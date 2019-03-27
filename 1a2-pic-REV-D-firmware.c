@@ -5,14 +5,14 @@
  *
  * Created on Mar 25, 2019, 04:20 PM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
- * 
+ *
  * Program the inputs/outputs needed by the 1A2 board, and test them.
- * 
+ *
  * CURRENTLY TESTING GENERAL FIRMWARE STRUCTURE.
- * 
+ *
  * *** THIS IS THE FIRST "RED BOARD" REV-D TEST BOARD PINOUT. ***
  *     Final boards will be different.
- * 
+ *
  * --------------------------------------------------------------------
  *                               _    _
  *                           V+ | |__| | GND
@@ -28,7 +28,7 @@
  *
  *                             PIC16F1709
  *                               REV D
- * 
+ *
  * --------------------------------------------------------------------
  *                               _    _
  *                           V+ | |__| | GND
@@ -48,39 +48,66 @@
 
 #define REV_D
 #ifdef REV_D
-// REVISION D (RED PROTOTYPE BOARD)
-#define L1_A_SENSE     (PORTCbits.RC4 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-#define L2_A_SENSE     (PORTCbits.RC3 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-#define L1_RING_DET    (PORTAbits.RA5 ^ 1)    // low on ring detect
-#define L2_RING_DET    (PORTBbits.RB7 ^ 1)    // low on ring detect
-#define L1_LINE_DET    (PORTAbits.RA4 ^ 1)    // low on line detect
-#define L2_LINE_DET    (PORTCbits.RC6 ^ 1)    // low on line detect
-#define L1_HOLD_RLY    LATAbits.LATA1         // hi puts call on hold
-#define L2_HOLD_RLY    LATCbits.LATC0         // hi puts call on hold
-#define L1_RING_RLY    LATCbits.LATC1         // hi rings line 1
-#define L2_RING_RLY    LATAbits.LATA2         // hi rings line 2
-#define RING_GEN_POW   LATCbits.LATC5         // hi supplies 12V power to ring generator
-#define L1_LAMP        LATAbits.LATA0         // hi turns on lamp
-#define L2_LAMP        LATBbits.LATB4         // hi turns on lamp
-#define CPU_STATUS_LED LATCbits.LATC7         // hi turns on lamp
+//
+// REVISION D (RED PROTOTYPE BOARD)                     Port(ABC)
+//                                   76543210           |Bit# in port
+//                                   ||||||||           ||
+#define L1_A_SENSE     ((G_portc & 0b00010000)?0:1) // RC4: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
+#define L2_A_SENSE     ((G_portc & 0b00001000)?0:1) // RC3: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
+#define L1_RING_DET    ((G_porta & 0b00100000)?0:1) // RA5: low on ring detect (0:1 instead of 1:0 to undo negative logic)
+#define L2_RING_DET    ((G_portb & 0b10000000)?0:1) // RB7: low on ring detect (0:1 instead of 1:0 to undo negative logic)
+#define L1_LINE_DET    ((G_porta & 0b00010000)?0:1) // RA4: low on line detect (0:1 instead of 1:0 to undo negative logic)
+#define L2_LINE_DET    ((G_portc & 0b01000000)?0:1) // RC6: low on line detect (0:1 instead of 1:0 to undo negative logic)
+//OLD ** THE FOLLOWING COMMENTED OUT:
+//OLD ** AVOID DIRECTLY ACCESSING HARDWARE DURING EXECUTION
+//OLD ** TO PREVENT TEMPORAL SAMPLING ERRORS
+//OLD
+//OLD #define L1_A_SENSE     (PORTCbits.RC4 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
+//OLD #define L2_A_SENSE     (PORTCbits.RC3 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
+//OLD #define L1_RING_DET    (PORTAbits.RA5 ^ 1)    // low on ring detect
+//OLD #define L2_RING_DET    (PORTBbits.RB7 ^ 1)    // low on ring detect
+//OLD #define L1_LINE_DET    (PORTAbits.RA4 ^ 1)    // low on line detect
+//OLD #define L2_LINE_DET    (PORTCbits.RC6 ^ 1)    // low on line detect
+#define L1_HOLD_RLY    LATAbits.LATA1               // hi puts L1 on hold
+#define L2_HOLD_RLY    LATCbits.LATC0               // hi puts L2 on hold
+#define L1_RING_RLY    LATCbits.LATC1               // hi rings L1
+#define L2_RING_RLY    LATAbits.LATA2               // hi rings L2
+#define RING_GEN_POW   LATCbits.LATC5               // hi supplies +12V to ring generator
+#define L1_LAMP        LATAbits.LATA0               // hi turns on L1's lamp on all extensions
+#define L2_LAMP        LATBbits.LATB4               // hi turns on L2's lamp on all extensions
+#define CPU_STATUS_LED LATCbits.LATC7               // hi turns on CPU STATUS led
 #endif
 
 #ifdef REV_E
-// REVISION E (BLUE) BOARD
-#define L1_A_SENSE     (PORTCbits.RC5 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-#define L2_A_SENSE     (PORTCbits.RC4 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-#define L1_RING_DET    (PORTAbits.RA5 ^ 1)    // low on ring detect
-#define L2_RING_DET    (PORTBbits.RB7 ^ 1)    // low on ring detect
-#define L1_LINE_DET    (PORTAbits.RA4 ^ 1)    // low on line detect
-#define L2_LINE_DET    (PORTCbits.RC6 ^ 1)    // low on line detect
-#define L1_HOLD_RLY    LATAbits.LATA1         // hi puts call on hold
-#define L2_HOLD_RLY    LATCbits.LATC0         // hi puts call on hold
-#define L1_RING_RLY    LATCbits.LATC2         // hi rings line 1
-#define L2_RING_RLY    LATBbits.LATB4         // hi rings line 2
-#define RING_GEN_POW   LATAbits.LATA2         // hi supplies 12V power to ring generator
-#define L1_LAMP        LATAbits.LATA0         // hi turns on lamp
-#define L2_LAMP        LATBbits.LATB5         // hi turns on lamp
-#define CPU_STATUS_LED LATCbits.LATC7         // hi turns on lamp
+// REVISION E (BLUE) BOARD                              Port(ABC)
+//                                   76543210           |Bit# in port
+//                                   ||||||||           ||
+#define L1_A_SENSE     ((G_portc & 0b00100000)?0:1) // RC5: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
+#define L2_A_SENSE     ((G_portc & 0b00010000)?0:1) // RC4: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
+#define L1_RING_DET    ((G_porta & 0b00100000)?0:1) // RA5: low on ring detect (0:1 instead of 1:0 to undo negative logic)
+#define L2_RING_DET    ((G_portb & 0b10000000)?0:1) // RB7: low on ring detect (0:1 instead of 1:0 to undo negative logic)
+#define L1_LINE_DET    ((G_porta & 0b00010000)?0:1) // RA4: low on line detect (0:1 instead of 1:0 to undo negative logic)
+#define L2_LINE_DET    ((G_portc & 0b01000000)?0:1) // RC6: low on line detect (0:1 instead of 1:0 to undo negative logic)
+
+//OLD ** THE FOLLOWING COMMENTED OUT:
+//OLD ** AVOID DIRECTLY ACCESSING HARDWARE DURING EXECUTION
+//OLD ** TO PREVENT TEMPORAL SAMPLING ERRORS
+//OLD
+//OLD #define L1_A_SENSE     (PORTCbits.RC5 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
+//OLD #define L2_A_SENSE     (PORTCbits.RC4 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
+//OLD #define L1_RING_DET    (PORTAbits.RA5 ^ 1)    // low on ring detect
+//OLD #define L2_RING_DET    (PORTBbits.RB7 ^ 1)    // low on ring detect
+//OLD #define L1_LINE_DET    (PORTAbits.RA4 ^ 1)    // low on line detect
+//OLD #define L2_LINE_DET    (PORTCbits.RC6 ^ 1)    // low on line detect
+
+#define L1_HOLD_RLY    LATAbits.LATA1               // hi puts L1 on hold
+#define L2_HOLD_RLY    LATCbits.LATC0               // hi puts L2 on hold
+#define L1_RING_RLY    LATCbits.LATC2               // hi rings L1
+#define L2_RING_RLY    LATBbits.LATB4               // hi rings L2
+#define RING_GEN_POW   LATAbits.LATA2               // hi supplies +12V to ring generator
+#define L1_LAMP        LATAbits.LATA0               // hi turns on L1's lamp on all extensions
+#define L2_LAMP        LATBbits.LATB5               // hi turns on L2's lamp on all extensions
+#define CPU_STATUS_LED LATCbits.LATC7               // hi turns on CPU STATUS led
 #endif
 
 // This must be #defined before #includes
@@ -113,23 +140,27 @@
 #include <xc.h>             // our Microchip C compiler (XC8)
 #include <pic16f1709.h>     // our chip
 
-// GLOBALS
+// DEFINES
+#define uchar unsigned char
+#define uint  unsigned int
+#define ulong unsigned long
+#define ITERS_PER_SEC  125       // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
-#define ITERS_PER_SEC  125          // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
-const unsigned int G_msec_per_iter = (1000/ITERS_PER_SEC);
-                                    // #msecs per iteration (if ITERS_PER_SEC=125, this is 8)
-unsigned long G_msec = 0;           // Millisec counter; counts up from 0 to 1000, wraps to zero.
-                                    // Steps by G_msec_per_iter
-unsigned char L1_hold = 0;          // Line1 HOLD state: 1=call on hold, 0=not on hold
-unsigned char L2_hold = 0;          // Line2 HOLD state: 1=call on hold, 0=not on hold
-unsigned int  L1_hold_timer = 0;    // countdown timer for hold sense. 0: timer disabled, >=1 timer running
-unsigned int  L2_hold_timer = 0;    // countdown timer for hold sense. 0: timer disabled, >=1 timer running
-unsigned long L1_ringing_timer = 0; // countdown timer in msec
-unsigned long L2_ringing_timer = 0; // countdown timer in msec
-int           L1_ringdet_timer = 0; // 1/10sec debounce countdown timer for L1_RING_DET
-int           L2_ringdet_timer = 0; // 1/10sec debounce countdown timer for L2_RING_DET
-char          G_hold_flash = 0;     // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
-char          G_ring_flash = 0;     // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
+// GLOBALS
+const uint G_msec_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
+ulong G_msec           = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msec_per_iter, wraps to zero.
+uchar L1_hold          = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
+uchar L2_hold          = 0;      // Line2 HOLD state: 1=call on hold, 0=not on hold
+uint  L1_hold_timer    = 0;      // countdown timer for hold sense. 0: timer disabled, >=1 timer running
+uint  L2_hold_timer    = 0;      // countdown timer for hold sense. 0: timer disabled, >=1 timer running
+ulong L1_ringing_timer = 0;      // countdown timer in msec
+ulong L2_ringing_timer = 0;      // countdown timer in msec
+int   L1_ringdet_timer = 0;      // 1/10sec debounce countdown timer for L1_RING_DET
+int   L2_ringdet_timer = 0;      // 1/10sec debounce countdown timer for L2_RING_DET
+char  G_hold_flash     = 0;      // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
+char  G_ring_flash     = 0;      // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
+int   G_curr_line      = 0;      // "current line" being worked on. Used by HandleLine() and hardware funcs
+uchar G_porta, G_portb, G_portc; // 8 bit input sample buffers (once per 125Hz)
 
 // Manage the global G_hold_flash variable
 //
@@ -158,7 +189,7 @@ void HandleHoldFlash() {
     //      :<---------------------------------------->:
     //                           1 sec
     //
-    G_hold_flash = ( G_msec >= 100 && G_msec <= 500 ) ||
+    G_hold_flash = ( G_msec >= 100 && G_msec <= 500  ) ||
                    ( G_msec >= 600 && G_msec <= 1000 ) ? 1 : 0;
 }
 
@@ -174,10 +205,10 @@ void HandleRingFlash() {
     // RING FLASH: 1Hz 50% DUTY CYCLE
     //
     //      0msec    500msec
-    //      :        : 
-    // _____          ________          ________ 
-    //      |        |        |        |        
-    //      |________|        |________|        
+    //      :        :
+    // _____          ________          ________
+    //      |        |        |        |
+    //      |________|        |________|
     //      :        :        :
     //      :<------>:<------>:
     //      :   50%  :   50%  :
@@ -191,18 +222,18 @@ void HandleRingFlash() {
 // Initialize the PIC chip for the REV_D board.. (RED DEVELOPMENT)
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
-    
+
     // Set PIC chip oscillator speed
     OSCCONbits.IRCF   = 0b1101;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
     OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
     OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
-    
+
     // NOTE: in the following TRISA/B/C data direction registers,
     //       '1' configures an input, '0' configures an output.
     //       'X' indicates a don't care/not implemented on this chip hardware.
     //
-    TRISA  = 0b00111000;  // data direction for port A (0=output, 1=input)
-    WPUA   = 0b00111000;  // enable 'weak pullup resistors' for all inputs
+    TRISA  = 0b00111000; // data direction for port A (0=output, 1=input)
+    WPUA   = 0b00111000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ A0 (OUT) L1 LAMP     *
     //         |||||||__ A1 (OUT) L1 HOLD RLY *
     //         ||||||___ A2 (OUT) L2 RING RLY *
@@ -211,9 +242,9 @@ void Init() {
     //         |||______ A5 (IN) L1 RING DET  *
     //         ||_______ X
     //         |________ X
-    
-    TRISB  = 0b10100000;  // data direction for port B (0=output, 1=input)
-    WPUB   = 0b10100000;  // enable 'weak pullup resistors' for all inputs
+
+    TRISB  = 0b10100000; // data direction for port B (0=output, 1=input)
+    WPUB   = 0b10100000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ X
     //         |||||||__ X
     //         ||||||___ X
@@ -222,9 +253,9 @@ void Init() {
     //         |||______ B5 (IN)  "StD"       *
     //         ||_______ B6 (OUT) "TOE"       *
     //         |________ B7 (IN)  L2 RING DET *
-    
-    TRISC  = 0b01111000;  // data direction for port C (0=output, 1=input)
-    WPUC   = 0b01111000;  // enable 'weak pullup resistors' for all inputs
+
+    TRISC  = 0b01111000; // data direction for port C (0=output, 1=input)
+    WPUC   = 0b01111000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ C0 (OUT) L2 HOLD RLY *
     //         |||||||__ C1 (OUT) L1 RING RLY *
     //         ||||||___ C2 (OUT) BUZZ 60HZ   *
@@ -235,11 +266,11 @@ void Init() {
     //         |________ C7 (OUT) CPU STATUS  *
 
     // Disable analog stuff
-    ANSELA = 0x0;
-    ANSELB = 0x0;
-    ANSELC = 0x0;
-    ADCON0 = 0x0;   // disable ADC
-    
+    ANSELA  = 0x0;
+    ANSELB  = 0x0;
+    ANSELC  = 0x0;
+    ADCON0  = 0x0;   // disables ADC
+
     // Disable slew rate controls
     SLRCONA = 0x0;
     SLRCONB = 0x0;
@@ -250,18 +281,18 @@ void Init() {
 #ifdef REV_E
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
-    
+
     // Set PIC chip oscillator speed
     OSCCONbits.IRCF   = 0b1101;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
     OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
     OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
-    
+
     // NOTE: in the following TRISA/B/C data direction registers,
     //       '1' configures an input, '0' configures an output.
     //       'X' indicates a don't care/not implemented on this chip hardware.
     //
-    TRISA  = 0b00111000;  // data direction for port A (0=output, 1=input)
-    WPUA   = 0b00111000;  // enable 'weak pullup resistors' for all inputs
+    TRISA  = 0b00111000; // data direction for port A (0=output, 1=input)
+    WPUA   = 0b00111000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ A0 (OUT) L1 LAMP      **
     //         |||||||__ A1 (OUT) L1 HOLD RLY  **
     //         ||||||___ A2 (OUT) RING GEN POW **
@@ -270,9 +301,9 @@ void Init() {
     //         |||______ A5 (IN) L1 RING DET   **
     //         ||_______ X
     //         |________ X
-    
-    TRISB  = 0b10000000;  // data direction for port B (0=output, 1=input)
-    WPUB   = 0b10000000;  // enable 'weak pullup resistors' for all inputs
+
+    TRISB  = 0b10000000; // data direction for port B (0=output, 1=input)
+    WPUB   = 0b10000000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ X
     //         |||||||__ X
     //         ||||||___ X
@@ -281,9 +312,9 @@ void Init() {
     //         |||______ B5 (OUT) L2 LAMP     **
     //         ||_______ B6 (OUT) MT8870 TOE  **
     //         |________ B7 (IN)  L2 RING DET **
-    
-    TRISC  = 0b01111000;  // data direction for port C (0=output, 1=input)
-    WPUC   = 0b01111000;  // enable 'weak pullup resistors' for all inputs
+
+    TRISC  = 0b01111000; // data direction for port C (0=output, 1=input)
+    WPUC   = 0b01111000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ C0 (OUT) L2 HOLD RLY **
     //         |||||||__ C1 (OUT) BUZZ 60HZ   **
     //         ||||||___ C2 (OUT) L1 RING RLY **
@@ -297,8 +328,8 @@ void Init() {
     ANSELA = 0x0;
     ANSELB = 0x0;
     ANSELC = 0x0;
-    ADCON0 = 0x0;   // disable ADC
-    
+    ADCON0 = 0x0;   // disables ADC
+
     // Disable slew rate controls
     SLRCONA = 0x0;
     SLRCONB = 0x0;
@@ -308,10 +339,8 @@ void Init() {
 
 // Flash the CPU STATUS led once per second
 void FlashCpuStatusLED() {
-    CPU_STATUS_LED = ( G_msec >= 500 ) ? 1 : 0;	// Blink LED 1Hz, 50% duty
+    CPU_STATUS_LED = ( G_msec >= 500 ) ? 1 : 0; // Blink LED 1Hz, 50% duty
 }
-
-int G_curr_line = 0;		// current line being worked on
 
 // Change the hardware state of current line's HOLD_RLY
 void SetHold(char val) {
@@ -463,9 +492,12 @@ int IsALead() {
     }
 }
 
-// MANAGE LINE 1 INPUTS/OUTPUTS
-//     In the following, caps letters (A,B,C..) refer to points in the logic diagram
-//     in README--REV-E--logic-diagram.txt, included with this .c file.
+// MANAGE L1/L2 INPUTS/OUTPUTS
+//     Set G_curr_line before calling this function to define the line#
+//     to be managed during execution.
+//
+//     In the following, caps letters (A,B,C..) refer to points in the
+//     README-REV-E-logic-diagram.txt, included with this .c file.
 //
 void HandleLine() {
     // A: Line Detect?
@@ -513,10 +545,10 @@ void HandleLine() {
                     SetLamp(1);            // lamp on steady; still active call, not sure if HOLD yet
                     return;
                 }
-                
+
                 // Count down hold timer
                 HandleHoldTimer();
-                
+
                 // Watch for hold condition when timer expires
                 if ( IsHoldTimer() ) {     // HOLD timer still running?
                     //HandleHoldTimer();   // timer countdown handled in main()
@@ -572,6 +604,18 @@ void HandleLine() {
     }
 }
 
+// Buffer the hardware state of PIC's PORTA/B/C all at once.
+//     Run this at the beginning of each iter of the 125Hz main loop.
+//     We then do bit tests on these buffered values, to avoid multiple
+//     hardware reads throughout execution to avoid sampling parallax.
+//
+void SampleInputs() {
+    // Buffer the hardware input states
+    G_porta = PORTA;
+    G_portb = PORTB;
+    G_portc = PORTC;
+}
+
 // In the following, the capital letters (A,B,C..) refer
 // to the large diagram in README--REV-E--logic-diagram.txt file.
 //
@@ -583,6 +627,9 @@ void main(void) {
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
+        // Sample input ports all at once
+        SampleInputs();
+        
         // Keep the millisecond counter running..
         G_msec = (G_msec + G_msec_per_iter) % 1000;   // wrap at 1000
 
@@ -594,10 +641,10 @@ void main(void) {
 
         // Manage the G_ring_flash variable each iter
         HandleRingFlash();
-        
+
         // Manage counting down the 1/10sec L1/L2_ringdet_timer each iter.
         HandleRingDetTimers();
-        
+
         // Manage counting down the 6sec L1/L2 ringing timer
         HandleRingingTimers();
 
