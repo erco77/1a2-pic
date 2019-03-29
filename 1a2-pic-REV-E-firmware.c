@@ -6,100 +6,40 @@
  * Created on Mar 25, 2019, 04:20 PM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
  *
- * Program the inputs/outputs needed by the 1A2 board, and test them.
- *
- * CURRENTLY TESTING GENERAL FIRMWARE STRUCTURE.
- *
- * *** THIS IS THE FIRST "RED BOARD" REV-D TEST BOARD PINOUT. ***
- *     Final boards will be different.
- *
- * --------------------------------------------------------------------
+ * Drive the 1A2 Multiline Phone Control board (REV D and REV E).
  *                               _    _
  *                           V+ | |__| | GND
- *     L1 RING DET (IN) -- RA5  |      | RA0 -- (OUT) L1 LAMP (DAT)
- *     L1 LINE DET (IN) -- RA4  |      | RA1 -- (OUT) L1 HOLD RLY (CLK)
- *        (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) L2 RING RLY
- *          unused (IN) -- RC5  |      | RC0 -- (OUT) L2 HOLD RLY
- *      L1 A SENSE (IN) -- RC4  |      | RC1 -- (OUT) L1 RING RLY
- *      L2 A SENSE (IN) -- RC3  |      | RC2 -- (OUT) BUZZ 60HZ
- *     L2 LINE DET (IN) -- RC6  |      | RB4 -- (OUT) L2 LAMP
- * CPU STATUS LED (OUT) -- RC7  |      | RB5 -- (IN)  "StD"
- *     L2 RING DET (IN) -- RB7  |______| RB6 -- (OUT) "TOE"
- *
- *                             PIC16F1709
- *                               REV D
- *
- * --------------------------------------------------------------------
- *                               _    _
- *                           V+ | |__| | GND
- *     L1 RING DET (IN) -- RA5  |      | RA0 -- (OUT) L1 LAMP (DAT)
- *     L1 LINE DET (IN) -- RA4  |      | RA1 -- (OUT) L1 HOLD RLY (CLK)
- *        (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) RING GEN POW
- *      L1 A SENSE (IN) -- RC5  |      | RC0 -- (OUT) L2 HOLD RLY
- *      L2 A SENSE (IN) -- RC4  |      | RC1 -- (OUT) BUZZ 60HZ
- *      MT8870 STD (IN) -- RC3  |      | RC2 -- (OUT) L1 RING RLY
- *     L2 LINE DET (IN) -- RC6  |      | RB4 -- (OUT) L2 RING RLY
- * CPU STATUS LED (OUT) -- RC7  |      | RB5 -- (IN)  L2 LAMP
- *     L2 RING DET (IN) -- RB7  |______| RB6 -- (OUT) MT8870 TOE
+ *     L1_RING_DET (IN) -- RA5  |      | RA0 -- (OUT) L1_LAMP (DAT)
+ *     L1_LINE_DET (IN) -- RA4  |      | RA1 -- (OUT) L1_HOLD_RLY (CLK)
+ *        (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) RING_GEN_POW
+ *      L1_A_SENSE (IN) -- RC5  |      | RC0 -- (OUT) L2 HOLD_RLY
+ *      L2_A_SENSE (IN) -- RC4  |      | RC1 -- (OUT) BUZZ_RING
+ *      MT8870_STD (IN) -- RC3  |      | RC2 -- (OUT) L1_RING_RLY
+ *     L2_LINE_DET (IN) -- RC6  |      | RB4 -- (OUT) L2_RING_RLY
+ * CPU_STATUS_LED (OUT) -- RC7  |      | RB5 -- (IN)  L2_LAMP
+ *     L2_RING_DET (IN) -- RB7  |______| RB6 -- (OUT) MT8870_TOE
  *
  *                             PIC16F1709
  *                               REV E
  */
 
-#define REV_D
-#ifdef REV_D
+// REVISION E (BLUE) BOARD
 //
-// REVISION D (RED PROTOTYPE BOARD)                     Port(ABC)
+//     Note in the following, the inputs aren't read directly, we read the
+//     snapshot in variables G_port[abc], updated each iteration of the main loop.
+//
+//
+//                                                      Port(ABC)
 //                                   76543210           |Bit# in port
-//                                   ||||||||           ||
-#define L1_A_SENSE     ((G_portc & 0b00010000)?0:1) // RC4: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
-#define L2_A_SENSE     ((G_portc & 0b00001000)?0:1) // RC3: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
-#define L1_RING_DET    ((G_porta & 0b00100000)?0:1) // RA5: low on ring detect (0:1 instead of 1:0 to undo negative logic)
-#define L2_RING_DET    ((G_portb & 0b10000000)?0:1) // RB7: low on ring detect (0:1 instead of 1:0 to undo negative logic)
-#define L1_LINE_DET    ((G_porta & 0b00010000)?0:1) // RA4: low on line detect (0:1 instead of 1:0 to undo negative logic)
-#define L2_LINE_DET    ((G_portc & 0b01000000)?0:1) // RC6: low on line detect (0:1 instead of 1:0 to undo negative logic)
-//OLD ** THE FOLLOWING COMMENTED OUT:
-//OLD ** AVOID DIRECTLY ACCESSING HARDWARE DURING EXECUTION
-//OLD ** TO PREVENT TEMPORAL SAMPLING ERRORS
-//OLD
-//OLD #define L1_A_SENSE     (PORTCbits.RC4 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-//OLD #define L2_A_SENSE     (PORTCbits.RC3 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-//OLD #define L1_RING_DET    (PORTAbits.RA5 ^ 1)    // low on ring detect
-//OLD #define L2_RING_DET    (PORTBbits.RB7 ^ 1)    // low on ring detect
-//OLD #define L1_LINE_DET    (PORTAbits.RA4 ^ 1)    // low on line detect
-//OLD #define L2_LINE_DET    (PORTCbits.RC6 ^ 1)    // low on line detect
-#define L1_HOLD_RLY    LATAbits.LATA1               // hi puts L1 on hold
-#define L2_HOLD_RLY    LATCbits.LATC0               // hi puts L2 on hold
-#define L1_RING_RLY    LATCbits.LATC1               // hi rings L1
-#define L2_RING_RLY    LATAbits.LATA2               // hi rings L2
-#define RING_GEN_POW   LATCbits.LATC5               // hi supplies +12V to ring generator
-#define L1_LAMP        LATAbits.LATA0               // hi turns on L1's lamp on all extensions
-#define L2_LAMP        LATBbits.LATB4               // hi turns on L2's lamp on all extensions
-#define CPU_STATUS_LED LATCbits.LATC7               // hi turns on CPU STATUS led
-#endif
-
-#ifdef REV_E
-// REVISION E (BLUE) BOARD                              Port(ABC)
-//                                   76543210           |Bit# in port
-//                                   ||||||||           ||
+// Inputs..                          ||||||||           ||
 #define L1_A_SENSE     ((G_portc & 0b00100000)?0:1) // RC5: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
 #define L2_A_SENSE     ((G_portc & 0b00010000)?0:1) // RC4: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
 #define L1_RING_DET    ((G_porta & 0b00100000)?0:1) // RA5: low on ring detect (0:1 instead of 1:0 to undo negative logic)
 #define L2_RING_DET    ((G_portb & 0b10000000)?0:1) // RB7: low on ring detect (0:1 instead of 1:0 to undo negative logic)
 #define L1_LINE_DET    ((G_porta & 0b00010000)?0:1) // RA4: low on line detect (0:1 instead of 1:0 to undo negative logic)
 #define L2_LINE_DET    ((G_portc & 0b01000000)?0:1) // RC6: low on line detect (0:1 instead of 1:0 to undo negative logic)
-
-//OLD ** THE FOLLOWING COMMENTED OUT:
-//OLD ** AVOID DIRECTLY ACCESSING HARDWARE DURING EXECUTION
-//OLD ** TO PREVENT TEMPORAL SAMPLING ERRORS
-//OLD
-//OLD #define L1_A_SENSE     (PORTCbits.RC5 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-//OLD #define L2_A_SENSE     (PORTCbits.RC4 ^ 1)    // low when A lead engaged (^1 to undo negative logic)
-//OLD #define L1_RING_DET    (PORTAbits.RA5 ^ 1)    // low on ring detect
-//OLD #define L2_RING_DET    (PORTBbits.RB7 ^ 1)    // low on ring detect
-//OLD #define L1_LINE_DET    (PORTAbits.RA4 ^ 1)    // low on line detect
-//OLD #define L2_LINE_DET    (PORTCbits.RC6 ^ 1)    // low on line detect
-
+#define MT8870_STD     ((G_portc & 0b00001000)?1:0) // RC3: hi while Touch-Tone button pressed on intercom
+// Outputs..
 #define L1_HOLD_RLY    LATAbits.LATA1               // hi puts L1 on hold
 #define L2_HOLD_RLY    LATCbits.LATC0               // hi puts L2 on hold
 #define L1_RING_RLY    LATCbits.LATC2               // hi rings L1
@@ -108,47 +48,48 @@
 #define L1_LAMP        LATAbits.LATA0               // hi turns on L1's lamp on all extensions
 #define L2_LAMP        LATBbits.LATB5               // hi turns on L2's lamp on all extensions
 #define CPU_STATUS_LED LATCbits.LATC7               // hi turns on CPU STATUS led
-#endif
+#define BUZZ_RING      LATCbits.LATC1               // hi/lo output to buzz phones during incoming calls
+#define MT8870_TOE     LATBbits.LATB6               // hi turns on a buzzer transistor. Normally low, run at 60Hz when MT8870_STD is hi
 
 // This must be #defined before #includes
-#define _XTAL_FREQ 4000000UL    // system oscillator speed in HZ (__delay_ms() needs this)
+#define _XTAL_FREQ 4000000UL     // system oscillator speed in HZ (__delay_ms() needs this)
 
 // --- The following section copy/pasted from MPLAB X menu: Production -> Set Configuration Bits -> Generate Source..
 // CONFIG1
-#pragma config FOSC     = INTOSC    // USE INTERNAL OSCILLATOR: Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
-#pragma config WDTE     = OFF       // Watchdog Timer Enable (WDT disabled)
-#pragma config PWRTE    = OFF       // Power-up Timer Enable (PWRT disabled)
-#pragma config MCLRE    = ON        // MCLR Pin Function Select (MCLR/VPP pin function is MCLR)
-#pragma config CP       = OFF       // Flash Program Memory Code Protection (Program memory code protection is disabled)
-#pragma config BOREN    = OFF       // Brown-out Reset Enable (Brown-out Reset disabled)
-#pragma config CLKOUTEN = OFF       // Clock Out Enable (CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin)
-#pragma config IESO     = OFF       // Internal/External Switchover Mode (Internal/External Switchover Mode is disabled)
-#pragma config FCMEN    = OFF       // Fail-Safe Clock Monitor Enable (Fail-Safe Clock Monitor is disabled)
+#pragma config FOSC     = INTOSC // USE INTERNAL OSCILLATOR: Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
+#pragma config WDTE     = OFF    // Watchdog Timer Enable (WDT disabled)
+#pragma config PWRTE    = OFF    // Power-up Timer Enable (PWRT disabled)
+#pragma config MCLRE    = ON     // MCLR Pin Function Select (MCLR/VPP pin function is MCLR)
+#pragma config CP       = OFF    // Flash Program Memory Code Protection (Program memory code protection is disabled)
+#pragma config BOREN    = OFF    // Brown-out Reset Enable (Brown-out Reset disabled)
+#pragma config CLKOUTEN = OFF    // Clock Out Enable (CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin)
+#pragma config IESO     = OFF    // Internal/External Switchover Mode (Internal/External Switchover Mode is disabled)
+#pragma config FCMEN    = OFF    // Fail-Safe Clock Monitor Enable (Fail-Safe Clock Monitor is disabled)
 
 // CONFIG2
-#pragma config WRT     = OFF        // Flash Memory Self-Write Protection (Write protection off)
-#pragma config PPS1WAY = ON         // Peripheral Pin Select one-way control (The PPSLOCK bit cannot be cleared once it is set by software)
-#pragma config ZCDDIS  = ON         // Zero-cross detect disable (Zero-cross detect circuit is disabled at POR)
-#pragma config PLLEN   = OFF        // Phase Lock Loop enable (4x PLL is enabled when software sets the SPLLEN bit)
-#pragma config STVREN  = ON         // Stack Overflow/Underflow Reset Enable (Stack Overflow or Underflow will cause a Reset)
-#pragma config BORV    = LO         // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
-#pragma config LPBOR   = OFF        // Low-Power Brown Out Reset (Low-Power BOR is disabled)
-#pragma config LVP     = ON         // Low-Voltage Programming Enable (Low-voltage programming enabled)
+#pragma config WRT     = OFF     // Flash Memory Self-Write Protection (Write protection off)
+#pragma config PPS1WAY = ON      // Peripheral Pin Select one-way control (The PPSLOCK bit cannot be cleared once it is set by software)
+#pragma config ZCDDIS  = ON      // Zero-cross detect disable (Zero-cross detect circuit is disabled at POR)
+#pragma config PLLEN   = OFF     // Phase Lock Loop enable (4x PLL is enabled when software sets the SPLLEN bit)
+#pragma config STVREN  = ON      // Stack Overflow/Underflow Reset Enable (Stack Overflow or Underflow will cause a Reset)
+#pragma config BORV    = LO      // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
+#pragma config LPBOR   = OFF     // Low-Power Brown Out Reset (Low-Power BOR is disabled)
+#pragma config LVP     = ON      // Low-Voltage Programming Enable (Low-voltage programming enabled)
 // --- end section
 
 // PIC hardware includes
-#include <xc.h>             // our Microchip C compiler (XC8)
-#include <pic16f1709.h>     // our chip
+#include <xc.h>                  // our Microchip C compiler (XC8)
+#include <pic16f1709.h>          // our chip
 
 // DEFINES
 #define uchar unsigned char
 #define uint  unsigned int
 #define ulong unsigned long
-#define ITERS_PER_SEC  125       // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
+#define ITERS_PER_SEC  250       // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
 // GLOBALS
-const uint G_msec_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
-ulong G_msec           = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msec_per_iter, wraps to zero.
+const uint G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
+ulong G_msec           = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar L1_hold          = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
 uchar L2_hold          = 0;      // Line2 HOLD state: 1=call on hold, 0=not on hold
 uint  L1_hold_timer    = 0;      // countdown timer for hold sense. 0: timer disabled, >=1 timer running
@@ -218,67 +159,7 @@ void HandleRingFlash() {
     G_ring_flash = ( G_msec >= 500 ) ? 1 : 0;
 }
 
-#ifdef REV_D
-// Initialize the PIC chip for the REV_D board.. (RED DEVELOPMENT)
-void Init() {
-    OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
-
-    // Set PIC chip oscillator speed
-    OSCCONbits.IRCF   = 0b1101;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
-    OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
-    OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
-
-    // NOTE: in the following TRISA/B/C data direction registers,
-    //       '1' configures an input, '0' configures an output.
-    //       'X' indicates a don't care/not implemented on this chip hardware.
-    //
-    TRISA  = 0b00111000; // data direction for port A (0=output, 1=input)
-    WPUA   = 0b00111000; // enable 'weak pullup resistors' for all inputs
-    //         ||||||||_ A0 (OUT) L1 LAMP     *
-    //         |||||||__ A1 (OUT) L1 HOLD RLY *
-    //         ||||||___ A2 (OUT) L2 RING RLY *
-    //         |||||____ A3 (IN)  unused/MCLR *
-    //         ||||_____ A4 (IN) L1 LINE DET  *
-    //         |||______ A5 (IN) L1 RING DET  *
-    //         ||_______ X
-    //         |________ X
-
-    TRISB  = 0b10100000; // data direction for port B (0=output, 1=input)
-    WPUB   = 0b10100000; // enable 'weak pullup resistors' for all inputs
-    //         ||||||||_ X
-    //         |||||||__ X
-    //         ||||||___ X
-    //         |||||____ X
-    //         ||||_____ B4 (OUT) L2 LAMP     *
-    //         |||______ B5 (IN)  "StD"       *
-    //         ||_______ B6 (OUT) "TOE"       *
-    //         |________ B7 (IN)  L2 RING DET *
-
-    TRISC  = 0b01111000; // data direction for port C (0=output, 1=input)
-    WPUC   = 0b01111000; // enable 'weak pullup resistors' for all inputs
-    //         ||||||||_ C0 (OUT) L2 HOLD RLY *
-    //         |||||||__ C1 (OUT) L1 RING RLY *
-    //         ||||||___ C2 (OUT) BUZZ 60HZ   *
-    //         |||||____ C3 (IN)  L2 A SENSE  *
-    //         ||||_____ C4 (IN)  L1 A SENSE  *
-    //         |||______ C5 (IN)  unused      *
-    //         ||_______ C6 (IN)  L2 LINE DET *
-    //         |________ C7 (OUT) CPU STATUS  *
-
-    // Disable analog stuff
-    ANSELA  = 0x0;
-    ANSELB  = 0x0;
-    ANSELC  = 0x0;
-    ADCON0  = 0x0;   // disables ADC
-
-    // Disable slew rate controls
-    SLRCONA = 0x0;
-    SLRCONB = 0x0;
-    SLRCONC = 0x0;
-}
-#endif
-
-#ifdef REV_E
+// Initialize PIC chip I/O for REV E board.
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
 
@@ -335,7 +216,6 @@ void Init() {
     SLRCONB = 0x0;
     SLRCONC = 0x0;
 }
-#endif
 
 // Flash the CPU STATUS led once per second
 void FlashCpuStatusLED() {
@@ -366,13 +246,11 @@ void SetLamp(char val) {
     }
 }
 
-// Start the 1/20sec software hold timer value for current line.
-//     This is an iteration counter (not msec).
-//
+// Start the 1/20sec (50msecs) software hold timer value for current line.
 void StartHoldTimer() {
     switch ( G_curr_line ) {
-        case 1: L1_hold_timer = ITERS_PER_SEC/20; return;
-        case 2: L2_hold_timer = ITERS_PER_SEC/20; return;
+        case 1: L1_hold_timer = 50; return;
+        case 2: L2_hold_timer = 50; return;
     }
 }
 
@@ -392,13 +270,20 @@ int IsHoldTimer() {
     }
 }
 
-// Manage counting down software hold timers (if enabled) for current line
-//      This is an iteration counter, not msecs.
-//
+// Manage counting down software hold timers (if enabled) for current line.
+//     Since we count down in msecs, make sure we reach exactly zero.
 void HandleHoldTimer() {
     switch ( G_curr_line ) {
-        case 1: if ( L1_hold_timer > 0 ) --L1_hold_timer; return;
-        case 2: if ( L2_hold_timer > 0 ) --L2_hold_timer; return;
+        case 1:
+            L1_hold_timer = ( L1_hold_timer > G_msecs_per_iter)
+                                ? (L1_hold_timer - G_msecs_per_iter)
+                                : 0;
+            return;
+        case 2:
+            L2_hold_timer = ( L2_hold_timer > G_msecs_per_iter)
+                                ? (L2_hold_timer - G_msecs_per_iter)
+                                : 0;
+            return;
     }
 }
 
@@ -432,8 +317,8 @@ int IsRingingTimer() {
 
 // Countdown the 6sec L1/L2 ringing timers if enabled
 void HandleRingingTimers() {
-    if ( L1_ringing_timer > 0 ) L1_ringing_timer -= G_msec_per_iter;
-    if ( L2_ringing_timer > 0 ) L2_ringing_timer -= G_msec_per_iter;
+    if ( L1_ringing_timer > 0 ) L1_ringing_timer -= G_msecs_per_iter;
+    if ( L2_ringing_timer > 0 ) L2_ringing_timer -= G_msecs_per_iter;
 }
 
 // Return the hardware state of the RING_DET optocoupler
@@ -458,8 +343,8 @@ int IsRinging() {
 void HandleRingDetTimers() {
     if ( L1_ringdet_timer > 0 ) --L1_ringdet_timer;
     if ( L2_ringdet_timer > 0 ) --L2_ringdet_timer;
-    if ( L1_RING_DET ) L1_ringdet_timer = ITERS_PER_SEC / 2;
-    if ( L2_RING_DET ) L2_ringdet_timer = ITERS_PER_SEC / 2;
+    if ( L1_RING_DET ) L1_ringdet_timer = ITERS_PER_SEC / 4;    // how long to keep ringing thru AC cycle (1/4th sec)
+    if ( L2_RING_DET ) L2_ringdet_timer = ITERS_PER_SEC / 4;    // how long to keep ringing thru AC cycle (1/4th sec)
 }
 
 // Return the hardware state of the LINE_DET optocoupler
@@ -573,7 +458,7 @@ void HandleLine() {
             // CO is currently ringing the line?
             // Restart 'line ringing' timer whenever a ring is detected.
             //
-            StartRingingTimer();             // Start 6sec ring timer
+            StartRingingTimer();       // Start 6sec ring timer
         }
         // Line has incoming call, either ringing or between rings.
         // Keep lamp blinking between rings, have 1A2 ring relay
@@ -596,9 +481,9 @@ void HandleLine() {
             //
             StopHoldTimer();
             StopRingingTimer();
-            SetHold(0);          // disable HOLD relay
-            SetRing(0);          // disable ringing
-            SetLamp(0);          // lamp off
+            SetHold(0);                 // disable HOLD relay
+            SetRing(0);                 // disable ringing
+            SetLamp(0);                 // lamp off
             return;
         }
     }
@@ -616,6 +501,29 @@ void SampleInputs() {
     G_portc = PORTC;
 }
 
+// Run the BUZZ_RING output used to buzz extensions when there's an incoming call
+void HandleBuzzRing() {
+    static uchar bz_count = 0;
+    // Oscillate BUZZ_RING output if Line#1 or Line#2 ringing
+    if ( L1_ringdet_timer || L2_ringdet_timer ) {
+        BUZZ_RING = (bz_count & 2) ? 1 : 0;       // run buzzer at a lower freq (~30Hz) for "ringing"
+        ++bz_count;                               // run our "oscillator" counter
+    } else {
+        BUZZ_RING = 0;                            // don't oscillate if no line ringing
+    }
+}
+
+// Handle the MT8870 DTMF chip's StD and TOE signals.
+void HandleDTMF() {
+    static uchar icm_bz_count = 0;
+    if ( MT8870_STD ) {
+        MT8870_TOE = (icm_bz_count & 1) ? 1 : 0;  // run TOE at 60Hz while a Touch-Tone button pressed
+        ++icm_bz_count;                           // run our "oscillator" counter
+    } else {
+        MT8870_TOE = 0;                           // disable outputs
+    }
+}
+
 // In the following, the capital letters (A,B,C..) refer
 // to the large diagram in README--REV-E--logic-diagram.txt file.
 //
@@ -631,7 +539,7 @@ void main(void) {
         SampleInputs();
         
         // Keep the millisecond counter running..
-        G_msec = (G_msec + G_msec_per_iter) % 1000;   // wrap at 1000
+        G_msec = (G_msec + G_msecs_per_iter) % 1000;   // wrap at 1000
 
         // Keep CPU STATUS lamp flashing
         FlashCpuStatusLED();
@@ -647,6 +555,12 @@ void main(void) {
 
         // Manage counting down the 6sec L1/L2 ringing timer
         HandleRingingTimers();
+        
+        // Oscillate the BUZZ_RING output
+        HandleBuzzRing();
+        
+        // Handle the two MT8870 DTMF chip's signals (StD and ToE)
+        HandleDTMF();
 
         // Handle logic signals for Line #1 and Line #2
         G_curr_line = 1; HandleLine();
@@ -659,6 +573,6 @@ void main(void) {
         RING_GEN_POW = (L1_ringing_timer | L2_ringing_timer) ? 1 : 0;
 
         // 100th sec delay
-        __delay_ms(G_msec_per_iter);
+        __delay_ms(G_msecs_per_iter);
     }
 }
