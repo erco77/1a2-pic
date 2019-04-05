@@ -1,12 +1,12 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 /*
  * File:   main.c
- * Author: erco
+ * Author: Greg Ercolano, erco@seriss.com
  *
  * Created on Mar 25, 2019, 04:20 PM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
  *
- * Drive the 1A2 Multiline Phone Control board (REV D and REV E).
+ * Drive the 1A2 Multiline Phone Control board, REV E and REV E1.
  *                               _    _
  *                           V+ | |__| | GND
  *     L1_RING_DET (IN) -- RA5  |      | RA0 -- (OUT) L1_LAMP (DAT)
@@ -20,18 +20,24 @@
  *     L2_RING_DET (IN) -- RB7  |______| RB6 -- (OUT) MT8870_TOE
  *
  *                             PIC16F1709
- *                               REV E
+ *                            REV E AND E1
+ *
+ * "REV E1" board differs from "REV E" in the following ways:
+ *
+ *     > Removed unnecessary 56K pullup resistors (R4 + R11) since PIC's internal "weak pullups" are used.
+ *     > Above gained space, moved LINE DET optos to fill space, simplified traces
+ *     > Changed 56K/.5W on RING DET inputs to 33K/1W.
+ *     > Changed 1K/.5W rating on RING+LINE DET inputs to 1W.
+ *     > REV label on top/bot silk updated from E to E1, and APR 2019 -> MAY 2019.
+ *     > D12-D19 diodes spaced apart a little for clearance.
+ *     > Added "Press Fit" part# for RJ-21's.
+ *     > Moved STAGE CONNECTOR switch diagrams to be seen if terminal blocks
+ *       are used in place of Phoenix connectors.
  */
 
-// REVISION E (BLUE) BOARD
-//
-//     Note in the following, the inputs aren't read directly, we read the
-//     snapshot in variables G_port[abc], updated each iteration of the main loop.
-//
-//
-//                                                      Port(ABC)
+// REVISION E1 BOARD                                    Port(ABC)
 //                                   76543210           |Bit# in port
-// Inputs..                          ||||||||           ||
+//                                   ||||||||           ||
 #define L1_A_SENSE     ((G_portc & 0b00100000)?0:1) // RC5: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
 #define L2_A_SENSE     ((G_portc & 0b00010000)?0:1) // RC4: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
 #define L1_RING_DET    ((G_porta & 0b00100000)?0:1) // RA5: low on ring detect (0:1 instead of 1:0 to undo negative logic)
@@ -39,7 +45,7 @@
 #define L1_LINE_DET    ((G_porta & 0b00010000)?0:1) // RA4: low on line detect (0:1 instead of 1:0 to undo negative logic)
 #define L2_LINE_DET    ((G_portc & 0b01000000)?0:1) // RC6: low on line detect (0:1 instead of 1:0 to undo negative logic)
 #define MT8870_STD     ((G_portc & 0b00001000)?1:0) // RC3: hi while Touch-Tone button pressed on intercom
-// Outputs..
+// Outputs
 #define L1_HOLD_RLY    LATAbits.LATA1               // hi puts L1 on hold
 #define L2_HOLD_RLY    LATCbits.LATC0               // hi puts L2 on hold
 #define L1_RING_RLY    LATCbits.LATC2               // hi rings L1
@@ -52,29 +58,29 @@
 #define MT8870_TOE     LATBbits.LATB6               // hi turns on a buzzer transistor. Normally low, run at 60Hz when MT8870_STD is hi
 
 // This must be #defined before #includes
-#define _XTAL_FREQ 4000000UL     // system oscillator speed in HZ (__delay_ms() needs this)
+#define _XTAL_FREQ 4000000UL    // system oscillator speed in HZ (__delay_ms() needs this)
 
 // --- The following section copy/pasted from MPLAB X menu: Production -> Set Configuration Bits -> Generate Source..
 // CONFIG1
-#pragma config FOSC     = INTOSC // USE INTERNAL OSCILLATOR: Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
-#pragma config WDTE     = OFF    // Watchdog Timer Enable (WDT disabled)
-#pragma config PWRTE    = OFF    // Power-up Timer Enable (PWRT disabled)
-#pragma config MCLRE    = ON     // MCLR Pin Function Select (MCLR/VPP pin function is MCLR)
-#pragma config CP       = OFF    // Flash Program Memory Code Protection (Program memory code protection is disabled)
-#pragma config BOREN    = OFF    // Brown-out Reset Enable (Brown-out Reset disabled)
-#pragma config CLKOUTEN = OFF    // Clock Out Enable (CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin)
-#pragma config IESO     = OFF    // Internal/External Switchover Mode (Internal/External Switchover Mode is disabled)
-#pragma config FCMEN    = OFF    // Fail-Safe Clock Monitor Enable (Fail-Safe Clock Monitor is disabled)
+#pragma config FOSC     = INTOSC    // USE INTERNAL OSCILLATOR: Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
+#pragma config WDTE     = OFF       // Watchdog Timer Enable (WDT disabled)
+#pragma config PWRTE    = OFF       // Power-up Timer Enable (PWRT disabled)
+#pragma config MCLRE    = ON        // MCLR Pin Function Select (MCLR/VPP pin function is MCLR)
+#pragma config CP       = OFF       // Flash Program Memory Code Protection (Program memory code protection is disabled)
+#pragma config BOREN    = OFF       // Brown-out Reset Enable (Brown-out Reset disabled)
+#pragma config CLKOUTEN = OFF       // Clock Out Enable (CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin)
+#pragma config IESO     = OFF       // Internal/External Switchover Mode (Internal/External Switchover Mode is disabled)
+#pragma config FCMEN    = OFF       // Fail-Safe Clock Monitor Enable (Fail-Safe Clock Monitor is disabled)
 
 // CONFIG2
-#pragma config WRT     = OFF     // Flash Memory Self-Write Protection (Write protection off)
-#pragma config PPS1WAY = ON      // Peripheral Pin Select one-way control (The PPSLOCK bit cannot be cleared once it is set by software)
-#pragma config ZCDDIS  = ON      // Zero-cross detect disable (Zero-cross detect circuit is disabled at POR)
-#pragma config PLLEN   = OFF     // Phase Lock Loop enable (4x PLL is enabled when software sets the SPLLEN bit)
-#pragma config STVREN  = ON      // Stack Overflow/Underflow Reset Enable (Stack Overflow or Underflow will cause a Reset)
-#pragma config BORV    = LO      // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
-#pragma config LPBOR   = OFF     // Low-Power Brown Out Reset (Low-Power BOR is disabled)
-#pragma config LVP     = ON      // Low-Voltage Programming Enable (Low-voltage programming enabled)
+#pragma config WRT     = OFF        // Flash Memory Self-Write Protection (Write protection off)
+#pragma config PPS1WAY = ON         // Peripheral Pin Select one-way control (The PPSLOCK bit cannot be cleared once it is set by software)
+#pragma config ZCDDIS  = ON         // Zero-cross detect disable (Zero-cross detect circuit is disabled at POR)
+#pragma config PLLEN   = OFF        // Phase Lock Loop enable (4x PLL is enabled when software sets the SPLLEN bit)
+#pragma config STVREN  = ON         // Stack Overflow/Underflow Reset Enable (Stack Overflow or Underflow will cause a Reset)
+#pragma config BORV    = LO         // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
+#pragma config LPBOR   = OFF        // Low-Power Brown Out Reset (Low-Power BOR is disabled)
+#pragma config LVP     = ON         // Low-Voltage Programming Enable (Low-voltage programming enabled)
 // --- end section
 
 // PIC hardware includes
@@ -89,19 +95,24 @@
 
 // GLOBALS
 const uint G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
-ulong G_msec           = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
-uchar L1_hold          = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
-uchar L2_hold          = 0;      // Line2 HOLD state: 1=call on hold, 0=not on hold
-uint  L1_hold_timer    = 0;      // countdown timer for hold sense. 0: timer disabled, >=1 timer running
-uint  L2_hold_timer    = 0;      // countdown timer for hold sense. 0: timer disabled, >=1 timer running
-ulong L1_ringing_timer = 0;      // countdown timer in msec
-ulong L2_ringing_timer = 0;      // countdown timer in msec
-int   L1_ringdet_timer = 0;      // 1/10sec debounce countdown timer for L1_RING_DET
-int   L2_ringdet_timer = 0;      // 1/10sec debounce countdown timer for L2_RING_DET
-char  G_hold_flash     = 0;      // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
-char  G_ring_flash     = 0;      // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
-int   G_curr_line      = 0;      // "current line" being worked on. Used by HandleLine() and hardware funcs
-uchar G_porta, G_portb, G_portc; // 8 bit input sample buffers (once per 125Hz)
+const int G_ringdet_max_iters  = 30; // ringdet_timer won't count above this (prevents wrap)
+const int G_ringdet_on_thresh  = 20; // ringdet_timer must count above this to "snap on"
+const int G_ringdet_off_thresh = 10; // ringdet_timer must count below this to "snap off"
+ulong G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+uchar L1_hold           = 0;         // Line1 HOLD state: 1=call on hold, 0=not on hold
+uchar L2_hold           = 0;         // Line2 HOLD state: 1=call on hold, 0=not on hold
+uint  L1_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
+uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
+ulong L1_ringing_timer  = 0;         // countdown timer in msec
+ulong L2_ringing_timer  = 0;         // countdown timer in msec
+int   L1_ringdet_timer  = 0;         // 1/10sec debounce countdown timer for L1_RING_DET
+int   L2_ringdet_timer  = 0;         // 1/10sec debounce countdown timer for L2_RING_DET
+int   L1_ringdet_thresh = 20;        // Line1 threshold for 'snap action' (hysteresis) for ring detect (ignores on/off noise)
+int   L2_ringdet_thresh = 20;        // Line2 threshold for 'snap action' (hysteresis) for ring detect (ignores on/off noise)
+char  G_hold_flash      = 0;         // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
+char  G_ring_flash      = 0;         // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
+int   G_curr_line       = 0;         // "current line" being worked on. Used by HandleLine() and hardware funcs
+uchar G_porta, G_portb, G_portc;     // 8 bit input sample buffers (once per 125Hz)
 
 // Manage the global G_hold_flash variable
 //
@@ -322,29 +333,82 @@ void HandleRingingTimers() {
 }
 
 // Return the hardware state of the RING_DET optocoupler
-//     Returns 1 when Tip/Ring is actively ringing from the CO.
-//     NOTE: This signal is debounced with a timer to prevent
-//     false off conditions due to AC ring zero crossing.
+//     Read the state of the "software capacitor" with hysteresis.
 //
 int IsRinging() {
     switch ( G_curr_line ) {
-        case 1: return (L1_ringdet_timer ? 1 : 0);    // return debounced state
-        case 2: return (L2_ringdet_timer ? 1 : 0);    // return debounced state
-        default: return 0;                            // shouldn't happen
+        case 1: return( (L1_ringdet_timer > L1_ringdet_thresh) ? 1 : 0);
+        case 2: return( (L2_ringdet_timer > L2_ringdet_thresh) ? 1 : 0);
+        default: return 0;                                         // shouldn't happen
     }
 }
 
 // Manage the L1/L2 RING_DET debounce timers
-//     This timer filters out any on/off noise during ringing,
-//     debouncing the RING_DET signal from zero-crossing noise
-//     during AC ring detection. Call this once per main loop iter
-//     to limit sampling of RING_DET hardware to once per iter.
+//     Ignore noise false-triggering RING_DET due to capacitive noise from CO lines
+//     during pickup/hangup. Must have multiple reads of logic high or low in 
+//     in a row before IsRinging() changes state. Use a timer to act like a cap,
+//     and use an on/off threshold for snap-action hysteresis.
+//
+//     Count up when ON detected (max:G_ringdet_max_iters), count down when OFF detected (min:0).
+//     Call once per main loop iter to limit sampling of RING_DET to once per iter.
+//
+//                         _      __   _______________       __
+//  RING_DET:             | | ||||  | |               | ||| |  || |  |
+//             ___________| |_||||  |_|               |_|||||  ||_|__|__________
+//
+//                                      ______________        _
+//  on thresh  . . . . . . . . . . . . /              \      / \/\
+//                                  /\/                \/\/\/     \
+//                                 / :                              \. . . . . . off thresh
+//  COUNTER:   ___________/ \_/\/\/  :                               :\_________
+//                                   :                               :
+//                                    _______________________________
+//  IsRinging():                     |                               |
+//             ______________________|                               |__________
 //
 void HandleRingDetTimers() {
+    // LINE #1
+    if ( L1_RING_DET ) {
+        // RING_DET bit on? Might be noise, debounce..
+        if ( L1_ringdet_timer < G_ringdet_max_iters ) {
+            if ( ++L1_ringdet_timer > G_ringdet_on_thresh ) {
+                // SNAP ON. No longer "off" until above off_thresh
+                L1_ringdet_thresh = G_ringdet_off_thresh;
+            }
+        }
+    } else {
+        // RING_DET hardware bit OFF? Might be noise, debounce..
+        if ( L1_ringdet_timer > 0 ) {
+            if ( --L1_ringdet_timer < G_ringdet_off_thresh ) {
+                // SNAP OFF. No longer "on" until above on_thresh
+                L1_ringdet_thresh = G_ringdet_on_thresh;
+            }
+        }
+    }
+    // LINE #2
+    if ( L2_RING_DET ) {
+        // RING_DET bit on? Might be noise, debounce..
+        if ( L2_ringdet_timer < G_ringdet_max_iters ) {
+            if ( ++L2_ringdet_timer > G_ringdet_on_thresh ) {
+                // SNAP ON. No longer "off" until above off_thresh
+                L2_ringdet_thresh = G_ringdet_off_thresh;
+            }
+        }
+    } else {
+        // RING_DET hardware bit OFF? Might be noise, debounce..
+        if ( L2_ringdet_timer > 0 ) {
+            if ( --L2_ringdet_timer < G_ringdet_off_thresh ) {
+                // SNAP OFF. No longer "on" until above on_thresh
+                L2_ringdet_thresh = G_ringdet_on_thresh;
+            }
+        }
+    }
+/** OLD: SIMPLE BUT FALSE TRIGGERS
     if ( L1_ringdet_timer > 0 ) --L1_ringdet_timer;
     if ( L2_ringdet_timer > 0 ) --L2_ringdet_timer;
     if ( L1_RING_DET ) L1_ringdet_timer = ITERS_PER_SEC / 4;    // how long to keep ringing thru AC cycle (1/4th sec)
     if ( L2_RING_DET ) L2_ringdet_timer = ITERS_PER_SEC / 4;    // how long to keep ringing thru AC cycle (1/4th sec)
+ **/
 }
 
 // Return the hardware state of the LINE_DET optocoupler
@@ -458,7 +522,7 @@ void HandleLine() {
             // CO is currently ringing the line?
             // Restart 'line ringing' timer whenever a ring is detected.
             //
-            StartRingingTimer();       // Start 6sec ring timer
+            StartRingingTimer();             // Start 6sec ring timer
         }
         // Line has incoming call, either ringing or between rings.
         // Keep lamp blinking between rings, have 1A2 ring relay
@@ -481,9 +545,9 @@ void HandleLine() {
             //
             StopHoldTimer();
             StopRingingTimer();
-            SetHold(0);                 // disable HOLD relay
-            SetRing(0);                 // disable ringing
-            SetLamp(0);                 // lamp off
+            SetHold(0);          // disable HOLD relay
+            SetRing(0);          // disable ringing
+            SetLamp(0);          // lamp off
             return;
         }
     }
@@ -506,10 +570,10 @@ void HandleBuzzRing() {
     static uchar bz_count = 0;
     // Oscillate BUZZ_RING output if Line#1 or Line#2 ringing
     if ( L1_ringdet_timer || L2_ringdet_timer ) {
-        BUZZ_RING = (bz_count & 2) ? 1 : 0;       // run buzzer at a lower freq (~30Hz) for "ringing"
-        ++bz_count;                               // run our "oscillator" counter
+        BUZZ_RING = (bz_count & 2) ? 1 : 0;         // run buzzer at a lower freq (~30Hz) for "ringing"
+        ++bz_count;                                 // run our "oscillator" counter
     } else {
-        BUZZ_RING = 0;                            // don't oscillate if no line ringing
+        BUZZ_RING = 0;                              // don't oscillate if no line ringing
     }
 }
 
@@ -520,7 +584,7 @@ void HandleDTMF() {
         MT8870_TOE = (icm_bz_count & 1) ? 1 : 0;  // run TOE at 60Hz while a Touch-Tone button pressed
         ++icm_bz_count;                           // run our "oscillator" counter
     } else {
-        MT8870_TOE = 0;                           // disable outputs
+        MT8870_TOE = 0;                 // disable outputs
     }
 }
 
@@ -541,7 +605,7 @@ void main(void) {
         // Keep the millisecond counter running..
         G_msec = (G_msec + G_msecs_per_iter) % 1000;   // wrap at 1000
 
-        // Keep CPU STATUS lamp flashing
+        // Keep CPU STATUS lamp flashing`
         FlashCpuStatusLED();
 
         // Manage the G_hold_flash variable each iter
