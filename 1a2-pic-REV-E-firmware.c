@@ -605,7 +605,7 @@ void main(void) {
         // Keep the millisecond counter running..
         G_msec = (G_msec + G_msecs_per_iter) % 1000;   // wrap at 1000
 
-        // Keep CPU STATUS lamp flashing`
+        // Keep CPU STATUS lamp flashing
         FlashCpuStatusLED();
 
         // Manage the G_hold_flash variable each iter
