@@ -37,7 +37,7 @@
 
 // REVISION E1 BOARD                                    Port(ABC)
 //                                   76543210           |Bit# in port
-//                                   ||||||||           ||
+// Inputs                            ||||||||           ||
 #define L1_A_SENSE     ((G_portc & 0b00100000)?0:1) // RC5: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
 #define L2_A_SENSE     ((G_portc & 0b00010000)?0:1) // RC4: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
 #define L1_RING_DET    ((G_porta & 0b00100000)?0:1) // RA5: low on ring detect (0:1 instead of 1:0 to undo negative logic)
@@ -346,23 +346,30 @@ int IsRinging() {
 // Manage the L1/L2 RING_DET debounce timers
 //     Ignore noise false-triggering RING_DET due to capacitive noise from CO lines
 //     during pickup/hangup. Must have multiple reads of logic high or low in 
-//     in a row before IsRinging() changes state. Use a timer to act like a cap,
-//     and use an on/off threshold for snap-action hysteresis.
+//     in a row before IsRinging() changes state. Use a timer to act as an integrating cap,
+//     and use an on/off threshold for snap-action hysteresis; when on threshold is reached,
+//     counter now must get below the "off threshold" to turn off again. Once off, counter
+//     must get above the "on threshold" to turn on again.
 //
 //     Count up when ON detected (max:G_ringdet_max_iters), count down when OFF detected (min:0).
 //     Call once per main loop iter to limit sampling of RING_DET to once per iter.
 //
-//                         _      __   _______________       __
-//  RING_DET:             | | ||||  | |               | ||| |  || |  |
-//             ___________| |_||||  |_|               |_|||||  ||_|__|__________
-//
-//                                      ______________        _
-//  on thresh  . . . . . . . . . . . . /              \      / \/\
-//                                  /\/                \/\/\/     \
-//                                 / :                              \. . . . . . off thresh
-//  COUNTER:   ___________/ \_/\/\/  :                               :\_________
-//                                   :                               :
-//                                    _______________________________
+//                         _      ___   _______________       __          _
+//  RING_DET:             | | ||||   | |               | ||| |  || |     | |
+//             ___________| |_||||   |_|               |_|||||  ||_|_____| |_______
+//                       .           . .               .                 .
+//                       .<-- Noise -->.               .<---- Noise ---->.
+//                       .           . .               .                 .
+//                       .           . .
+//  RINGDET COUNTER:                 .    _____________        _
+//                                   ^   /             \      / \/\_
+//  on thresh  - - - - - - - - - - -/ \ /- - - - - - - -\/\/\/ - - -\ - - - - - - - on thresh
+//                                 / . v                             \     _
+//  off thresh - - - - - - - - - _/- . - - - - - - - - - - - - - - - -\ - / \ - - - off thresh
+//             ___________/ \_/\/    .                               . \_/   \____
+//                                   .<-- hits "on" threshold        .
+//                                   .                               .<-- hits "off" threshold
+//                                   ._______________________________.
 //  IsRinging():                     |                               |
 //             ______________________|                               |__________
 //
