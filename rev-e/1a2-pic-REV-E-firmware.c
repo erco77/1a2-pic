@@ -58,7 +58,7 @@
 #define MT8870_TOE     LATBbits.LATB6               // hi turns on a buzzer transistor. Normally low, run at 60Hz when MT8870_STD is hi
 
 // This must be #defined before #includes
-#define _XTAL_FREQ 4000000UL    // system oscillator speed in HZ (__delay_ms() needs this)
+#define _XTAL_FREQ 4000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
 
 // --- The following section copy/pasted from MPLAB X menu: Production -> Set Configuration Bits -> Generate Source..
 // CONFIG1
@@ -410,12 +410,6 @@ void HandleRingDetTimers() {
             }
         }
     }
-/** OLD: SIMPLE BUT FALSE TRIGGERS
-    if ( L1_ringdet_timer > 0 ) --L1_ringdet_timer;
-    if ( L2_ringdet_timer > 0 ) --L2_ringdet_timer;
-    if ( L1_RING_DET ) L1_ringdet_timer = ITERS_PER_SEC / 4;    // how long to keep ringing thru AC cycle (1/4th sec)
-    if ( L2_RING_DET ) L2_ringdet_timer = ITERS_PER_SEC / 4;    // how long to keep ringing thru AC cycle (1/4th sec)
- **/
 }
 
 // Return the hardware state of the LINE_DET optocoupler
@@ -452,8 +446,9 @@ int IsALead() {
 //     Set G_curr_line before calling this function to define the line#
 //     to be managed during execution.
 //
-//     In the following, caps letters (A,B,C..) refer to points in the
-//     README-REV-E-logic-diagram.txt, included with this .c file.
+//     In the following, letters in caps (A:, B:, etc) refer to points
+//     in the logic diagram file (README-firmware-logic-diagram.txt)
+//     included with this .c file.
 //
 void HandleLine() {
     // A: Line Detect?
