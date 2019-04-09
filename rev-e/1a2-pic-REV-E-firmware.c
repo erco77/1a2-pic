@@ -16,7 +16,7 @@
  *      L2_A_SENSE (IN) -- RC4  |      | RC1 -- (OUT) BUZZ_RING
  *      MT8870_STD (IN) -- RC3  |      | RC2 -- (OUT) L1_RING_RLY
  *     L2_LINE_DET (IN) -- RC6  |      | RB4 -- (OUT) L2_RING_RLY
- * CPU_STATUS_LED (OUT) -- RC7  |      | RB5 -- (IN)  L2_LAMP
+ * CPU_STATUS_LED (OUT) -- RC7  |      | RB5 -- (OUT) L2_LAMP
  *     L2_RING_DET (IN) -- RB7  |______| RB6 -- (OUT) MT8870_TOE
  *
  *                             PIC16F1709
