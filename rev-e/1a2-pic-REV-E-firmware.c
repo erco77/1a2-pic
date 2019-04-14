@@ -33,6 +33,9 @@
  *     > Added "Press Fit" part# for RJ-21's.
  *     > Moved STAGE CONNECTOR switch diagrams to be seen if terminal blocks
  *       are used in place of Phoenix connectors.
+ *     > Enlarged footprint for R5,6,7,12,13,14 to allow for 1W resistors.
+ *     > Enlarged footprint for R26.
+ *     > Removed lamp grounds for lines 3 + 4 (should be entirely N/C)
  */
 
 // REVISION E1 BOARD                                    Port(ABC)
