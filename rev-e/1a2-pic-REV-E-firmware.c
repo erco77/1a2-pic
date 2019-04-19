@@ -35,7 +35,12 @@
  *       are used in place of Phoenix connectors.
  *     > Enlarged footprint for R5,6,7,12,13,14 to allow for 1W resistors.
  *     > Enlarged footprint for R26.
- *     > Removed lamp grounds for lines 3 + 4 (should be entirely N/C)
+ *     > Removed lamp grounds for lines 3 + 4, which should be entirely N/C
+ *     > Changed Q1/Q2 from TIP32 -> IRF9530, added R4/R11, removed C4.
+ *       This change decreases noise on ICM VOICE BATT during hold/ring flashing
+ *     > Changed R2/3/4/9/10/11 to surface mount resistors (for space)
+ *     > Changed value of C1/C3 from .1uF to .47uF (to support XLink)
+ *       
  */
 
 // REVISION E1 BOARD                                    Port(ABC)
