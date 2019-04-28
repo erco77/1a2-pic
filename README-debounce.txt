@@ -1,15 +1,17 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 
-Digital Signal Debounce + Hysteresis
-------------------------------------                 author: erco@seriss.com 04/28/2019
+                      Digital Signal Debounce and Hysteresis
+                      --------------------------------------
+                        author: erco@seriss.com 04/28/2019
 
 OVERVIEW
+--------
 
- The 'Debounce' struct has variables to implement digital signal noise rejection
- and "snap-action" hysteresis to avoid oscillations during transitions.
+  The 'Debounce' struct has variables to implement digital signal noise rejection
+  and "snap-action" hysteresis to avoid oscillations during transitions.
 
- The structure is implemented as 6 integer values; 2 dynamic that change with live data,
- and 4 constants that are set on initialization, and don't change thereafter:
+  The structure is implemented as 6 integer values; 2 dynamic that change with live data,
+  and 4 constants that are set on initialization, and don't change thereafter:
 
         typedef struct {
             int value;          // current running value counter (in msecs)
@@ -19,7 +21,7 @@ OVERVIEW
             int thresh;         // 'current' threshold value implementing 'snap-action' hysteresis
         } Debounce;
 
- And the structure initialized with values specific to the application this way:
+  And the structure initialized with values specific to the application this way:
 
     // Initialize debounce struct
     //
@@ -40,17 +42,54 @@ OVERVIEW
         d->thresh     = 15;
     }
 
- ..where the non-zero values would be determined empirically, depending on the needs
- of the application. In this case the values are in milliseconds, the values indicating
- and/or summing how long the input digital signal was in one state or another (on or off).
+  ..where the non-zero values would be determined empirically, depending on the needs
+  of the application. In this case the values are in milliseconds, the values indicating
+  and/or summing how long the input digital signal was in one state or another (on or off).
 
- This technique "cleans up" both sides of the signal; transitions to high, and transistions
- to low.
+  This technique "cleans up" both sides of the signal; transitions to high, and transistions
+  to low.
+
+  The code to implement the algorithm that makes use of the struct looks like this:
+
+      // Manage reading the raw input hardware signal and clean it up,
+      // using the Debounce struct to manage the signal processing.
+      //
+      void ManageInput(Debounce *d) {
+          if ( DIGITAL_INPUT ) {          // this is the hardware input bit
+              // Hardware bit ON? Might be noise, debounce..
+              if ( d->value < d->max_value ) {
+                  d->value += G_msecs_per_iter;
+                  if ( d->value > d->on_thresh ) {
+                      // SNAP ON. No longer "off" until above off_thresh
+                      d->thresh = d->off_thresh;
+                  }
+              }
+          } else {
+              // Hardware bit OFF? Might be noise, debounce..
+              if ( d->value > 0 ) {
+                  d->value -= G_msecs_per_iter;
+                  if ( d->value < d->off_thresh ) {
+                      // SNAP OFF. No longer "on" until above on_thresh
+                      d->thresh = d->on_thresh;
+                  }
+              }
+          }
+      }
+
+ This implements signal cleanup of the raw hardware digital input signal 'DIGITAL_INPUT',
+ the resulting cleaned up digital output accessable by comparing these two values:
+
+     // Read the cleaned up input signal, and act upon it
+     if ( d->value > d->thresh ) input_is_on();
+     else                        input_is_off();
+
+ See below for an actual walk through of how this algorithm/struct combo works.
 
 EXAMPLE OF SIGNAL CLEANUP
 -------------------------
- Consider the following noisy digital input signal, which has excessive noise on both
- the rising and falling edge.
+
+  Consider the following noisy digital input signal, which has excessive noise on both
+  the rising and falling edge.
 
       DIGITAL INPUT SIGNAL:
                              _     ____   _______________       __          _
@@ -58,9 +97,9 @@ EXAMPLE OF SIGNAL CLEANUP
                  ___________| |_|||    |_|               |_|||||  ||_|_____| |______
 
 
- We want to clean that up, rejecting the noise with an average weighting
- and and hysteresis to snap on or off to prevent quick oscillations,
- so that we get:
+  We want to clean that up, rejecting the noise with an average weighting
+  and and hysteresis to snap on or off to prevent quick oscillations,
+  so that we get:
 
       DESIRED OUTPUT SIGNAL:
                                         _______________________________
@@ -68,16 +107,16 @@ EXAMPLE OF SIGNAL CLEANUP
                  ______________________|                               |____________
 
 
- To do this, we create a "signal chaser" for the digital input signal; a value that
- might represent either voltage over time, or perhaps better, represents a time tally
- of how long the input digital signal is hi or low.
+  To do this, we create a "signal chaser" for the digital input signal; a value that
+  might represent either voltage over time, or perhaps better, represents a time tally
+  of how long the input digital signal is hi or low.
 
- We use time, so that the running 'value' represents milliseconds the signal was either
- on or off.
+  We use time, so that the running 'value' represents milliseconds the signal was either
+  on or off.
 
- So in the sample loop for the digital input signal, we count the value up or down by
- the number of millisecs between samples, depending on if the input signal is high or low.
- The result is an integrator of sorts:
+  So in the sample loop for the digital input signal, we count the value up or down by
+  the number of millisecs between samples, depending on if the input signal is high or low.
+  The result is an integrator of sorts:
 
       DIGTITAL INPUT SIGNAL:
                          _     ____   _______________       __          _
@@ -95,9 +134,9 @@ EXAMPLE OF SIGNAL CLEANUP
              ___________/ \_/\/                                      \_/   \____    __ 0
 
 
- In our 'Debounce' structure, this integrator is the integer 'value', which is clamped
- to the range 0 to 'max_value'. We then pre-determine, typically empirioally, the optimal
- on/off threshold values for snapping our output digital signal on and off:
+  In our 'Debounce' structure, this integrator is the integer 'value', which is clamped
+  to the range 0 to 'max_value'. We then pre-determine, typically empirioally, the optimal
+  on/off threshold values for snapping our output digital signal on and off:
 
       INPUT SIGNAL:      _     ____   _______________       __          _
                         | | |||    | |               | ||| |  || |     | |
@@ -131,36 +170,8 @@ EXAMPLE OF SIGNAL CLEANUP
   so that the intgegrator must now go BELOW that value to transition
   the output signal back to low.
 
-  The code that reads the digital hardware input and applies the above
-  logic to the struct's variables looks like this:
-
-      // Manage reading the raw input hardware signal and clean it up,
-      // using the Debounce struct to manage the signal processing.
-      //
-      void ManageInput(Debounce *d) {
-          if ( DIGITAL_INPUT ) {          // this is the hardware input bit
-              // Hardware bit ON? Might be noise, debounce..
-              if ( d->value < d->max_value ) {
-                  d->value += G_msecs_per_iter;
-                  if ( d->value > d->on_thresh ) {
-                      // SNAP ON. No longer "off" until above off_thresh
-                      d->thresh = d->off_thresh;
-                  }
-              }
-          } else {
-              // Hardware bit OFF? Might be noise, debounce..
-              if ( d->value > 0 ) {
-                  d->value -= G_msecs_per_iter;
-                  if ( d->value < d->off_thresh ) {
-                      // SNAP OFF. No longer "on" until above on_thresh
-                      d->thresh = d->on_thresh;
-                  }
-              }
-          }
-      }
-
- So in main(), we create an instance of this struct, and pass it to the above
- functions to initialize and use the structure for live data processing:
+  So in main(), we create an instance of this struct, and pass it to the above
+  functions to initialize and use the structure for live data processing:
 
       int main() {
           Debounce deb;           // instance of the struct
@@ -173,7 +184,7 @@ EXAMPLE OF SIGNAL CLEANUP
               else                           do_something_when_lo();
           }
       }
-          
+
   So, instead of reading the raw, noisy input signal directly:
 
       // BAD: Read noisy signal directly
