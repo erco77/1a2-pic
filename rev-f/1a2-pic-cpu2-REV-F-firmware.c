@@ -280,14 +280,18 @@ void HandleDTMF() {
 // Debounce the potentially noisy input and include snap action hysteresis.
 // Empirical tests showed noise to look like this:
 //
-//
-//                         <--65ms--><20ms> <--65ms-->
-//                         _________        _________
-//                     || |         |   || |         |
-//             ________||_|         |___||_|         |_______________
-//
-//                     \/               \/
-//                   noise            noise
+//                               Rotary           Rotary
+//                               Pulse    Space   Pulse
+//                             ____^____   /\   ____^____
+//                            /         \ /  \ /         \
+//       
+//                             <--65ms--><20ms> <--65ms-->
+//       ROTARY_PULSE:         _________        _________
+//                         || |         |   || |         |
+//                 ________||_|         |___||_|         |_______________
+//       
+//                         \/               \/
+//                       noise            noise
 //
 void HandleRotaryDialing(Rotary *r, Debounce *d) {
     // DEBOUNCE THE "ROTARY_PULSE" HARDWARE INPUT
