@@ -65,59 +65,61 @@ these can actually be connected up in any order.
 --------------------------------------------------------
 
     It is important that the board is not lying on anything metal
-    before powering it up, to prevent shorting out the board.
+    when powered it up, to prevent shorting out the board.
 
     Free Standing
     -------------
 
-        If the board is not mounted to a backboard yet, place the board
-        on a non-conducting surface (wood, cardboard, etc) that is free
-        of metal parts (no staples, paperclips, stray screws/nuts/wire
-        clippings, etc).
+    If the board is not mounted to a backboard yet, place the board
+    on a non-conducting surface (wood, cardboard, etc) that is free
+    of metal parts (no staples, paperclips, stray screws/nuts/wire
+    clippings, etc).
 
     Mounting to a Backboard
     -----------------------
 
-        If mounting the KSU to a backboard, use standoffs to keep the
-        board elevated off the backboard's surface so air can flow 
-        along the back to aid in cooling of components, and to keep it
-        clear of catching stray metal (like wire clippings). 
+    If mounting the KSU to a backboard, use screws through all
+    mounting holes with standoffs to keep the board elevated off
+    the backboard's surface so air can flow along the back to aid
+    in cooling of components, and to keep it clear of catching stray
+    metal (like wire clippings).
 
-                                    .   .
-                                 -->.   .<-- 1/4" or more
-                                    .   .
-                                    .   .
-                                    .    _____
-                                   _    |     | 
-                                  | |___|     |
-                                 || |___|     |
-                                  | |   |     |
-                                  | |   |     |
-                                  | |   |     |
-                                  | |   |     |
-                                 /| |   |     |
-                                / | |   |     |
-                             KSU  | |   |     |
-                           Board  | |   |     |
-                                  | |___|     |
-                                 || |___|     |\
-                                  |_| / |     | Backboard
-                                     /  |     |
-                       Standoffs ___/   |_____|
-
+                                     .   .
+                                  -->.   .<-- 1/4" or more
+                                     .   .
+                                     .   .
+                                     .   XXXXXXX
+                                    _    XXXXXXX 
+                                   | |___XXXXXXX
+                         +------> || |___XXXXXXX
+                         |         | |   XXXXXXX
+                         |         | |   XXXXXXX
+                         |         | |   XXXXXXX
+                         |         | |   XXXXXXX
+                         |        /| |   XXXXXXX
+                         |       / | |   XXXXXXX
+                         |    KSU  | |   XXXXXXX
+                         |  Board  | |   XXXXXXX
+                         |         | |___XXXXXXX
+        Mounting Screws -+------> || |___XXXXXXX <-- Backboard
+                                   |_| / XXXXXXX
+                                  /   /  XXXXXXX
+                       PC Board _/   /   XXXXXXX
+                                    /
+                       Statndoffs _/
 
                    Figure A: Mounting KSU card to backboard.
                   Standoffs can be metal, nylon, rubber, etc.
 
 
         If metal standoffs are used, make sure their diameter does not
-        exceed the diameter of the white circles around the mounting screws,
+        exceed the diameter of the white circles around the mounting holes,
         to prevent shorting traces on the board.
 
-        When mounting the board, it's recommended all screw mounting holes
-        be screwed down, especially the corners and center screw, so that
-        plugging/unplugging the large 50 pin connectors doesn't put mechanical
-        bending stress on the board that can fatigue the solder/traces.
+        It's recommended ALL screw mounting holes be used, especially the
+        corners and center screw, so that plugging/unplugging the
+        large 50 pin connectors doesn't put mechanical bending
+        stress on the board that can fatigue the solder/traces.
 
 
 1. CONNECT POWER
@@ -197,15 +199,15 @@ these can actually be connected up in any order.
             > Buzzers on pins 17/42 (Y-O pair)
             > Phone networks configured for diode ringing (**)
 
-    (**) Regarding "configured for diode ringing", since this board
-    uses a diode network to program ringing, bell ringing is on only
-    1/2 of the AC wave.  Paraphrasing Ed from Sundance Communications:
+    (**) Since this board uses a diode network to program ringing, bell
+         ringing is on only 1/2 of the AC wave. Paraphrasing Ed from 
+         Sundance Communications:
 
-        "For any kind of diode ringing to work, the capacitor between
-         network terminals A and K (inside phone) have to be bypassed.
-         Move the wire on terminal 'K' to terminal 'A' along with the
-         existing wire." The wire he's referring to is usually the actual
-         bell's red wire.
+            "For any kind of diode ringing to work, the capacitor between
+             network terminals A and K (inside phone) have to be bypassed.
+             Move the wire on terminal 'K' to terminal 'A' along with the
+             existing wire." The wire he's referring to is usually the actual
+             bell's red wire.
 
        The wiring change inside the phone should be as follows:
 
@@ -225,9 +227,13 @@ these can actually be connected up in any order.
    :    |        |-----+          |        :     |        |-----+            |       :
    :    |________|     |          |        :     |________|     |            |       :
    :                   |          |        :                    |            |       :
-   :                  \|/        \|/       :                   \|/          \|/      :
-   :                   v          v        :                    v            v       :
-   :                1A2 TERMINAL BLOCK     :                  1A2 TERMINAL BLOCK     :
+   :                   |          |        :                    |            |       :
+   :                   O          O        :                    O            O       :
+   :                   /         /         :                   /            /        :
+   :                Y/S       S/Y          :                Y/S          S/Y         :
+   :                (45)      (20)         :                (45)         (20)        :
+   :                                       :                                         :
+   :              PHONE TERMINAL BLOCK     :                PHONE TERMINAL BLOCK     :
    :                                       :                                         :
    :.......................................:.........................................:
 
@@ -271,12 +277,13 @@ these can actually be connected up in any order.
              analog PSTN/POTS lines ("Public Switched Telephone Networks",
              "Plain Old Telephone Service")
 
-             Legally it can only be attached to phone systems that use an
-             interface of some kind, like VoIP or like the XLink described above.
+             Legally it can only be attached to phone systems that
+             use an interface of some kind, like VoIP or like the
+             XLink described above.
 
              While this board IS designed to handle old analog POTS lines,
              THE RESPONSIBILITY IS YOURS whether to connect it without 
-             an FCC approval. If you do, it is assumed you are a hobbiest
+             FCC approval. If you do, it is assumed you are a hobbiest
              or EE technician who understands the implications.
 
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -285,12 +292,12 @@ these can actually be connected up in any order.
 4. ATTACHING A RING GENERATOR (IF YOU HAVE ONE)
 -----------------------------------------------
 
-    This step is optional. Skip this step if:
+    This step is optional. SKIP THIS STEP, if:
 
         > You don't have an external ring generator
 
-        > Intend to use "BUZZ RINGING" instead, or you have your own external ringer
-          and don't want the 1A2 phones themselves to ring.
+        > You intend to use "BUZZ RINGING" instead, or you have your own
+          external ringer and don't want the 1A2 phones themselves to ring.
 
     To configure a ring generator with the board, you can attach a 105VAC 20Hz-30Hz
     ring generator to enable bell ringing in the 1A2 phones on the Y/S wire pair.
@@ -433,7 +440,7 @@ these can actually be connected up in any order.
         If you don't have a ring generator, this board can still "ring"
         the phones using the phone's built-in buzzers. Assuming your
         buzzers are wired to the 17/42 wire pair in each phone (Yel/Orn pair),
-        turn on the appropriate DIP switches under the "BUZZ CALL" section
+        TURN ON the appropriate DIP switches under the "BUZZ CALL" section
         (SW1). The 12VDC supply will handle buzzing the buzzers during ringing.
 
         BELL RINGING -- SW2
@@ -446,6 +453,25 @@ these can actually be connected up in any order.
     such as if you have your own ringing system (bell boxes, etc), then
     you can turn off /all/ the DIP switches for SW1 and SW2, and leave
     any ring generator connection unconnected.
+
+    Note that for each switch turned on, that enables ringing for a particular
+    line to a particular extension. The first two switches manage Ext 1,
+    the second two switches manage Ext #2, etc. Here's a full breakdown:
+
+                  Switch #1: ON for ringing Line #1 on Extension #1
+                  Switch #2: ON for ringing Line #2 on Extension #1
+
+                  Switch #1: ON for ringing Line #1 on Extension #2
+                  Switch #2: ON for ringing Line #2 on Extension #2
+
+                  Switch #1: ON for ringing Line #1 on Extension #3
+                  Switch #2: ON for ringing Line #2 on Extension #3
+
+                  Switch #1: ON for ringing Line #1 on Extension #4
+                  Switch #2: ON for ringing Line #2 on Extension #4
+
+    This switch arrangement is the same for both SW1 (Buzz Call)
+    and SW2 (Bell Call).
 
 
 TESTING YOUR SETUP FOR THE FIRST TIME
@@ -519,9 +545,13 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     Each multiline phone has "line select" buttons to let you
     pick which phone line you can use.
 
+    HOLD
+    ----
     From left-to-right, the first button is the red HOLD button,
     which lets you put calls on Hold.
 
+    LINE BUTTONS 1-5
+    ----------------
     Next to the red button are the line buttons; the first being
     Line #1, Line #2, and so on, the last line being Line #5, 
     which is the Intercom Line on this board, described below.
@@ -548,15 +578,17 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     PUTTING CALLS ON HOLD
     ---------------------
     You can put an active call on hold by pressing and releasing the
-    red HOLD button. You can then hang up the phone, and the call will
-    remain on hold, and that line's lamp should "wink" indicating a call
-    is on hold.
+    red HOLD button. 
+    
+    Once on hold, the line's lamp should "wink" at a fast rate, indicating
+    the call is on hold. You can then hang up the phone, and the call will
+    remain on hold.
 
-    Any extension can then pick up the winking line to return to
-    the call.
+    Any extension can then pick up the winking line to return from hold
+    and continue the call.
 
-    If the remote caller hangs up while on hold, the light will go out,
-    and the line will be free for use again.
+    If the remote caller hangs up while they are on hold, the light will
+    go out, hold will be released, and the line will be free for use again.
 
     INCOMING CALLS
     ---------------
@@ -596,8 +628,10 @@ PHONE SYSTEM ACCESSORIES
     ORDERING PHONES
     ---------------
     To order more phones, check Ebay, Amazon, or other surplus
-    sources for 1a2 multiline phones. AT&T models 2564, 2565,
-    and 2830 all work with this board.
+    sources for 1a2 multiline phones. AT&T 1A2 models 565, 2564, 
+    2565, and 2830 all have been tested to work with this board.
+    Other models may work as well; check the Bell System Practices
+    (BSP) wiring diagrams to make sure.
 
     ORDERING EXTENSION CABLES
     -------------------------
@@ -627,6 +661,10 @@ PHONE SYSTEM ACCESSORIES
          o Cat3 50 conductor telco cable
          o 26AWG UTP Telco 25PR
 
+    You can use punch blocks with amphenol connectors to punch down cable
+    wiring yourself. The cable can be multiple runs of 8 conductor Cat3, Cat5,
+    or other telecom compatible UTP (twisted pair) cable.
+
     Cable terminology: 
     
         "RJ21" refers to the 50 pin amphenol connectors.
@@ -634,7 +672,9 @@ PHONE SYSTEM ACCESSORIES
         "Cat3" refers to the twisted pair rating for voice communications,
         where the pairs of wire are twisted around each other in a specific
         way to prevent electrical noise from getting into the voice circuit
-        over long runs of wire.
+        over long runs of wire. I believe higher category numbers, such as
+        Cat5, Cat6, etc. should also be OK for old 1a2 wiring, but check
+        around for verification.
 
         "UTP" stands for "Unshielded Twisted Pair", which is typical of
         telephone cables for noise reduction.
