@@ -14,6 +14,9 @@ SPRINT PCB
 	Set checkbox: "Include frame (board size)"
 	..which seems to always clear itself!
 
+	FOR SURFACE MOUNT RESISTORS: You can leave out the "smdmask", as that's if
+	you want to generate a metal mask for solder paste.
+
 * File -> Export -> Excellon
 	Make sure "Inches" selected
 
