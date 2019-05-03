@@ -28,9 +28,9 @@ OVERVIEW
     //     'value' range:
     //         max_value     20         __________________
     //                                 /
-    //         on thresh     15 ....../...................
+    //         on_thresh     15 ....../...................
     //                               /
-    //         off thresh    8 ...../.....................
+    //         off_thresh    8 ...../.....................
     //                       0 ____/
     //
     //
@@ -46,7 +46,7 @@ OVERVIEW
   of the application. In this case the values are in milliseconds, the values indicating
   and/or summing how long the input digital signal was in one state or another (on or off).
 
-  This technique "cleans up" both sides of the signal; transitions to high, and transistions
+  This technique "cleans up" both sides of the signal; transitions to high, and transitions
   to low.
 
   The code to implement the algorithm that makes use of the struct looks like this:
@@ -77,7 +77,7 @@ OVERVIEW
       }
 
  This implements signal cleanup of the raw hardware digital input signal 'DIGITAL_INPUT',
- the resulting cleaned up digital output accessable by comparing these two values:
+ the resulting cleaned up digital output accessible by comparing these two values:
 
      // Read the cleaned up input signal, and act upon it
      if ( d->value > d->thresh ) input_is_on();
@@ -135,7 +135,7 @@ EXAMPLE OF SIGNAL CLEANUP
 
 
   In our 'Debounce' structure, this integrator is the integer 'value', which is clamped
-  to the range 0 to 'max_value'. We then pre-determine, typically empirioally, the optimal
+  to the range 0 to 'max_value'. We then predetermine, typically empirically, the optimal
   on/off threshold values for snapping our output digital signal on and off:
 
       INPUT SIGNAL:      _     ____   _______________       __          _
@@ -149,9 +149,9 @@ EXAMPLE OF SIGNAL CLEANUP
                                    .
       INTEGRATOR:                  .    _____________        _
                                    ^   /             \      / \/\_
-  on thresh  - - - - - - - - - - -/ \ /- - - - - - - -\/\/\/ - - -\ - - - - - - - on thresh
+  on_thresh  - - - - - - - - - - -/ \ /- - - - - - - -\/\/\/ - - -\ - - - - - - - on_thresh
                                  / . v                             \     _
-  off thresh - - - - - - - - - _/- . - - - - - - - - - - - - - - - -\ - / \ - - - off thresh
+  off_thresh - - - - - - - - - _/- . - - - - - - - - - - - - - - - -\ - / \ - - - off_thresh
              ___________/ \_/\/    .                                .\_/   \____
                                    .<-- crosses "on" threshold      .
                                    .                                .<-- crosses "off" threshold
@@ -167,7 +167,7 @@ EXAMPLE OF SIGNAL CLEANUP
   signal is low, thresh is set to the 'on threshold', which is what the
   integrator must reach to transition the output to high. Once reached,
   immediately the 'thresh' value is set to the 'off threshold' value,
-  so that the intgegrator must now go BELOW that value to transition
+  so that the integrator must now go BELOW that value to transition
   the output signal back to low.
 
   So in main(), we create an instance of this struct, and pass it to the above
