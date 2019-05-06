@@ -77,7 +77,7 @@
 
 // PIC hardware includes
 #include <xc.h>                     // our Microchip C compiler (XC8)
-//#include <pic16f1709.h>           // our chip
+#include "Debounce.h"               // our signal debouncer module
 
 // DEFINES
 #define uchar unsigned char
@@ -86,18 +86,6 @@
 #define ITERS_PER_SEC        250    // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 #define ROTARY_BUZZ_MSECS    800    // how many msecs a rotary dialed extension's buzzer should buzz (almost 1 sec)
 #define ROTARY_MAX_OFF_MSECS 200    // determines when dialing completed
-
-// Generic signal debouncing struct
-//     Manage debouncing a hardware input; remove noise, and add hysteresis.
-//     See README-debounce.txt for info on how this works.
-//
-typedef struct {
-    int value;          // current running value counter (in msecs)
-    int max_value;      // 'value' will be clamped to this maximum
-    int on_thresh;      // 'value' must count above this to "snap on"
-    int off_thresh;     // 'value' must count below this to "snap off"
-    int thresh;         // 'current' threshold value implementing 'snap-action' hysteresis
-} Debounce;
 
 // Rotary dialing struct
 //     Variables related to rotary dial management
@@ -255,13 +243,6 @@ void RotaryReset(Rotary *r) {
     BuzzExtension(-1);      // all coils off
 }
 
-// Return the hardware state of the ROTARY_PULSE optocoupler
-//     Read the state of the "software debounce" with hysteresis.
-//
-int IsRotaryPulse(Debounce *d) {
-    return( (d->value > d->thresh) ? 1 : 0);
-}
-
 // Emulate a 7445 each iteration of the main loop
 void HandleDTMF() {
     if ( !MT8870_STD ) {
@@ -294,34 +275,16 @@ void HandleDTMF() {
 //                       noise            noise
 //
 void HandleRotaryDialing(Rotary *r, Debounce *d) {
-    // DEBOUNCE THE "ROTARY_PULSE" HARDWARE INPUT
-    if ( ROTARY_PULSE ) {
-        // ROTARY hardware bit ON? Might be noise, debounce..
-        if ( d->value < d->max_value ) {
-            d->value += G_msecs_per_iter;
-            if ( d->value > d->on_thresh ) {
-                // SNAP ON. No longer "off" until above off_thresh
-                d->thresh = d->off_thresh;
-            }
-        }
-    } else {
-        // ROTARY hardware bit OFF? Might be noise, debounce..
-        if ( d->value > 0 ) {
-            d->value -= G_msecs_per_iter;
-            if ( d->value < d->off_thresh ) {
-                // SNAP OFF. No longer "on" until above on_thresh
-                d->thresh = d->on_thresh;
-            }
-        }
-    }
+    // Debounce the "ROTARY_PULSE" input
+    int is_rotary_pulse = DebounceNoisyInput(d, ROTARY_PULSE);
 
     // Early exit if idle & not dialing (mode=0) or valid digit still being handled (mode=3)
-    if ( !IsRotaryPulse(d) && ( r->mode == 0 || r->mode == 3 ) ) return;
+    if ( !is_rotary_pulse && ( r->mode == 0 || r->mode == 3 ) ) return;
 
     // COUNT ROTARY PULSES
     //    Manange separate counters for pulse and space
     //
-    if ( IsRotaryPulse(d) ) {
+    if ( is_rotary_pulse ) {
         // PULSE
         if ( r->mode == 0 || r->mode == 3 ) // Begin new dialing sequence?
              RotaryReset(r);                // Reset rotary system, stop buzzers
@@ -382,7 +345,6 @@ void main(void) {
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
-
 #ifdef DEBUG
         {
             static char state = 0;
