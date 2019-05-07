@@ -77,7 +77,7 @@
 
 // PIC hardware includes
 #include <xc.h>                     // our Microchip C compiler (XC8)
-#include <pic16f1709.h>             // our chip
+#include "Debounce.h"               // our signal debouncer module
 
 // DEFINES
 #define uchar unsigned char
@@ -86,10 +86,7 @@
 #define ITERS_PER_SEC  250           // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
 // GLOBALS
-const uint G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
-const int G_ringdet_max_iters  = 30; // ringdet_timer won't count above this (prevents wrap)
-const int G_ringdet_on_thresh  = 20; // ringdet_timer must count above this to "snap on"
-const int G_ringdet_off_thresh = 10; // ringdet_timer must count below this to "snap off"
+const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
 ulong G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar L1_hold           = 0;         // Line1 HOLD state: 1=call on hold, 0=not on hold
 uchar L2_hold           = 0;         // Line2 HOLD state: 1=call on hold, 0=not on hold
@@ -97,10 +94,6 @@ uint  L1_hold_timer     = 0;         // countdown timer for hold sense. 0: timer
 uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
 ulong L1_ringing_timer  = 0;         // countdown timer in msec
 ulong L2_ringing_timer  = 0;         // countdown timer in msec
-int   L1_ringdet_timer  = 0;         // 1/10sec debounce countdown timer for L1_RING_DET
-int   L2_ringdet_timer  = 0;         // 1/10sec debounce countdown timer for L2_RING_DET
-int   L1_ringdet_thresh = 20;        // Line1 threshold for 'snap action' (hysteresis) for ring detect (ignores on/off noise)
-int   L2_ringdet_thresh = 20;        // Line2 threshold for 'snap action' (hysteresis) for ring detect (ignores on/off noise)
 char  G_hold_flash      = 0;         // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
 char  G_ring_flash      = 0;         // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
 int   G_curr_line       = 0;         // "current line" being worked on. Used by HandleLine() and hardware funcs
@@ -324,28 +317,33 @@ void HandleRingingTimers() {
     if ( L2_ringing_timer > 0 ) L2_ringing_timer -= G_msecs_per_iter;
 }
 
-// Return the hardware state of the RING_DET optocoupler
-//     Read the state of the "software capacitor" with hysteresis.
+// Return the state of the RING_DET optocoupler with noise removed
+int IsRinging(Debounce *d) {
+    return (d->value > d->thresh) ? 1 : 0;
+}
+
+// Initialize debounce struct for ring detect input
 //
-int IsRinging() {
-    switch ( G_curr_line ) {
-        case 1: return( (L1_ringdet_timer > L1_ringdet_thresh) ? 1 : 0);
-        case 2: return( (L2_ringdet_timer > L2_ringdet_thresh) ? 1 : 0);
-        default: return 0;                                         // shouldn't happen
-    }
+//     'value' range:
+//         max_value     30         __________________
+//                                 /
+//         on thresh     20 ....../...................
+//                               /
+//         off thresh    10 ..../.....................
+//                       0 ____/
+//
+//
+void RingDetectDebounceInit(Debounce *d) {
+    d->value      = 0;
+    d->max_value  = 30;
+    d->on_thresh  = 20;
+    d->off_thresh = 10;
+    d->thresh     = 20;
 }
 
 // Manage the L1/L2 RING_DET debounce timers
 //     Ignore noise false-triggering RING_DET due to capacitive noise from CO lines
-//     during pickup/hangup. Must have multiple reads of logic high or low in 
-//     in a row before IsRinging() changes state. Use a timer to act as an integrating cap,
-//     and use an on/off threshold for snap-action hysteresis; when on threshold is reached,
-//     counter now must get below the "off threshold" to turn off again. Once off, counter
-//     must get above the "on threshold" to turn on again.
-//
-//     Count up when ON detected (max:G_ringdet_max_iters), count down when OFF detected (min:0).
-//     Call once per main loop iter to limit sampling of RING_DET to once per iter.
-//
+//     during pickup/hangup.
 //                         _      ___   _______________       __          _
 //  RING_DET:             | | ||||   | |               | ||| |  || |     | |
 //             ___________| |_||||   |_|               |_|||||  ||_|_____| |_______
@@ -365,43 +363,9 @@ int IsRinging() {
 //  IsRinging():                     |                               |
 //             ______________________|                               |__________
 //
-void HandleRingDetTimers() {
-    // LINE #1
-    if ( L1_RING_DET ) {
-        // RING_DET bit on? Might be noise, debounce..
-        if ( L1_ringdet_timer < G_ringdet_max_iters ) {
-            if ( ++L1_ringdet_timer > G_ringdet_on_thresh ) {
-                // SNAP ON. No longer "off" until above off_thresh
-                L1_ringdet_thresh = G_ringdet_off_thresh;
-            }
-        }
-    } else {
-        // RING_DET hardware bit OFF? Might be noise, debounce..
-        if ( L1_ringdet_timer > 0 ) {
-            if ( --L1_ringdet_timer < G_ringdet_off_thresh ) {
-                // SNAP OFF. No longer "on" until above on_thresh
-                L1_ringdet_thresh = G_ringdet_on_thresh;
-            }
-        }
-    }
-    // LINE #2
-    if ( L2_RING_DET ) {
-        // RING_DET bit on? Might be noise, debounce..
-        if ( L2_ringdet_timer < G_ringdet_max_iters ) {
-            if ( ++L2_ringdet_timer > G_ringdet_on_thresh ) {
-                // SNAP ON. No longer "off" until above off_thresh
-                L2_ringdet_thresh = G_ringdet_off_thresh;
-            }
-        }
-    } else {
-        // RING_DET hardware bit OFF? Might be noise, debounce..
-        if ( L2_ringdet_timer > 0 ) {
-            if ( --L2_ringdet_timer < G_ringdet_off_thresh ) {
-                // SNAP OFF. No longer "on" until above on_thresh
-                L2_ringdet_thresh = G_ringdet_on_thresh;
-            }
-        }
-    }
+void HandleRingDetTimers(Debounce *d1, Debounce *d2) {
+    DebounceNoisyInput(d1, L1_RING_DET);
+    DebounceNoisyInput(d2, L2_RING_DET);
 }
 
 // Return the hardware state of the LINE_DET optocoupler
@@ -442,7 +406,7 @@ int IsALead() {
 //     in the logic diagram file (README-firmware-logic-diagram.txt)
 //     included with this .c file.
 //
-void HandleLine() {
+void HandleLine(Debounce *d) {
     // A: Line Detect?
     if ( IsLineDetect() ) {
         // B: Hold?
@@ -512,7 +476,7 @@ void HandleLine() {
         }
     } else {
         // I: Idle (no line detect)
-        if ( IsRinging() ) {
+        if ( IsRinging(d) ) {
             // CO is currently ringing the line?
             // Restart 'line ringing' timer whenever a ring is detected.
             //
@@ -530,7 +494,7 @@ void HandleLine() {
             StopHoldTimer();
             //HandleRingingTimer();    // 6sec ringing timer countdown managed in main())
             SetHold(0);
-            SetRing(IsRinging());      // have 1A2 ringing follow debounced CO ringing
+            SetRing(IsRinging(d));     // have 1A2 ringing follow debounced CO ringing
             SetLamp(G_ring_flash);     // flash line lamp at RING rate
             return;
         } else {
@@ -560,10 +524,10 @@ void SampleInputs() {
 }
 
 // Run the BUZZ_RING output used to buzz extensions when there's an incoming call
-void HandleBuzzRing() {
+void HandleBuzzRing(Debounce *d1, Debounce *d2) {
     static uchar bz_count = 0;
     // Oscillate BUZZ_RING output if Line#1 or Line#2 ringing
-    if ( L1_ringdet_timer || L2_ringdet_timer ) {
+    if ( IsRinging(d1) || IsRinging(d2) ) {
         BUZZ_RING = (bz_count & 2) ? 1 : 0;         // run buzzer at a lower freq (~30Hz) for "ringing"
         ++bz_count;                                 // run our "oscillator" counter
     } else {
@@ -575,8 +539,14 @@ void HandleBuzzRing() {
 // to the large diagram in README--REV-X--logic-diagram.txt file.
 //
 void main(void) {
+    // Ring detect debounce/hysteresis struct
+    Debounce ringdet_d1, ringdet_d2;
+
     // Initialize PIC chip
     Init();
+
+    RingDetectDebounceInit(&ringdet_d1);
+    RingDetectDebounceInit(&ringdet_d2);
 
     // Loop at ITERS_PER_SEC
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
@@ -584,7 +554,7 @@ void main(void) {
     while (1) {
         // Sample input ports all at once
         SampleInputs();
-        
+
         // Keep the millisecond counter running..
         G_msec = (G_msec + G_msecs_per_iter) % 1000;   // wrap at 1000
 
@@ -598,17 +568,17 @@ void main(void) {
         HandleRingFlash();
 
         // Manage counting down the 1/10sec L1/L2_ringdet_timer each iter.
-        HandleRingDetTimers();
+        HandleRingDetTimers(&ringdet_d1, &ringdet_d2);
 
         // Manage counting down the 6sec L1/L2 ringing timer
         HandleRingingTimers();
-        
+
         // Oscillate the BUZZ_RING output
-        HandleBuzzRing();
-        
+        HandleBuzzRing(&ringdet_d1, &ringdet_d2);
+
         // Handle logic signals for Line #1 and Line #2
-        G_curr_line = 1; HandleLine();
-        G_curr_line = 2; HandleLine();
+        G_curr_line = 1; HandleLine(&ringdet_d1);
+        G_curr_line = 2; HandleLine(&ringdet_d2);
 
         // Handle ring generator power
         //     This should be 'on' during and between all ringing on L1 or L2,

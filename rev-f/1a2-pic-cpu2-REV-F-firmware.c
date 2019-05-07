@@ -1,5 +1,5 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
-#define DEBUG 1     // **DISABLE THIS IN FINAL FIRMWARE!!!
+//#define DEBUG 1     // **DISABLE THIS IN FINAL FIRMWARE!!!
 
 /*
  * File:   main.c

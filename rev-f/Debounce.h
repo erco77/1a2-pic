@@ -21,6 +21,8 @@ typedef struct {
 //     Call this only once per main-loop iteration to ensure accurate timing.
 //
 int DebounceNoisyInput(Debounce *d, int input) {
+    extern const long G_msecs_per_iter;		// extern global: millisecs per main() loop iterations
+
     // Debounce the digital hardware input
     if ( input ) {
         // Hardware bit ON? Might be noise, debounce..
