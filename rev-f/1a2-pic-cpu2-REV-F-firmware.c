@@ -1,5 +1,4 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
-//#define DEBUG 1     // **DISABLE THIS IN FINAL FIRMWARE!!!
 
 /*
  * File:   main.c
@@ -50,7 +49,7 @@
 #define EXT8_BUZZ      LATAbits.LATA0               // hi to turn EXT8 buzzer on
 
 // This must be #defined before #includes
-#define _XTAL_FREQ 4000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
+#define _XTAL_FREQ 8000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
 
 // --- The following section copy/pasted from MPLAB X menu: Production -> Set Configuration Bits -> Generate Source..
 // CONFIG1
@@ -83,7 +82,7 @@
 #define uchar unsigned char
 #define uint  unsigned int
 #define ulong unsigned long
-#define ITERS_PER_SEC        250    // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
+#define ITERS_PER_SEC        500    // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 #define ROTARY_BUZZ_MSECS    800    // how many msecs a rotary dialed extension's buzzer should buzz (almost 1 sec)
 #define ROTARY_MAX_OFF_MSECS 200    // determines when dialing completed
 
@@ -117,13 +116,13 @@ uchar       G_porta, G_portb, G_portc;       // 8 bit input sample buffers (once
 //
 void RotaryDebounceInit(Debounce *d) {
     d->value      = 0;
-    d->max_value  = 20;
-    d->on_thresh  = 15; // 8;
-    d->off_thresh = 8;  // 3;
-    d->thresh     = 15; // 8;
+    d->max_value  = 15; // 20
+    d->on_thresh  = 10; // 15;
+    d->off_thresh = 4;  // 8;
+    d->thresh     = 10; // 15;
 }
 
-// Initialize the Rotary structure's values to zero
+// Initialize the Rotary struct's values to zero
 void RotaryInit(Rotary *r) {
     r->mode       = 0;
     r->digit      = 0;
@@ -156,7 +155,7 @@ void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
 
     // Set PIC chip oscillator speed
-    OSCCONbits.IRCF   = 0b1101;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
+    OSCCONbits.IRCF   = 0b1110;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
     OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
     OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
 
@@ -218,11 +217,11 @@ void Init() {
 //
 void BuzzExtension(int num) {
     static uchar count = 0;
-    uchar bz_60hz = (++count & 1) ? 1 : 0;  // bz is 0|1 changing at 60hz rate
+    uchar bz_60hz = (++count & 4) ? 1 : 0;  // bz is 0|1 changing at ~60hz rate
 
-#ifdef DEBUG
+/*** DEBUG
     bz_60hz = 1;      // ** ERCODEBUG ** FORCE ALWAYS ON FOR LED MONITOR
-#endif
+***/
 
     if ( num < 1 || num > 8 ) bz_60hz = 0;  // force bz off if ext# outside 1-8 range
 
@@ -265,12 +264,12 @@ void HandleDTMF() {
 //                               Pulse    Space   Pulse
 //                             ____^____   /\   ____^____
 //                            /         \ /  \ /         \
-//       
+//
 //                             <--65ms--><20ms> <--65ms-->
 //       ROTARY_PULSE:         _________        _________
 //                         || |         |   || |         |
 //                 ________||_|         |___||_|         |_______________
-//       
+//
 //                         \/               \/
 //                       noise            noise
 //
@@ -332,7 +331,7 @@ void SampleInputs() {
 void main(void) {
     Rotary rot;         // rotary management struct
     Debounce rdeb;      // rotary debounce/hysteresis struct
-    
+
     // Initialize PIC chip
     Init();
 
@@ -345,18 +344,6 @@ void main(void) {
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
-#ifdef DEBUG
-        {
-            static char state = 0;
-            static long msecs_timer = 800;
-            msecs_timer -= G_msecs_per_iter;
-            if ( msecs_timer > 0 )
-                { PORTCbits.RC3 = state ? 1 : 0; }
-            else
-                { state ^= 1; msecs_timer = 800; }
-        }
-#endif
-
         // Sample input ports all at once
         SampleInputs();
 
@@ -366,11 +353,31 @@ void main(void) {
         // Keep status status led flashing
         FlashCpuStatusLED();
 
-#ifndef DEBUG
+/*** DEBUG
+        // USE SCOPE TO DEBUG Debounce OF ROTARY
+        //     1. Attach +12 to card, and rotary phone on EXT *2*, pickup ICM line
+        //     2. Put scope on pin #10 to monitor cleaned up signal
+        //     3. To include 'iterations' square wave, connect pin#3 to scope with a series 220ohm,
+        //        to see pin#3 squarewave on top of pin#10's cleaned up signal, e.g.
+        //
+        //                        220
+        //         (pin 3) o-----/\/\/\----O------- (scope lead)
+        //                                 |
+        //        (pin 10) o---------------+
+        //
+        // Scope result:                        space
+        //                                     <----->
+        //                   -_-_-_-_-_-_-_-_-_       -_-_-_-_-_-_-_-_-_
+        //                   |                 |      |                 |
+        //                   |  <---pulse--->  |      |                 |
+        //        _-_-_-_-_-_                  -_-_-_-                  -_-_-_-_-_-
+        //
+        int is_rotary_pulse = DebounceNoisyInput(&rdeb, ROTARY_PULSE);
+        LATBbits.LATB7      = is_rotary_pulse;   // B7(pin 10): clean version of ROTARY_PULSE
+        LATAbits.LATA4      = G_iters & 1;       // A4(pin  3): on/off each iter
+***/
         // Handle DTMF dialing on the intercom
         HandleDTMF();
-#endif
-        //DEBUG EXT2_BUZZ = ROTARY_PULSE;
 
         // Handle Rotary dialing/buzzing on the intercom
         HandleRotaryDialing(&rot, &rdeb);    // loads r->digit + r->mode
