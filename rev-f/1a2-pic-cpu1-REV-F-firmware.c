@@ -1,4 +1,6 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
+//#define DEBUG 1     // **DISABLE THIS IN FINAL FIRMWARE!!!
+
 /*
  * File:   main.c
  * Author: Greg Ercolano, erco@seriss.com
@@ -560,6 +562,36 @@ void main(void) {
 
         // Keep CPU STATUS lamp flashing
         FlashCpuStatusLED();
+
+#ifdef DEBUG
+        // *** TEST MODE ***
+        // Test JUST the ring detect input debounce. 
+        //
+        //     1. Clean up L1_RING_DET input
+        //     2. Write the cleaned up result to L1_LAMP
+        //
+        // Then put a scope on L1_LAMP and trigger ringing vs. pickup/hangup
+        // to verify no false triggers and consistent detection throughout ring bursts.
+        // To compare, put scope into dual trace mode, and compare PIC pin #2 <-> #19.
+        //
+        HandleRingDetTimers(&ringdet_d1, &ringdet_d2);      // 1
+        G_curr_line = 1; L1_LAMP = IsRinging(&ringdet_d1);  // 2
+
+        // ENSURE ALL OTHER OUTPUTS REMAIN OFF
+        // But send a special flash pattern to L2_LAMP to indicate debug mode
+        //
+        L2_LAMP      = (G_msec <= 150) || (G_msec >= 300 && G_msec <= 450) ? 1 : 0; // 2 quick flashes per second (like CPU2 status lamp)
+        L1_HOLD_RLY  = 0;
+        L2_HOLD_RLY  = 0;
+        L1_RING_RLY  = 0;
+        L2_RING_RLY  = 0;
+        BUZZ_RING    = 0;
+        RING_GEN_POW = 0;
+
+        // Loop delay
+        __delay_ms(G_msecs_per_iter);
+        continue;
+#endif
 
         // Manage the G_hold_flash variable each iter
         HandleHoldFlash();
