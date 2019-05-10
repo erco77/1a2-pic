@@ -43,7 +43,7 @@
 #define EXT3_BUZZ      LATCbits.LATC6               // hi to turn EXT3 buzzer on
 #define EXT4_BUZZ      LATCbits.LATC3               // hi to turn EXT4 buzzer on
 
-#define EXT5_BUZZ      LATCbits.LATC1               // hi to turn EXT5 buzzer on
+#define EXT5_BUZZ      LATCbits.LATC0               // hi to turn EXT5 buzzer on
 #define EXT6_BUZZ      LATAbits.LATA2               // hi to turn EXT6 buzzer on
 #define EXT7_BUZZ      LATAbits.LATA1               // hi to turn EXT7 buzzer on
 #define EXT8_BUZZ      LATAbits.LATA0               // hi to turn EXT8 buzzer on
