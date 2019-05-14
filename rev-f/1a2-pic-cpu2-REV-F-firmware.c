@@ -219,7 +219,7 @@ void Init() {
 //
 void BuzzExtension(int num) {
     static uchar count = 0;
-    uchar bz_60hz = (++count & 4) ? 1 : 0;  // bz is 0|1 changing at ~60hz rate
+    uchar bz_60hz = (++count & 2) ? 1 : 0;  // bz is 0|1 changing at ~60hz rate
 
 /*** DEBUG
     bz_60hz = 1;      // ** ERCODEBUG ** FORCE ALWAYS ON FOR LED MONITOR
@@ -242,20 +242,6 @@ void BuzzExtension(int num) {
 void RotaryReset(Rotary *r) {
     RotaryInit(r);
     BuzzExtension(-1);      // all coils off
-}
-
-// Emulate a 7445 each iteration of the main loop
-void HandleDTMF() {
-    if ( !MT8870_STD ) {
-        // If MT8870 is 0, no Touch-Tone digit pressed - disable buzzers.
-        BuzzExtension(-1);
-    } else {
-        // If MT8870_STD is 1, a Touch-Tone button is pressed; decode the digit
-        // from the MT8870 abcd outputs as an integer, and buzz that extension
-        //
-        int digit = ( DTMF_a ) | (DTMF_b << 1) | (DTMF_c << 2) | (DTMF_d << 3);
-        BuzzExtension(digit);
-    }
 }
 
 // HANDLE ROTARY DIALING ON INTERCOM LINE
@@ -283,7 +269,7 @@ void HandleRotaryDialing(Rotary *r, Debounce *d) {
     if ( !is_rotary_pulse && ( r->mode == 0 || r->mode == 3 ) ) return;
 
     // COUNT ROTARY PULSES
-    //    Manange separate counters for pulse and space
+    //    Manage separate counters for pulse and space
     //
     if ( is_rotary_pulse ) {
         // PULSE
@@ -301,21 +287,41 @@ void HandleRotaryDialing(Rotary *r, Debounce *d) {
         if ( r->on_msecs ) { r->on_msecs = 0; r->digit++; }
         r->off_msecs += G_msecs_per_iter;   // count off time
         if ( r->off_msecs > ROTARY_MAX_OFF_MSECS ) {
-            // FULL DIGIT WAS DIALED -- stop dialing and start buzzer
+            // Full digit dialed -- stop dialing and start buzzer
             r->mode = 3;                    // indicate r->digit now has valid digit
             r->buzz_msecs = ROTARY_BUZZ_MSECS;
         }
     }
 }
 
-// HANDLE RUNNING ROTARY-DIALED EXTENSION BUZZER FOR ~1 SECOND
-void HandleRotaryBuzzing(Rotary *r) {
+// Return rotary dialed digit, or 0 if none.
+//     Manages keeping digit active until rotary buzzer timer expires.
+//     Also handles preventing switch hook pickup noise from causing false dialing.
+//
+int GetRotaryDigit(Rotary *r, Debounce *d) {
+    // Early exit if recent pickup
+    if ( G_powerup_msecs < ROTARY_POWERUP_MSECS ) return 0;
+
+    HandleRotaryDialing(r, d);            // loads r->digit + r->mode
+
     // Valid digit recently dialed (mode=3), and buzzer still running?
     if ( r->mode == 3 && r->buzz_msecs > 0 ) {
-        r->buzz_msecs -= G_msecs_per_iter;                   // count buzz timer down to zero
-        if ( r->buzz_msecs <= 0 ) RotaryReset(r);            // stop buzzer, done
-        else                      BuzzExtension(r->digit);   // keep running buzzer
+        r->buzz_msecs -= G_msecs_per_iter;            // count buzz timer down to zero
+        if ( r->buzz_msecs <= 0 ) RotaryReset(r);     // stop buzzer, done
+        else                      return r->digit;    // return digit to keep buzzing
     }
+    return 0;
+}
+
+// Return DTMF dialed digit, or 0 if none.
+int GetDTMFDigit() {
+    // Nothing being dialed right now? early exit
+    if ( !MT8870_STD ) return 0;
+
+    // If MT8870_STD is 1, a Touch-Tone button is pressed; decode the digit
+    // from the MT8870 abcd outputs as an integer, and buzz that extension
+    //
+    return (( DTMF_a ) | (DTMF_b << 1) | (DTMF_c << 2) | (DTMF_d << 3));
 }
 
 // Buffer the hardware state of PIC's PORTA/B/C all at once.
@@ -331,6 +337,7 @@ void SampleInputs() {
 }
 
 void main(void) {
+    int digit;          // dtmf or rotary dialed digit
     Rotary rot;         // rotary management struct
     Debounce rdeb;      // rotary debounce/hysteresis struct
 
@@ -378,24 +385,19 @@ void main(void) {
         LATBbits.LATB7      = is_rotary_pulse;   // B7(pin 10): clean version of ROTARY_PULSE
         LATAbits.LATA4      = G_iters & 1;       // A4(pin  3): on/off each iter
 ***/
-        // Handle DTMF dialing on the intercom
-        HandleDTMF();
-
-        // Handle Rotary dialing/buzzing on the intercom
-        //     This PIC powers up when someone goes offhook on ICM line.
-        //     Prevent mistaking pickup noise as a valid dial pulse by waiting
-        //     after powerup before processing rotary dialing.
-        //
-        if ( G_powerup_msecs >= ROTARY_POWERUP_MSECS ) { // hold off rotary until powered up at least 1/2 sec
-            HandleRotaryDialing(&rot, &rdeb);            // loads r->digit + r->mode
-            HandleRotaryBuzzing(&rot);                   // uses r->digit/mode to run buzzers
-        }
+        if ( (digit = GetDTMFDigit()) )
+            BuzzExtension(digit);                // DTMF dialed digit? Buzz that extension
+        else if ( (digit = GetRotaryDigit(&rot, &rdeb)) )
+            BuzzExtension(digit);                // Rotary dialed digit? Buzz that extension
+        else
+            BuzzExtension(-1);                   // ensure buzzer xstrs not left on
 
         // Loop delay
         __delay_ms(G_msecs_per_iter);
 
         // Loop counter
         if ( ++G_iters > ITERS_PER_SEC ) G_iters = 0;   // wrap to 0 each sec
+
         // Powerup counter
         //     Counts up from zero then stops after 10 secs, leaving counter >=10000.
         //
