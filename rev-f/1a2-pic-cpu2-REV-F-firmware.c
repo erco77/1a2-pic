@@ -85,6 +85,7 @@
 #define ITERS_PER_SEC        500    // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 #define ROTARY_BUZZ_MSECS    800    // how many msecs a rotary dialed extension's buzzer should buzz (almost 1 sec)
 #define ROTARY_MAX_OFF_MSECS 200    // determines when dialing completed
+#define ROTARY_POWERUP_MSECS 500    // how long to wait after powerup before doing rotary detect
 
 // Rotary dialing struct
 //     Variables related to rotary dial management
@@ -99,6 +100,7 @@ typedef struct {
 
 // GLOBALS
 const long  G_msecs_per_iter         = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
+long        G_powerup_msecs          = 0;    // counts up from 0 to 10,000 then stops
 long        G_msec                   = 0;    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 long        G_iters                  = 0;    // number of main loop iters. wraps to zero every ITERS_PER_SEC.
 uchar       G_porta, G_portb, G_portc;       // 8 bit input sample buffers (once per main loop iter)
@@ -380,13 +382,23 @@ void main(void) {
         HandleDTMF();
 
         // Handle Rotary dialing/buzzing on the intercom
-        HandleRotaryDialing(&rot, &rdeb);    // loads r->digit + r->mode
-        HandleRotaryBuzzing(&rot);           // uses r->digit/mode to run buzzers
+        //     This PIC powers up when someone goes offhook on ICM line.
+        //     Prevent mistaking pickup noise as a valid dial pulse by waiting
+        //     after powerup before processing rotary dialing.
+        //
+        if ( G_powerup_msecs >= ROTARY_POWERUP_MSECS ) { // hold off rotary until powered up at least 1/2 sec
+            HandleRotaryDialing(&rot, &rdeb);            // loads r->digit + r->mode
+            HandleRotaryBuzzing(&rot);                   // uses r->digit/mode to run buzzers
+        }
 
         // Loop delay
         __delay_ms(G_msecs_per_iter);
 
         // Loop counter
         if ( ++G_iters > ITERS_PER_SEC ) G_iters = 0;   // wrap to 0 each sec
+        // Powerup counter
+        //     Counts up from zero then stops after 10 secs, leaving counter >=10000.
+        //
+        if ( G_powerup_msecs < 10000 ) G_powerup_msecs += G_msecs_per_iter;
     }
 }
