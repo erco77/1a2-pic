@@ -39,7 +39,7 @@
                         If you find problems in this document, contact: erco@seriss.com
 
                      ____________________________________________________________________
-                    |                                 ::::::: INTLINK                    |
+                    |                                 ::::::: INTERLINK                  |
                     |                                                                    |
                     |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
                     |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
@@ -67,6 +67,9 @@ these can actually be connected up in any order.
 
     It is important that the board is not lying on anything metal
     when powered it up, to prevent shorting out the board.
+
+    If you plan to interlink two boards, see also the INTERLINK section
+    of this document.
 
     Free Standing
     -------------
@@ -129,7 +132,7 @@ these can actually be connected up in any order.
     Connect power by plugging in the 12volt power:
     
      ____________________________________________________________________
-    |                                 ::::::: INTLINK                    |
+    |                                 ::::::: INTERLINK                  |
     |                                                                    |
     |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
     |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
@@ -178,7 +181,7 @@ these can actually be connected up in any order.
     amphenol connectors.
 
      ____________________________________________________________________
-    |                                 ::::::: INTLINK                    |
+    |                                 ::::::: INTERLINK                  |
     |                                                                    |
     |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
     |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
@@ -253,7 +256,7 @@ these can actually be connected up in any order.
     The phone source can be VoIP, XLink BT, or other "plain old telephone" compatible source.
 
      ____________________________________________________________________
-    |                                 ::::::: INTLINK                    |
+    |                                 ::::::: INTERLINK                  |
     |                                                                    |
     |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
     |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
@@ -491,14 +494,12 @@ TESTING YOUR SETUP FOR THE FIRST TIME
     -------------
 
          o Pick up the handset on a phone extension, and press the
-           RIGHT-most line button, to pick Line #5. This is the
-           intercom line.
+           RIGHT-most line button to use the intercom on Line #5.
 
          o The lamp for that line should light on all the extensions.
 
-         o Try dialing "1" on the touchtone pad. It should buzz the phone
-           plugged into EXT1 on the card. Dial "2" to buzz the EXT2 phone,
-           etc.
+         o Try dialing "1". It should buzz the phone plugged into EXT1
+           on the card. Dial "2" to buzz the EXT2 phone, etc.
 
          o While you're using the intercom line, have someone else pickup
            the same line on a different extension. You should both be able
@@ -508,21 +509,21 @@ TESTING YOUR SETUP FOR THE FIRST TIME
     ---------
 
          o Try calling Line #1's phone number from a cell phone, or another line.
-           The ringers should ring (if configured), and the Line #1 lamp should
-           flash at a 1 second rate.
+           If configured, the ringers should ring, and the Line #1 lamp should
+           flash at a 1 second rate. (See the TROUBLESHOOTING section for problems)
 
          o Answer the call by selecting Line #1 on the phone, and picking up the
-           handset. The lamp should stop blinking and be on steady.
+           handset. The lamp should stop blinking and stay on steady.
 
-         o Try putting the call on hold by pressing the red HOLD button, and
-           hang up. The Line #1 lamp should flash at a fast rate, and the call
-           should remain on hold, until you pick up the call again from any
-           of the extensions.
+         o Try putting the call on hold by pressing the red HOLD button.
+           The Line #1 lamp should flash quickly, indicating the call is now
+           on HOLD. You can now hangup and the call will remain on HOLD
+           until you, or someone at another extension picks up the call.
 
-         If you don't have a live phone network configured, you can force ringing
-         using the "Ring Trigger Connector" by shorting the two left
-         terminals together to ring line #1, or short the right two
-         terminals to ring line #2:
+         If you don't have a live phone network configured, you can
+         force ringing using the "Ring Trigger Connector" by shorting
+         the two left terminals to ring line #1, or the right two terminals
+         to ring line #2:
 
                       Ring Trigger Connector
                         Line 1  Line 2
@@ -535,7 +536,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
                         .   .
                        /|\ /|\
                         |   |   <-- jumper or doorbell switch
-                        |___|
+                        |___|       to ring line #1
 
          To ring Line #1, connect left two terminals on Ring Trigger
          Connector together briefly with a wire jumper or doorbell
@@ -773,6 +774,48 @@ PHONE SYSTEM ACCESSORIES
     http://seriss.com/people/erco/tmp/pic/data/1a2-pic-REV-F-0012.bmp
 
 
+INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
+---------------------------------------------------
+ If you have two REVISION F1 boards, you can connect them together
+ with a 30 pin ribbon cable to create a single phone system with
+ 4 CO lines and up to 8 extensions that all can be individually
+ buzzed on the intercom line (by dialing 1 through 8).
+
+ For info on how to configure two boards with the INTERLINK connector,
+ refer to this page which includes diagrams and descriptions:
+ http://seriss.com/1a2-ksu/rev-f1/data/1a2-pic-IRF-rotary-interlink-REV-F1-0015.png
+
+ In short, you connect the two boards together by their INTERLINK
+ connector using a 30 pin ribbon cable, pin #1 <-> pin #1, and power the
+ boards either with separate power adaptors, or one adapter (of suitable
+ amperage, 1.5A or higher) wired in parallel to both boards. (See diagram)
+ 
+ Configure one board as the "PRIMARY"; that board's telco inputs will
+ appear as LINE 1 and LINE 2 on the extensions. Configure the other board
+ as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and
+ LINE 4 on the extensions. The PRIMARY board's intercom circuit will manage
+ the intercom line for all 8 possible extensions.
+
+ To configure the PRIMARY board, make sure all the jumper blocks are
+ all installed on the PRIMARY jumper (JP3), and none on the SECONDARY
+ (JP4). Plug the CO lines that should be LINE 1 + 2 into this board.
+
+ To configure the SECONDARY board, make sure all jumper blocks are installed
+ on the SECONDARY jumper (JP4), and none on the PRIMARY jumper (JP3).
+ Plug the CO lines that should appear as LINE 3 + 4 into this board.
+
+ Plug up to 8 extensions into the two board's EXT# connectors. 
+
+ When someone picks up the intercom line, dialing 1-4 will buzz
+ the extensions on the PRIMARY board, EXT 1-4 respectively.
+ And dialing 5-8 will buzz the extensions on the SECONDARY board,
+ EXT 1-4 respectively.
+ 
+ Note that connectors EXT 1/2/3/4 on the SECONDARY board will really
+ be EXT 5/6/7/8, so you may want to relabel the connectors on the
+ SECONDARY board.
+
+
 TROUBLESHOOTING
 ---------------
 
@@ -805,6 +848,18 @@ TROUBLESHOOTING
            If Tip/Ring are swapped, these TouchTone pads either won't
            dial at all, or will put out very low volume tones.
 
+ *  PROBLEM: Can't use the Rotary dial to dial extensions
+    -----------------------------------------------------
+
+    Dialing of extensions for buzzing on the intercom line should
+    work on REV F boards for both Rotary and Touch-Tone.
+    
+    Older boards (REV E, REV D..) support Touch-Tone dialing, and
+    don't support rotary to buzz extensions.
+
+    If you can't use rotary to dial phone numbers over the CO lines
+    (Line 1-4), your telco phone service or interface device (XLink)
+    may not support rotary dialing.
 
  *  PROBLEM: Line #1 works, but Line #2 does not
     --------------------------------------------
