@@ -99,11 +99,11 @@ typedef struct {
 } Rotary;
 
 // GLOBALS
-const long  G_msecs_per_iter         = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
-long        G_powerup_msecs          = 0;    // counts up from 0 to 10,000 then stops
-long        G_msec                   = 0;    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
-long        G_iters                  = 0;    // number of main loop iters. wraps to zero every ITERS_PER_SEC.
-uchar       G_porta, G_portb, G_portc;       // 8 bit input sample buffers (once per main loop iter)
+const long  G_msecs_per_iter = (1000/ITERS_PER_SEC); // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
+long        G_powerup_msecs  = 0;                    // counts up from 0 to 10,000 then stops
+long        G_msec           = 0;                    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+long        G_iters          = 0;                    // number of main loop iters. wraps to zero every ITERS_PER_SEC.
+uchar       G_porta, G_portb, G_portc;               // 8 bit input sample buffers (once per main loop iter)
 
 // Initialize debounce struct for rotary input values
 //
@@ -113,8 +113,8 @@ uchar       G_porta, G_portb, G_portc;       // 8 bit input sample buffers (once
 //         on thresh     15 ....../...................
 //                               /
 //         off thresh    8 ...../.....................
-//                       0 ____/
-//
+//                             /
+//                       0 ___/
 //
 void RotaryDebounceInit(Debounce *d) {
     d->value      = 0;
@@ -142,7 +142,7 @@ void FlashCpuStatusLED() {
     //      :_____       _____             :
     //      |     |     |     |            :
     //  ____|     |_____|     |____________:
-    //      :     :     :     :            :
+    //
     //      :     :     :     :            :
     //      : 150 : 150 : 150 :    550     :
     //      :  ms :  ms : ms  :     ms     :
@@ -221,10 +221,6 @@ void BuzzExtension(int num) {
     static uchar count = 0;
     uchar bz_60hz = (++count & 2) ? 1 : 0;  // bz is 0|1 changing at ~60hz rate
 
-/*** DEBUG
-    bz_60hz = 1;      // ** ERCODEBUG ** FORCE ALWAYS ON FOR LED MONITOR
-***/
-
     if ( num < 1 || num > 8 ) bz_60hz = 0;  // force bz off if ext# outside 1-8 range
 
     // Drive the extension buzzers
@@ -302,7 +298,7 @@ int GetRotaryDigit(Rotary *r, Debounce *d) {
     // Early exit if recent pickup
     if ( G_powerup_msecs < ROTARY_POWERUP_MSECS ) return 0;
 
-    HandleRotaryDialing(r, d);            // loads r->digit + r->mode
+    HandleRotaryDialing(r, d);                        // loads r->digit + r->mode
 
     // Valid digit recently dialed (mode=3), and buzzer still running?
     if ( r->mode == 3 && r->buzz_msecs > 0 ) {
@@ -375,11 +371,11 @@ void main(void) {
         //        (pin 10) o---------------+
         //
         // Scope result:                        space
-        //                                     <----->
-        //                   -_-_-_-_-_-_-_-_-_       -_-_-_-_-_-_-_-_-_
+        //                                      <---->
+        //                    _-_-_-_-_-_-_-_-_       -_-_-_-_-_-_-_-_-_
         //                   |                 |      |                 |
         //                   |  <---pulse--->  |      |                 |
-        //        _-_-_-_-_-_                  -_-_-_-                  -_-_-_-_-_-
+        //        _-_-_-_-_-_|                 |-_-_-_|                 |-_-_-_-_-_-
         //
         int is_rotary_pulse = DebounceNoisyInput(&rdeb, ROTARY_PULSE);
         LATBbits.LATB7      = is_rotary_pulse;   // B7(pin 10): clean version of ROTARY_PULSE
