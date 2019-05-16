@@ -102,7 +102,6 @@ typedef struct {
 const long  G_msecs_per_iter = (1000/ITERS_PER_SEC); // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
 long        G_powerup_msecs  = 0;                    // counts up from 0 to 10,000 then stops
 long        G_msec           = 0;                    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
-long        G_iters          = 0;                    // number of main loop iters. wraps to zero every ITERS_PER_SEC.
 uchar       G_porta, G_portb, G_portc;               // 8 bit input sample buffers (once per main loop iter)
 
 // Initialize debounce struct for rotary input values
@@ -377,9 +376,14 @@ void main(void) {
         //                   |  <---pulse--->  |      |                 |
         //        _-_-_-_-_-_|                 |-_-_-_|                 |-_-_-_-_-_-
         //
+        static long G_iters = 0;                 // number of main loop iters. wraps to zero every ITERS_PER_SEC.
         int is_rotary_pulse = DebounceNoisyInput(&rdeb, ROTARY_PULSE);
         LATBbits.LATB7      = is_rotary_pulse;   // B7(pin 10): clean version of ROTARY_PULSE
         LATAbits.LATA4      = G_iters & 1;       // A4(pin  3): on/off each iter
+
+        // Loop counter
+        if ( ++G_iters > ITERS_PER_SEC ) G_iters = 0;   // wrap to 0 each sec
+
 ***/
         if ( (digit = GetDTMFDigit()) )
             BuzzExtension(digit);                // DTMF dialed digit? Buzz that extension
@@ -391,12 +395,8 @@ void main(void) {
         // Loop delay
         __delay_ms(G_msecs_per_iter);
 
-        // Loop counter
-        if ( ++G_iters > ITERS_PER_SEC ) G_iters = 0;   // wrap to 0 each sec
-
         // Powerup counter
         //     Counts up from zero then stops after 10 secs, leaving counter >=10000.
-        //
         if ( G_powerup_msecs < 10000 ) G_powerup_msecs += G_msecs_per_iter;
     }
 }
