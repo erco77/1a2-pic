@@ -174,21 +174,32 @@ SOLDERING BOARDS
 	  a soft cloth or folded papertowel that is just under those components so that
 	  it presses them against the board. I then solder the leads on the solder side.
 
-	  If in doubt about the component laying flat, I touch solder on ONE pin first,
+	  If in doubt about the component laying flat, I touch solder on a corner pin first,
 	  let it harden to hold the socket in place, then flip the board over to view
-	  the board sideways to see if the socket is resting flat. If not, I can touch
+	  the board sideways to see if the socket is resting flat. If it's not, I can touch
 	  the iron to that one pin to loosen it, while pressing on the socket to flatten
-	  it, making sure not to put a finger on the pin (it'll be hot!)
+	  it, making sure not to put a finger on the pin (it'll be hot!). The reason for
+          doing one pin is it's really hard to reseat a crooked component if all the pins
+          have already been soldered; it's hard to heat ALL the pins at once so you can
+          reseat before the solder hardens.. trust me.
 
-	> Do all the rest of the chip sockets
+	> Do all the larger chip sockets similarly.
+
+          Some sockets are nice in that they have pins you can bend to hold the sockets
+          flat and in place when you flip the board for soldering. If that's not an option,
+          solder a few at a time, using a cloth or folded napkin underneath to hold them
+          flat against the board.
 
 	> Do all the small through hole discrete components (resisitors, capacitors..).
 
-	  For these I put them in a few at a time, and have them inserted into the holes,
+          I like to solder all the resistors with the color bands facing the same way,
+          the first band digit facing up or facing left. I try to be consistent, as it
+          simply looks nicer that way.
+
+	  For these I do a bunch at a time, having them all pre-inserted into the holes,
 	  pre-bent into a "U" shape with needle nose pliers, and hold them in place with
-	  my finger tips while I flip the board, and bend the leads at 45 degree angles
-	  to hold them in place, then touch solder at the pads, and trim off the leads
-	  with small wire cutters:
+	  my finger tips while I flip the board, and bend all the leads at 45 degree angles
+	  to hold them in place:
 
                                        \\                  //
                                         \\                // <-- bend leads 45 degrees
@@ -200,17 +211,30 @@ SOLDERING BOARDS
 
 				              Component
 
-        > Solder the TO-220 transistors. They're supposed to lay flat
-          and be screwed down, to prevent them from flapping around, but more
-          importantly, to keep them from sliding sideways into each other,
-          shorting them out, as the heat sink tabs are the output of the transistor.
+          Then once a bunch of them are inserted this way, I solder them all in
+          one pass, then trim off the leads with small wire cutters.
 
-          I pre-bend the leads to 90 degrees with needle nose pliers before
-          inserting them. Once inserted, I screw them in first with nuts so they
-          stay in position when I flip the board to solder them.
+          NOTES:
 
-          Some notes on pre-bending the pins: 
-          You're not supposed to bend the fat part of the leads:
+              1) Keep a small cup nearby to put all the cutaways into, so they
+                 don't end up flying everywhere, or getting under and between
+                 chip sockets to cause shorts later.
+
+              2) Keep the soldering area clean!! Don't let cut off leads or solder blobs
+                 lie around, or they'll find their way into the board causing shorts later.
+
+        > Solder the TO-220 transistors. 
+        
+          NOTES: 
+              1) TO-220's are best laid flat and screwed down, to prevent
+                 them from flapping around, but more importantly,
+                 to keep them from sliding sideways into each other,
+                 shorting them out, as the heat sink tabs are the output
+                 of the transistor.
+
+              2) When making the 90 degree angle bend for the pins, don't
+                 bend the pins where they meet the case. Bend them out at
+                 the point where the leads flare down from fat to thin. e.g.
 
                                      ______________
                                     |       _      |
@@ -220,16 +244,18 @@ SOLDERING BOARDS
                                     ||             |
                                     ||             |
                                     ||_____________|
-                                       | | | | | |  <-- fat part of leads
-                                       |_| |_| |_|
-                                        |   |   |
-                                        |   |   |   <-- thin part of leads
+                        wide leads --> | | | | | |\___ DON'T bend here
+                                       |_| |_| |_| 
+                                        |   |   |\___ BEND HERE
+                         thin leads --> |   |   |
                                         |   |   |
 
+          I pre-bend the leads with needle nose pliers before inserting them
+          into the board. Once inserted, I screw the case down with nuts so
+          they stay in position when I flip the board to solder them.
 
-          In other words, don't bend them at the case.
-          Something about stressing the inside parts of the component and heat
-          stress. So when bending the leads just bend at the thin parts. So:
+          Some notes on pre-bending the pins: When bending the leads, just bend
+          along the thin part of the leads, not at the case:
 
                           ________                               ________
                  ________|        |                     ________|        |___
@@ -273,13 +299,13 @@ SOLDERING BOARDS
                                     |
 
 
-        The result ends up being a 90 degree bend with two 45 degree bends, that ends up looking
-        more like a continuous smooth curve, giving a nice bend radius:
+        The result ends up being more of a curve than two flat 45 degree bends, giving a
+        nice bend radius that can't really be render in ascii art:
 
                      ________
             ________|        |===
             |_______|________|    \  <-- a nicer looking curve
-                                   \     than this ascii art makes it look
+                                   \     than this ascii art can show
                                     |
                                     |
 
