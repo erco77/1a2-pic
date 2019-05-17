@@ -202,13 +202,15 @@ SOLDERING BOARDS
 
         > Solder the TO-220 transistors. They're supposed to lay flat
           and be screwed down, to prevent them from flapping around, but more
-          importantly, from touching each other, as the heat sink tab is usually
-          "hot" (the output of the transistor).
+          importantly, to keep them from sliding sideways into each other,
+          shorting them out, as the heat sink tabs are the output of the transistor.
 
           I pre-bend the leads to 90 degrees with needle nose pliers before
-          inserting them.
+          inserting them. Once inserted, I screw them in first with nuts so they
+          stay in position when I flip the board to solder them.
 
-          NOTE: You're not supposed to bend the wide part of the leads:
+          Some notes on pre-bending the pins: 
+          You're not supposed to bend the fat part of the leads:
 
                                      ______________
                                     |       _      |
@@ -225,15 +227,16 @@ SOLDERING BOARDS
                                         |   |   |
 
 
+          In other words, don't bend them at the case.
           Something about stressing the inside parts of the component and heat
           stress. So when bending the leads just bend at the thin parts. So:
 
-                                      ________                           ________
-                             ________|        |                 ________|        |___
-                             |_______|________|\   BAD !        |_______|________|   \   GOOD
-                                                \                                    |
-                                                |                                    |
-                                                |                                    |
+                          ________                               ________
+                 ________|        |                     ________|        |___
+                 |_______|________|\   BAD !            |_______|________|   \   GOOD
+                                    \                                        |
+                                    |                                        |
+                                    |                                        |
 
          To do this, I grip small needle nose across the fat pins:
                                                                           ___________________
