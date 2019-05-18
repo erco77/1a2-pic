@@ -3,18 +3,16 @@
 SAVING GERBERS / ORDERING NEW BOARDS
 ====================================
 
-    I used Sprint Layout 6.0 (Windows only) to layout the printed circuit
-    board for this project. It has a nice UI, similar to ExpressPCB's,
-    but has the option of saving gerbers/drill files, so that I can
-    use any PCB printing company in the world for more cost effective
-    board printing.
+    I used Sprint Layout 6.0 (Windows only) to layout the printed circuit board for this
+    project. It has a nice UI, similar to ExpressPCB's, but has the option of saving
+    gerbers/drill files, so that I can use any PCB printing company in the world for more
+    cost effective board printing.
 
-    This software is free to download and use to load and create PCB's,
-    but saving is disabled unless you purchase the software (~$50 USD).
-    I think $50 is very reasonable, considering how much other PCB software
-    costs. And $50 is way cheaper than the free ExpressPCB software ends up
-    being when you pay $380 to have the boards printed, instead of more like
-    $100 to have them printed elsewhere.
+    This software is free to download and use to load and create PCB's, but saving is
+    disabled unless you purchase the software (~$50 USD).  I think $50 is very reasonable,
+    considering how much other PCB software costs. And $50 is way cheaper than the free
+    ExpressPCB software ends up being when you pay $380 to have the boards printed,
+    instead of more like $100 to have them printed elsewhere.
 
     To generate gerbers:
 
@@ -28,29 +26,28 @@ SAVING GERBERS / ORDERING NEW BOARDS
 		    * top/bot solder mask ( #5 + #6 )
 		    * outline             ( #7 )
 
-	    Set checkbox: "Include frame (board size)" which always
-	    seems to clear itself each time you save.
+	    Set checkbox: "Include frame (board size)" which always seems to clear itself
+	    each time you save.
 
-	    FOR SURFACE MOUNT RESISTORS: You can leave out the "smdmask", as that's
-	    only for generating the metal mask used for solder paste. The few surface
-	    mount components on these boards can be hand soldered easily.
+	    FOR SURFACE MOUNT RESISTORS: You can leave out the "smdmask", as that's only
+	    for generating the metal mask used for solder paste. The few surface mount
+	    components on these boards can be hand soldered easily.
 
     * File -> Export -> Excellon
 	    Make sure "Inches" selected
 
-    Then I put the resulting files into a .zip that I can then shop around to the
-    various PCB print houses. I used a Makefile to automatically generate the zip,
-    but it can be done by hand too using tools like Winzip, pkzip, or the zip software
-    that comes with linux.
-    
-    I found PCBway to work well for the boards I've
-    printed during development, and they have instructions specifically for Sprint 6.0:
+    Then I put the resulting files into a .zip that I can then shop around to the various
+    PCB print houses. I used a Makefile to automatically generate the zip, but it can be done
+    by hand too using tools like Winzip, pkzip, or the zip software that comes with linux.
+
+    I found PCBway to work well for the boards I've printed during development, and they
+    have instructions specifically for Sprint 6.0:
     https://www.pcbway.com/blog/help_center/How_to_generate_Gerber_from_Sprint_Layout_6_0.html
 
     [OPTIONAL]
-      I like saving out .jpg images of the PCB board so I can review them on the web
-      from coffee shops and such to look for errors, and without needing the Sprint
-      software to view it. To do this:
+      I like saving out .jpg images of the PCB board so I can review them on the web from
+      coffee shops and such to look for errors, and without needing the Sprint software
+      to view it. To do this:
 
 	* Show top/bot copper, top silk, outline, then:
 	  File -> Export -> JPG  -- Save as "1a2-pic--all
@@ -90,26 +87,25 @@ and the general instructions for using them:
 
    o Now you can upload the .zip file of gerbers
 
-   o Then you wait -- they take maybe 10 minutes or more to load your zip file
-     and check for errors, and then adjust your quote estimate if need be. Just
-     reload the page until the person responds who checks your board for errors.
+   o Then you wait -- they take maybe 10 minutes or more to load your zip file and check
+     for errors, and then adjust your quote estimate if need be. Just reload the page
+     until the person responds who checks your board for errors.
 
    o Once you get the all clear, you can then order the boards.
-     Paypal works fine, that way they never see your credit card info.
-     I chose express DHL for delivery, and I typically used their 24 hour 
-     express service so that I can keep my intertia on the project.
+     Paypal works fine, that way they never see your credit card info.  I chose express
+     DHL for delivery, and I typically used their 24 hour express service so that I can
+     keep my intertia on the project.
 
-   o While waiting for the boards to be printed, I'd spend those days
-     reviewing my parts inventory, ordering any parts from digikey I might need
-     before the boards come. I'd also check the board's schematics for errors,
-     as each time I did a board run I was typically making changes, and the way
-     I work, I typically start with protoboarded circuits, draw those into the
-     board layout program, make some rough schematics from that, and re-proto
-     the board based on the PCB layout I end up with, to be sure what I drew
-     really will work. And then have the boards printed, and refine the schematics.
-     Reviewing the schematics while the boards are bring printed also makes sure
-     I have the design in my head so that when the boards come back, I'm primed
-     to solder the boards up, and know what to check for during testing.
+   o While waiting for the boards to be printed, I'd spend those days reviewing
+     my parts inventory, ordering any parts from digikey I might need before the boards
+     come. I'd also check the board's schematics for errors, as each time I did a board run
+     I was typically making changes, and the way I work, I typically start with protoboarded
+     circuits, draw those into the board layout program, make some rough schematics from
+     that, and re-proto the board based on the PCB layout I end up with, to be sure what I
+     drew really will work. And then have the boards printed, and refine the schematics.
+     Reviewing the schematics while the boards are bring printed also makes sure I have
+     the design in my head so that when the boards come back, I'm primed to solder the
+     boards up, and know what to check for during testing.
 
 MANAGING SCHEMATICS
 ===================
@@ -170,25 +166,25 @@ SOLDERING BOARDS
 
 	  These are small and fall out easily, so I do them first.
 
-	  I put at least two in the board, and hold them as I flip the board over onto
-	  a soft cloth or folded papertowel that is just under those components so that
-	  it presses them against the board. I then solder the leads on the solder side.
+	  I put at least two in the board, and hold them as I flip the board over onto a
+	  soft cloth or folded papertowel that is just under those components so that it
+	  presses them against the board. I then solder the leads on the solder side.
 
 	  If in doubt about the component laying flat, I touch solder on a corner pin first,
-	  let it harden to hold the socket in place, then flip the board over to view
-	  the board sideways to see if the socket is resting flat. If it's not, I can touch
+	  let it harden to hold the socket in place, then flip the board over to view the
+	  board sideways to see if the socket is resting flat. If it's not, I can touch
 	  the iron to that one pin to loosen it, while pressing on the socket to flatten
 	  it, making sure not to put a finger on the pin (it'll be hot!). The reason for
-          doing one pin is it's really hard to reseat a crooked component if all the pins
-          have already been soldered; it's hard to heat ALL the pins at once so you can
-          reseat before the solder hardens.. trust me.
+	  doing one pin is it's really hard to reseat a crooked component if all the pins
+	  have already been soldered; it's hard to heat ALL the pins at once so you can
+	  reseat before the solder hardens.. trust me.
 
 	> Do all the larger chip sockets similarly.
 
-          Some sockets are nice in that they have pins you can bend to hold the sockets
-          flat and in place when you flip the board for soldering. If that's not an option,
-          solder a few at a time, using a cloth or folded napkin underneath to hold them
-          flat against the board.
+	  Some sockets are nice in that they have pins you can bend to hold the sockets
+	  flat and in place when you flip the board for soldering. If that's not an option,
+	  solder a few at a time, using a cloth or folded napkin underneath to keep pressure
+	  on the sockets to press them flat against the board while you solder the pins.
 
 	> Do all the small through hole discrete components (resisitors, capacitors..).
 
@@ -196,29 +192,31 @@ SOLDERING BOARDS
           the first band digit facing up or facing left. I try to be consistent, as it
           simply looks nicer that way.
 
-	  For these I do a bunch at a time, having them all pre-inserted into the holes,
-	  pre-bent into a "U" shape with needle nose pliers, and hold them in place with
-	  my finger tips while I flip the board, and bend all the leads at 45 degree angles
-	  to hold them in place:
+	  For discretes I try to do a bunch at a time, having them all pre-inserted into
+	  the holes, pre-bent into a "U" shape with needle nose pliers, and hold them in
+	  place with my finger tips while I flip the board, and bend all the leads at 45
+	  degree angles to hold them in place:
 
-                                       \\                  //
-                                        \\                // <-- bend leads 45 degrees
-                    Solder Side          \\              //
+
+                                       \                  / 
+                                        \                /  <-- bend leads 45 degrees
+                    Solder Side          \              / 
 	            ------------------------------------------------------------  Board
 	            ------------------------------------------------------------
-		    Component Side        ||__--------__||
-				          +---________---+
+		    Component Side        |__::::::::__|
+				             ::::::::
 
-				              Component
+				             Resistor
 
-          Then once a bunch of them are inserted this way, I solder them all in
-          one pass, then trim off the leads with small wire cutters.
+
+          Then once a bunch of them are inserted this way, I solder them all in one pass,
+          then trim off the leads with small wire cutters.
 
           NOTES:
 
               1) Keep a small cup nearby to put all the cutaways into, so they
-                 don't end up flying everywhere, or getting under and between
-                 chip sockets to cause shorts later.
+                 don't end up flying everywhere, or getting under and between chip sockets
+                 to cause shorts later.
 
               2) Keep the soldering area clean!! Don't let cut off leads or solder blobs
                  lie around, or they'll find their way into the board causing shorts later.
@@ -226,15 +224,14 @@ SOLDERING BOARDS
         > Solder the TO-220 transistors. 
         
           NOTES: 
-              1) TO-220's are best laid flat and screwed down, to prevent
-                 them from flapping around, but more importantly,
-                 to keep them from sliding sideways into each other,
-                 shorting them out, as the heat sink tabs are the output
-                 of the transistor.
+              1) TO-220's are best laid flat and screwed down, to prevent them from flapping
+                 around, but more importantly, to keep them from sliding sideways into
+                 each other, shorting them out, as the heat sink tabs are the output of
+                 the transistor.
 
-              2) When making the 90 degree angle bend for the pins, don't
-                 bend the pins where they meet the case. Bend them out at
-                 the point where the leads flare down from fat to thin. e.g.
+              2) When making the 90 degree angle bend for the pins, don't bend the pins where
+                 they meet the case. Bend them out at the point where the leads flare down
+                 from fat to thin. e.g.
 
                                      ______________
                                     |       _      |
@@ -250,12 +247,12 @@ SOLDERING BOARDS
                          thin leads --> |   |   |
                                         |   |   |
 
-          I pre-bend the leads with needle nose pliers before inserting them
-          into the board. Once inserted, I screw the case down with nuts so
-          they stay in position when I flip the board to solder them.
+          I pre-bend the leads with needle nose pliers before inserting them into the
+          board. Once inserted, I screw the case down with nuts so they stay in position
+          when I flip the board to solder them.
 
-          Some notes on pre-bending the pins: When bending the leads, just bend
-          along the thin part of the leads, not at the case:
+          Some notes on pre-bending the pins: When bending the leads, just bend along the
+          thin part of the leads, not at the case:
 
                           ________                               ________
                  ________|        |                     ________|        |___
@@ -312,6 +309,7 @@ SOLDERING BOARDS
      > Solder the large profile components last (relays, large caps, connectors, SIP + DIP headers)
 
      > Last I usually do the press-fit 50 pin amphenol connectors.
+
        I used a large clamp and a simple wood jig with a slot cut in it. The jig goes under the
        board for the clamp to clamp against, the slot allows the pins to poke through without
        being compressed by the clamp:
