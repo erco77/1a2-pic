@@ -373,3 +373,6 @@ SOLDERING BOARDS
      Once pressed into place, you DO NOT solder the pins. I mean, that's the whole
      point is not having to make 200 solders for the 4 50 pin connectors.
 
+TODO:
+    Programming the PIC chips
+    Managing source code, git, Makefile
