@@ -262,15 +262,21 @@ SOLDERING BOARDS
                                     |                                        |
 
          To do this, I grip small needle nose across the fat pins:
-                                                                          ___________________
-                                                                         /   ________________\
-                              :::                                       /   /
-                     ________ :::                       _______________/   /
-            ________|        |===-------               /________          /
-            |_______|________|:::                      _o_o_o___/         \
-                              ::: <-- plier teeth ---> \________________   \
-                                                                        \   \________________
-                                                                         \___________________/
+
+
+                            plier's grip                     
+                            on fat pins                                            ___________________
+                            |                                                     /   ________________\
+                           \|/                                                   /   /
+                            _                                    _______________/   /
+                  ________ / \                                  /________          /
+         ________|        |===-------      <--- pins --->       _O_O_O___/         \
+         |_______|________|\_/                                  \________________   \
+                                                                                 \   \________________
+                                                                                  \___________________/
+                                                                                                   
+                - SIDE VIEW -                                                  - BOTTOM VIEW -
+                                                       
 
          To prevent metal-fatiguing the pins with a full 90 degree turn all at one point
          on the leads, I bend the pins down only 45 degrees with my finger, the needle nose
