@@ -66,9 +66,9 @@ these can actually be connected up in any order.
 --------------------------------------------------------
 
     It is important that the board is not lying on anything metal
-    when powered it up, to prevent shorting out the board.
+    when powered up, to prevent shorting out the board.
 
-    If you plan to interlink two boards, see also the INTERLINK section
+    If you plan to interlink two boards, see the INTERLINK section
     of this document.
 
     Free Standing
@@ -121,9 +121,9 @@ these can actually be connected up in any order.
         to prevent shorting traces on the board.
 
         It's recommended ALL screw mounting holes be used, especially the
-	corners and center screw, so that plugging/unplugging the
-	large 50 pin connectors doesn't put mechanical bending
-	stress on the board that can fatigue the solder/traces.
+        corners and center screw, so that plugging/unplugging the
+        large 50 pin connectors doesn't put mechanical bending
+        stress on the board that can fatigue the solder/traces.
 
 
 1. CONNECT POWER
@@ -287,9 +287,9 @@ these can actually be connected up in any order.
              analog PSTN/POTS lines ("Public Switched Telephone Networks",
              "Plain Old Telephone Service")
 
-	     Legally it can only be attached to phone systems that
-	     use an interface of some kind, like VoIP or like the
-	     XLink described above.
+             Legally it can only be attached to phone systems that
+             use an interface of some kind, like VoIP or like the
+             XLink described above.
 
              While this board IS designed to handle old analog POTS lines,
              THE RESPONSIBILITY IS YOURS whether to connect it without 
@@ -733,97 +733,56 @@ PHONE SYSTEM ACCESSORIES
     118A.
 
 
-    ENLARGING BEYOND 2 LINES/4 EXTENSIONS
-    -------------------------------------
-    One can add even more extensions and lines than the two lines/
-    4 extensions the card supports out of the box.
-    
-    A person knowledgable about wiring phones and networks can break
-    out any one of the 50 pin extension cables on a 66 block to expand
-    support for several extra phones.
-
-    And two cards can be combined with a 66 block to support up to
-    4 incoming lines total.
-
-    When attaching extra extensions, beware of the power limits of your
-    power supply, and the output limits of the TIP32 power transistors
-    Q1 and Q2.  The lamps will glow dimmer when too many lamps are
-    lit at once, and/or components Q1 and Q2 will get warm or hot.
-
-    Note that the "LAMP" power transistors have been burn tested to
-    handle up to 8 lamps for each line, so up to 8 extensions should
-    work OK.
-    
-    Beyond that, you're on your own. There are apparently "Lamp Expanders"
-    (such as the Melco KT-631) which may be able to amplify the Line #1
-    and Line #2 lamps for more extensions.
-
-    The ring generator can only handle ringing as many phones as
-    its REN number is rated for.
-
-    ADDING MORE EXTENSIONS AND LINES
-    --------------------------------
-    The revision F series boards only support 2 lines and 4 extensions
-    per board.
-
-    However, you can bridge these boards together with a 30 pin ribbon
-    cable between the "INTERLINK CONNECTORS" for a total of 4 lines,
-    8 extensions.
-
-    See this schematic page for how to wire this:
-    http://seriss.com/people/erco/tmp/pic/data/1a2-pic-REV-F-0012.bmp
-
-
 INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
 ---------------------------------------------------
- If you have two REVISION F1 boards, you can connect them together
- with a 30 pin ribbon cable to create a single phone system with
- 4 CO lines and up to 8 extensions that all can be individually
- buzzed on the intercom line (by dialing 1 through 8).
+  If you have two REVISION F1 boards, you can connect them together
+  with a 30 pin ribbon cable to create a single phone system with
+  4 CO lines and up to 8 extensions that all can be individually
+  buzzed on the intercom line (by dialing 1 through 8).
 
- For info on how to configure two boards with the INTERLINK connector,
- refer to this page which includes diagrams and descriptions:
- http://seriss.com/1a2-ksu/rev-f1/data/1a2-pic-IRF-rotary-interlink-REV-F1-0015.png
+  For info on how to configure two boards with the INTERLINK connector,
+  refer to this page which includes diagrams and descriptions:
+  http://seriss.com/1a2-ksu/rev-f1/data/1a2-pic-IRF-rotary-interlink-REV-F1-0015.png
 
- In short, you connect the two boards together by their INTERLINK
- connector using a 30 pin ribbon cable, pin #1 <-> pin #1, and power the
- boards either with separate power adaptors, or one adapter (of suitable
- amperage, 1.5A or higher) wired in parallel to both boards. (See diagram)
- 
- Configure one board as the "PRIMARY"; that board's telco inputs will
- appear as LINE 1 and LINE 2 on the extensions. Configure the other board
- as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and
- LINE 4 on the extensions. The PRIMARY board's intercom circuit will manage
- the intercom line for all 8 possible extensions.
+  In short, you connect the two boards together by their INTERLINK
+  connector using a 30 pin ribbon cable, pin #1 <-> pin #1, and power the
+  boards either with separate power adaptors, or one adapter (of suitable
+  amperage, 1.5A or higher) wired in parallel to both boards. (See diagram)
 
- To configure the PRIMARY board, make sure all the jumper blocks are
- all installed on the PRIMARY jumper (JP3), and none on the SECONDARY
- (JP4). Plug the CO lines that should be LINE 1 + 2 into this board.
+  Configure one board as the "PRIMARY"; that board's telco inputs will
+  appear as LINE 1 and LINE 2 on the extensions. Configure the other board
+  as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and
+  LINE 4 on the extensions. The PRIMARY board's intercom circuit will manage
+  the intercom line for all 8 possible extensions.
 
- To configure the SECONDARY board, make sure all jumper blocks are installed
- on the SECONDARY jumper (JP4), and none on the PRIMARY jumper (JP3).
- Plug the CO lines that should appear as LINE 3 + 4 into this board.
+  To configure the PRIMARY board, make sure all the jumper blocks are
+  all installed on the PRIMARY jumper (JP3), and none on the SECONDARY
+  (JP4). Plug the CO lines that should be LINE 1 + 2 into this board.
 
- Plug up to 8 extensions into the two board's EXT# connectors. 
+  To configure the SECONDARY board, make sure all jumper blocks are installed
+  on the SECONDARY jumper (JP4), and none on the PRIMARY jumper (JP3).
+  Plug the CO lines that should appear as LINE 3 + 4 into this board.
 
- When someone picks up the intercom line, dialing 1-4 will buzz
- the extensions on the PRIMARY board, EXT 1-4 respectively.
- And dialing 5-8 will buzz the extensions on the SECONDARY board,
- EXT 1-4 respectively.
- 
- Note that connectors EXT 1/2/3/4 on the SECONDARY board will really
- be EXT 5/6/7/8, so you may want to relabel the connectors on the
- SECONDARY board.
+  Plug up to 8 extensions into the two board's EXT# connectors. 
+
+  When someone picks up the intercom line, dialing 1-4 will buzz
+  the extensions on the PRIMARY board, EXT 1-4 respectively.
+  And dialing 5-8 will buzz the extensions on the SECONDARY board,
+  EXT 1-4 respectively.
+
+  Note that connectors EXT 1/2/3/4 on the SECONDARY board will really
+  be EXT 5/6/7/8, so you may want to relabel the connectors on the
+  SECONDARY board.
 
 
 TROUBLESHOOTING
 ---------------
 
- This section should help you solve the various problems you can have
- during setup, or when things go wrong. 
+  This section should help you solve the various problems you can have
+  during setup, or when things go wrong. 
 
- Email erco@seriss.com if you encounter problems not defined here, esp.
- if you've found a solution and think others would benefit from it.
+  Email erco@seriss.com if you encounter problems not defined here, esp.
+  if you've found a solution and think others would benefit from it.
  
 
  *  PROBLEM: Can't dial with Touch-Tone.
@@ -951,10 +910,10 @@ TROUBLESHOOTING
            Refer to "Figure C" and "Figure D" near the top of this document
            for more info.
 
-         > For bell ringing to work properly with the diode oriented
-           circuit of this board, verify all the 1A2 phones have
-           the following one wire modification.  Paraphrasing Ed
-           from Sundance Communications:
+         > For bell ringing to work properly with the diode oriented ring
+           circuit for this board, verify all the 1A2 phones have the
+           following one wire modification.  Paraphrasing Ed from
+           Sundance Communications:
 
             "For any kind of diode ringing to work, the capacitor between
              network terminals A and K (inside phone) have to be bypassed.

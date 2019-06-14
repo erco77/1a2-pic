@@ -34,7 +34,7 @@
                                    SERISS CORPORATION - 1A2 KSU CONTROL CARD
                                             2 LINE / 4 EXTENSIONS
                                 ==============================================
-                                    erco@seriss.com - 05/02/2019 - REV F
+                                    erco@seriss.com - 06/27/2019 - REV G
 
                         If you find problems in this document, contact: erco@seriss.com
 
@@ -912,7 +912,7 @@ TROUBLESHOOTING
 
          > For bell ringing to work properly with the diode oriented ring
            circuit for this board, verify all the 1A2 phones have the
-           following one wire modification.  Paraphrasing Ed from 
+           following one wire modification.  Paraphrasing Ed from
            Sundance Communications:
 
             "For any kind of diode ringing to work, the capacitor between
