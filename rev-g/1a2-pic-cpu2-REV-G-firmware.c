@@ -7,7 +7,7 @@
  * Created on Apr 24, 2019, 06:29 PM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
  *
- * Drive the 1A2 Multiline Phone Control board, REV F - CPU2 Firmware.
+ * Drive the 1A2 Multiline Phone Control board, REV-G - CPU2 Firmware.
  *                               _    _
  *                           V+ | |__| | GND
  *              x (OUT) -- RA5  |      | RA0 -- (OUT) EXT8 BUZZ
@@ -21,11 +21,11 @@
  *      EXT1 BUZZ (OUT) -- RB7  |______| RB6 -- (IN) DTMF 'a'
  *
  *                         PIC16F1709 / CPU2
- *                               REV F
+ *                               REV-G
  *
  */
 
-// REVISION F / CPU2                                    Port(ABC)
+// REVISION G / CPU2                                    Port(ABC)
 //                                   76543210           |Bit# in port
 // Inputs                            ||||||||           ||
 #define MT8870_STD     ((G_portc & 0b00100000)?1:0) // RC5: goes hi when dial button pressed
