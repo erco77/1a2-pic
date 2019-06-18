@@ -574,6 +574,11 @@ void HandleBuzzRing(Debounce *d1, Debounce *d2) {
 
 //
 // Manage the sync signal between two CPUs on different boards over interlink.
+//
+//   'send_sync' should be 1 if G_msec just wrapped to zero, so that we
+//   pull sync low to signal other cpu to sync to us. If 0, we just keep
+//   checking for sync from other cpu.
+//
 //   We want to keep the G_msec counter more or less in sync with other board
 //   so lamps blink in sync for hold/ringing.
 //
@@ -593,8 +598,8 @@ void HandleInterlinkSync(char send_sync) {
     //         > If so, return to input mode, done for this iter
     //         > If not, check for sync from remote, and if so, sync!
     //
-    static char sending = 0;
-    static char lastsync = 0;
+    static char sending = 0;       // Keeps track of if we're sending sync or receiving
+    static char lastsync = 0;      // Last iter's state of sync input (used for hardware edge detect)
     if ( send_sync ) {
         sending = 1;               // Indicate for next iter we're sending sync
         TRISB = 0b10000000;        // Change RB6 to be OUTPUT
@@ -607,7 +612,7 @@ void HandleInterlinkSync(char send_sync) {
             TRISB = 0b11000000;    // Set RB6 back to INPUT
             WPUB  = 0b11000000;    // Enable 'weak pullup resistors' for all inputs
         } else {
-            if ( sync == 0 && lastsync == 1 ) {   // sync received from "other" cpu? Then sync..
+            if ( sync == 0 && lastsync == 1 ) {   // Falling edge of sync received from "other" cpu? Then sync..
                 G_msec = 0;                       // "syncing" is all about zeroing G_msec counter
             }
         }
