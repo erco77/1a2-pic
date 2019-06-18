@@ -29,6 +29,16 @@
  *    > CPU1 handles logic same as REV E's single CPU, but no longer handles MT8870 signals
  *    > CPU2 handles MT8870 signals and rotary dial counting
  *    > HandleDTMF() function removed from CPU1 firmware, moved to CPU2
+ *    > The INTERLINK feature is new in this version
+ *    > A 30 pin INTERLINK ribbon connector was added
+ *    > Two 32 pin jumpers, JP3 and JP4 were added to select PRIMARY vs SECONDARY
+ *    > 4 TIP125 transistors were no longer needed, due to the new interlink feature
+ *    > The LINE1/LINE2 lamp xstrs were changed from TIP32 to IRF9530 (which run cooler)
+ *    > This version uses surface mount resistors for the IRF9530
+ *
+ * "REV F1" differs from "REV F" in that the pad hole sizes for the INTERLINK connector
+ * and JP3 and JP4 in "REV F" were a few 1000ths too small, so only the pad hole sizes
+ * were fixed in "REV F1".
  */
 
 // REVISION F / CPU1                                    Port(ABC)
