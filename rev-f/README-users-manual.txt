@@ -41,12 +41,12 @@
                      ____________________________________________________________________
                     |                                 ::::::: INTERLINK                  |
                     |                                                                    |
-                    |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
-                    |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
+                    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
+                    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
                     |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
                     |                                      :  :      ||   ||   ||   ||   |
-                    |      o CPU1         o CPU2           :  :      ||   ||   ||   ||   |
-                    |        STATUS         STATUS         :  :      ||   ||   ||   ||   |
+                    |                     o CPU2           :  :      ||   ||   ||   ||   |
+                    |                       STATUS         :  :      ||   ||   ||   ||   |
                     |                                         :      ||   ||   ||   ||   |
                     |   ___      __      ____               ____     \|   \|   \|   \|   |
                     |  |   |    |+-|    |oooo|             |oooo|                        |
@@ -61,6 +61,9 @@ INITIAL SETUP
 There is nothing critical about the order of connecting up the board.
 The order shown below is: extensions, power, telco, ring gen.. but
 these can actually be connected up in any order. 
+
+If you're new to 1A2 wiring, and are not sure what the wire colors "Y-S" or "S-Y"
+refers to, please see the section on "WIRE COLORS" near the bottom of this document.
 
 0. Mount the board or position it safely before starting
 --------------------------------------------------------
@@ -134,12 +137,12 @@ these can actually be connected up in any order.
      ____________________________________________________________________
     |                                 ::::::: INTERLINK                  |
     |                                                                    |
-    |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
-    |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
+    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
+    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
     |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
     |                                      :  :      ||   ||   ||   ||   |
-    |      o CPU1        o CPU2            :  :      ||   ||   ||   ||   |
-    |        STATUS        STATUS          :  :      ||   ||   ||   ||   |
+    |                    o CPU2            :  :      ||   ||   ||   ||   |
+    |                      STATUS          :  :      ||   ||   ||   ||   |
     |                                         :      ||   ||   ||   ||   |
     |   ___      __      ____               ____     \|   \|   \|   \|   |
     |  |   |    |+-|    |oooo|             |oooo|                        |
@@ -183,12 +186,12 @@ these can actually be connected up in any order.
      ____________________________________________________________________
     |                                 ::::::: INTERLINK                  |
     |                                                                    |
-    |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
-    |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
+    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
+    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
     |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
     |                                      :  :      ||   ||   ||   ||   |
-    |      o CPU1        o CPU2            :  :      ||   ||   ||   ||   |
-    |        STATUS        STATUS          :  :      ||   ||   ||   ||   |
+    |                    o CPU2            :  :      ||   ||   ||   ||   |
+    |                      STATUS          :  :      ||   ||   ||   ||   |
     |                                         :      ||   ||   ||   ||   |
     |   ___      __      ____               ____     \|   \|   \|   \|   |
     |  |   |    |+-|    |oooo|             |oooo|                        |
@@ -204,8 +207,9 @@ these can actually be connected up in any order.
     IMPORTANT: When connecting phones for the first time, VERIFY the phones
     are internally wired as follows BEFORE connecting them:
     
-            > Bells on pins 20/45 (Y-S pair)
-            > Buzzers on pins 17/42 (Y-O pair)
+            > Buzzers on Y-O pair (amphenol pins 17/42)
+            > Bells on Y-S pair (amphenol pins 20/45)
+            > Bell RED wire goes to S-Y (20), BLK wire goes to Y-S (45)
             > Phone networks configured for diode ringing (**)
 
     (**) Since this board uses a diode network to program ringing, bell
@@ -258,12 +262,12 @@ these can actually be connected up in any order.
      ____________________________________________________________________
     |                                 ::::::: INTERLINK                  |
     |                                                                    |
-    |      o      o      o      o          A        EXT1 EXT2 EXT3 EXT4  |
-    |     LINE1  CPU    LINE2   ICM        :  B      /|   /|   /|   /|   |
+    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
+    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
     |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
     |                                      :  :      ||   ||   ||   ||   |
-    |      o CPU1        o CPU2            :  :      ||   ||   ||   ||   |
-    |        STATUS        STATUS          :  :      ||   ||   ||   ||   |
+    |                    o CPU2            :  :      ||   ||   ||   ||   |
+    |                      STATUS          :  :      ||   ||   ||   ||   |
     |                                         :      ||   ||   ||   ||   |
     |   ___      __      ____               ____     \|   \|   \|   \|   |
     |  |   |    |+-|    |oooo|             |oooo|                        |
@@ -1008,5 +1012,49 @@ TROUBLESHOOTING
           permanently damaged the board to the point where components are blown,
           and may need to be swapped out to properly repair the board.
 
+
+WIRE COLORS
+-----------
+
+    Bell System Practices wire color codes are used throughout this document, 
+    e.g. Y-S and Y-O. The color codes are:
+
+         R - Red        G - Green    BR - Brown     W - White
+         O - Orange    BL - Blue     BK - Black
+         Y - Yellow     V - Violet    S - Slate
+
+    In telephone wiring, CAT-3 UTP cable (Category 3, "Unshielded Twisted Pair")
+    is used to ensure long runs of signals have the best noise cancellation,
+    such that each voice circuit is on its own pair of wires that are physically
+    twisted together. Most 1A2 phones have 25 pair (50 conductor) CAT-3 UTP cables.
+
+    Each pair of wires twisted together share the same colors; The "Y-S pair"
+    (yellow-slate) consists of two wires: 
+
+        Y-S -- A yellow wire with a slate (gray) stripe
+        S-Y -- A slate wire with a yellow stripe
+
+    Mostly single letters are used, but where confusion might arise, two letters
+    are used (like BR for brown, BK for black, BL for blue).  To avoid confusion
+    with green (G), gray wires are always referred to as "slate" (S).
+
+    When referring to a *single wire*, the first of the two colors is the primary color,
+    and the second is the stripe color. So Y-S is a mostly yellow wire with a slate stripe.
+
+    When referring to *wire pairs*, the first letter is the primary color group.
+    In a 25 pair CAT3 UTP cable, wire pairs are broken into 5 color groups of 5 pairs each:
+                                                                 __
+        White group  - 5 pairs (W-BL, W-O, W-G, W-BR, W-S)         |
+        Red group    - 5 pairs (R-BL, R-O, R-G, R-BR, R-S)         |
+        Black group  - 5 pairs (BK-BL, BK-O, BK-G, BK-BR, BK-S)    |-- 25 pairs total
+        Yellow group - 5 pairs (Y-BL, Y-O, Y-G, Y-BR, Y-S)         |
+        Violet group - 5 pairs (V-BL, V-O, V-G, V-BR, V-S)       __|
+
+    So when referring to the pair of wires that are Y-S and S-Y, refer to the pair
+    as "the Y-S pair" (and not the S-Y pair), because the primary color for the group
+    that pair is in is yellow.
+
+    In this document, the Y-S and Y-O pair are referenced a lot, because the Y-S pair
+    is used for the bells, and the Y-O pair is used for the buzzers.
 
 * * * EDITING: WORK IN PROGRESS * * *
