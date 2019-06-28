@@ -214,23 +214,24 @@ void Init() {
 }
 
 // Buzz the specified extension number (1 thru 8) at 60Hz
+//     If extension number is 10 (dialed "0"), buzzes ALL extensions (added for Stephane Levesque 06/27/2019).
 //     If extension number is -1, all extension buzzers are turned off.
 //
 void BuzzExtension(int num) {
     static uchar count = 0;
     uchar bz_60hz = (++count & 2) ? 1 : 0;  // bz is 0|1 changing at ~60hz rate
 
-    if ( num < 1 || num > 8 ) bz_60hz = 0;  // force bz off if ext# outside 1-8 range
+    if ( num < 0 || num > 10 ) bz_60hz = 0;  // force bz off if ext# outside 1-8 range
 
     // Drive the extension buzzers
-    EXT1_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT2_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT3_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT4_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT5_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT6_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT7_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
-    EXT8_BUZZ = ( --num == 0 ) ? bz_60hz : 0;
+    EXT1_BUZZ = ( num == 10 || num == 1 ) ? bz_60hz : 0;
+    EXT2_BUZZ = ( num == 10 || num == 2 ) ? bz_60hz : 0;
+    EXT3_BUZZ = ( num == 10 || num == 3 ) ? bz_60hz : 0;
+    EXT4_BUZZ = ( num == 10 || num == 4 ) ? bz_60hz : 0;
+    EXT5_BUZZ = ( num == 10 || num == 5 ) ? bz_60hz : 0;
+    EXT6_BUZZ = ( num == 10 || num == 6 ) ? bz_60hz : 0;
+    EXT7_BUZZ = ( num == 10 || num == 7 ) ? bz_60hz : 0;
+    EXT8_BUZZ = ( num == 10 || num == 8 ) ? bz_60hz : 0;
 }
 
 // Reset the rotary counters and deenergize any buzzers
@@ -289,13 +290,14 @@ void HandleRotaryDialing(Rotary *r, Debounce *d) {
     }
 }
 
-// Return rotary dialed digit, or 0 if none.
+// Return rotary dialed digit, or -1 if none.
 //     Manages keeping digit active until rotary buzzer timer expires.
 //     Also handles preventing switch hook pickup noise from causing false dialing.
+//     NOTE: When "0" is dialed, a 10 is generated
 //
 int GetRotaryDigit(Rotary *r, Debounce *d) {
     // Early exit if recent pickup
-    if ( G_powerup_msecs < ROTARY_POWERUP_MSECS ) return 0;
+    if ( G_powerup_msecs < ROTARY_POWERUP_MSECS ) return -1;
 
     HandleRotaryDialing(r, d);                        // loads r->digit + r->mode
 
@@ -305,10 +307,12 @@ int GetRotaryDigit(Rotary *r, Debounce *d) {
         if ( r->buzz_msecs <= 0 ) RotaryReset(r);     // stop buzzer, done
         else                      return r->digit;    // return digit to keep buzzing
     }
-    return 0;
+    return -1;
 }
 
 // Return DTMF dialed digit, or 0 if none.
+//     NOTE: when a "0" is dialed, the MT8870 generates "10".
+//
 int GetDTMFDigit() {
     // Nothing being dialed right now? early exit
     if ( !MT8870_STD ) return 0;
@@ -387,7 +391,7 @@ void main(void) {
 ***/
         if ( (digit = GetDTMFDigit()) )
             BuzzExtension(digit);                // DTMF dialed digit? Buzz that extension
-        else if ( (digit = GetRotaryDigit(&rot, &rdeb)) )
+        else if ( (digit = GetRotaryDigit(&rot, &rdeb)) != -1 )
             BuzzExtension(digit);                // Rotary dialed digit? Buzz that extension
         else
             BuzzExtension(-1);                   // ensure buzzer xstrs not left on
