@@ -2,7 +2,7 @@ PIC CHIP PROGRAMMER: Ref: Hardware: https://www.youtube.com/watch?v=ksYe_FFAlEM
                           Software: https://www.youtube.com/watch?v=TIsiRmGVgUI
 
 
-PICKIT 3 PROGRAMMING WIRING
+PICKIT 3 PROGRAMMER WIRING
                                                                _    _
             PIN1 >  o-----o MCLR              PIN2 -->     V+ | |__| | GND  <-- PIN3
                2    o-----o V+                             x  |      | DAT  <-- PIN4
@@ -34,7 +34,8 @@ PICKIT 3 PROGRAMMING WIRING
                          PIC16F1709                       
 
         Software: MikroC PRO for PIC v.5.4.0 <-- GUI used in video
-                  Also: MicroChip recommends "MPLAB IDE Software"
+                  Also: MicroChip recommends "MPLAB X IDE Software",
+		        which is what I ended up using.
 
         Xtal: 32.768kHz tuning fork type crystals for LP oscillator mode.
               Connect between SOSCO and SOSCI pins.
@@ -293,6 +294,9 @@ void HandleLineTransitions(line) {
    Perhaps a way to get MikroC to write .HEX file to PICKit3:
    http://www.theengineeringprojects.com/2013/03/how-to-burn-mikroc-code-using-pickit3.html
 
+   ..but in the end I couldn't get that to work, so I started using the MPLAB X IDE,
+   which is kinda slow and uses up a lot of memory on my two Windows 7 and Windows 8
+   machines.
 
 
 ---------------------------------------------------------------------------------------------------------------
@@ -317,7 +321,9 @@ void HandleLineTransitions(line) {
 
     #define _XTAL_FREQ 1000000UL        // 4MHz/4?
 
-    // The following a copy/paste from MPLABX's menu: Production -> Set Configuration Bits -> Generate Source Code to Output
+    // -START BLOCK- //
+    // The following code block is a copy/paste from MPLABX's menu:
+    // Production -> Set Configuration Bits -> Generate Source Code to Output
 
     // CONFIG1
     #pragma config FOSC = INTOSC    // Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
@@ -340,20 +346,28 @@ void HandleLineTransitions(line) {
     #pragma config LPBOR = OFF      // Low-Power Brown Out Reset (Low-Power BOR is disabled)
     #pragma config LVP = ON         // Low-Voltage Programming Enable (Low-voltage programming enabled)
 
+    // -END BLOCK- //
+
     // #pragma config statements should precede project file includes.
     // Use project enums instead of #define for ON and OFF.
 
     // Ref: https://electronics.stackexchange.com/questions/171530/pic-microchip-keeps-resetting
     #include <xc.h>
-    #include <pic16f1709.h>
+    // #include <pic16f1709.h>	// the chip I'm using. xc.h gets the chip info from the IDE's project settings
 
     void main(void) {
+	// Set PIC chip oscillator speed
+        OSCCONbits.IRCF   = 0b1011;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
+        OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
+        OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
+        // Set all data direction bits to outputs (0=out, 1=in)
+	// Example, TRISA bit 0 is RA0 port, TRISA bit 1 is RA1 port, etc.
         TRISA = 0x0;
         TRISB = 0x0;
         TRISC = 0x0;
         while (1) {
-            PORTB = 0xaa;  __delay_ms(500);
-            PORTB = 0x55;  __delay_ms(500);
+            PORTB = 0xaa;  __delay_ms(500);	// sets all even bits in port B, delay 1/2 sec
+            PORTB = 0x55;  __delay_ms(500);	// sets all odd  bits in port B, delay 1/2 sec
         }
     }
     _______________________________________________________________________________________________________________
@@ -430,7 +444,109 @@ void HandleLineTransitions(line) {
     So I ended up sticking with Microchip's MPLAB IDE + Compiler,
     and rewrote my MikroC code to use their programming model instead.
     (Different macros, bad docs.. bleh)
-     
+    </digression>
+
+    PIC CHIP INPUT/OUTPUTS
+    ----------------------
+    Notes about PIC chip inputs/outputs..
+
+    PIC INPUTS
+    ==========
+
+	To /read/ a particular port bit, e.g. port A bit #0, one can use:
+
+	    val = PORTAbits.RA0;		// read bit #0
+
+	       - or -
+
+	    val = (PORTA & 0x00000001);	// read all 8 bits, isolate bit#0
+
+	To avoid time aliasing, it's probably best in your main() loop to read
+	all the input port values once into some global variables, and then test
+	the bits of those during the loop iteration, e.g.
+
+	int main() {
+	    while ( 1 ) {
+		G_porta = PORTA;
+		G_portb = PORTB;
+		G_portc = PORTC;
+
+		// Do stuff reading G_porta/b/c only, not live hardware
+
+		__delay_ms(..);
+	    } // while
+	} // main
+
+	Weak Pullup Resistors
+	---------------------
+	Inputs can have internal "weak" pullup resistors assigned to each. To do this,
+	when setting up the port direction bits, you can also turn on weak pullups
+	for which ever inputs you want, e.g. in the following PORTC bits 0-3 are programmed
+	to be inputs, but only bits 0 and 2 are configured with 'weak pullups' enabled:
+
+	    OPTION_REGbits.nWPUEN = 0;	// enable WPUEN (weak pullup enable) by /clearing/ the bit
+	    ..
+	    TRISC = 0b00001111;		// program PORTC bits 0-3 as inputs
+	    WPUC  = 0b00000101;		// enable weak pullups for bits 0 and 2
+
+	Schmitt Inputs
+	--------------
+	Inputs can be assigned to either be Schmitt Triggered, or the default TTL style inputs.
+	Here, Schmitt is disabled for all ports:
+
+	    // Normal input thresholds
+	    //     1: Schmitt TRigger input used for PORT reads and interrupt-on-change
+	    //     0: TTL input used for PORT reads and interrupt-on-change
+	    //
+	    INLVLA = 0b00000000;
+	    INLVLB = 0b00000000;
+	    INLVLC = 0b00000000;
+
+	Analog Inputs
+	-------------
+	Inputs can be assigned to read values in analog. See docs for more, but if you're
+	not using analog inputs, it's probably best to explicitly disable analog stuff:
+
+	    ANSELA = 0b00000000;
+	    ANSELB = 0b00000000;
+	    ANSELC = 0b00000000;
+	    ADCON0 = 0x0;	// Disable ADC
+
+	Comparator
+	----------
+	PIC also supports comparator inputs. See docs for more, but if you're not
+	going to be using the comparator feature, it's probably best to disable it explicitly:
+
+	    CM1CON0 = 0x0;
+	    CM2CON0 = 0x0;
+	    CM1CON1 = 0x0;
+	    CM2CON1 = 0x0;
+
+    PIC OUTPUTS
+    ===========
+
+	To /write/ to a particular port bit, e.g. port A bit #0, one can use:
+
+	    LATAbits.LATA0 = 1;		// set single bit in PORTA
+
+		- or -
+
+	    PORTA = 0000000001;		// set all 8 bits in PORTA
+	
+	Outputs can either be 'open drain' (the MOS equivalent of "open collector"?) or normal
+	push-pull drive (default I think). Here I'm setting all output bits to be push-pull.
+	Some bits will be 'don't care' because bit settings are only valid for port bits
+	programmed to be outputs. Note too not all PORT bits are available for I/O, only the
+	ones your chip supports:
+
+	    // Disable 'Open Drain' control:
+	    //     1: open drain drive (sink current only)
+	    //     0: normal push-pull drive (source and sink current)
+	    //
+	    ODCONA = 0b00000000;	
+	    ODCONA = 0b00000000;	
+	    ODCONA = 0b00000000;
+
 ---------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------
 1A2 PIC 
