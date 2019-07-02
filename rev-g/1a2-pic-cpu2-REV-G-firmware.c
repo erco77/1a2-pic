@@ -7,7 +7,7 @@
  * Created on Apr 24, 2019, 06:29 PM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
  *
- * Drive the 1A2 Multiline Phone Control board, REV-G - CPU2 Firmware.
+ * Drive the 1A2 Multiline Phone Control board, CPU2 Firmware.
  *                               _    _
  *                           V+ | |__| | GND
  *              x (OUT) -- RA5  |      | RA0 -- (OUT) EXT8 BUZZ

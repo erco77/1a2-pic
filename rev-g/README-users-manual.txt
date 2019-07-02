@@ -315,17 +315,32 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     To configure a ring generator with the board, you can attach a 105VAC 20Hz-30Hz
     ring generator to enable bell ringing in the 1A2 phones on the Y/S wire pair.
 
+    There are several options for supplying a ring generator:
+
+        * PowerDSINE 12v ring generator 70VAC/20Hz 
+          (can ring 3 or 4 phones using board's own 12v supply)
+
+        * Western Electric 118A Ring generator from an old 1A2 KSU
+
+        * VIKING PS-48-RGA (supplies 90VAC 20Hz at 10REN, can ring up to 30 phones)
+
+        * Other commercially available telephone "Ring Generator" or "Frequency Generator"
+
     There are at least three ways to connect an external ring generator,
     depending on the type:
     
-      4.1 For an old telco ring generator (like the AT&T 118A), you can wire
-          the two Ring AC wires to the RIGHT HAND TWO TERMINALS
-          (labelled 105 VAC) on the 4 pin EXT RING GEN connector:
+      4.1 For an old telco ring generator (like the WECO 118A or VIKING), you can
+          wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS 
+          (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
 
+                                EXT RING GEN
 
-                              EXT RING GEN
-                                      
-                              (+) (-) (~) (~)
+                             12V RING   105 VAC
+                                OUT     20HZ IN
+                               __|__   __|__
+                              /     \ /     \
+
+                               +   -   ~   ~ 
            _ _ _____________________________________________________ _ _
                              | O   O   O   O |
                              |_______________|

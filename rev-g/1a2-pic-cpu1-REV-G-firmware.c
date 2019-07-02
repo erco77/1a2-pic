@@ -8,7 +8,7 @@
  * Created on Apr 24, 2019, 08:22 AM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
  *
- * Drive the 1A2 Multiline Phone Control board, REV F - CPU1 Firmware.
+ * Drive the 1A2 Multiline Phone Control board, CPU1 Firmware.
  *                               _    _
  *                           V+ | |__| | GND
  *     L1_RING_DET (IN) -- RA5  |      | RA0 -- (OUT) L1_LAMP (DAT)
@@ -23,6 +23,16 @@
  *
  *                         PIC16F1709 / CPU1
  *                               REV G
+ *
+ * "REV G1" differs from "REV G" in the following ways:
+ *    > No impact on software at all
+ *    > Change surface mount resistors to through hole (SMT annoying to solder)
+ *    > Spaced apart R25/26/28 for easier soldering/lead trimming
+ *    > Increased INTERLINK connector pad size for *solder side only* (more surface area for soldering)
+ *    > Increased overall pad size for JP3 & 4 (more surface area for soldering)
+ *    > Slight enlarge of LED holes to allow red status leds to flush mount
+ *    > Added extra pad holes for 60/1W and 300/1W resistors
+ *    > Added TIP125 surge suppression diodes D22-D25
  *
  * "REV G" differs from "REV F" in the following ways:
  *    > REV G added 'SYNC' I/O signal to allow two boards to keep their
