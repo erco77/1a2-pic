@@ -14,49 +14,120 @@ SAVING GERBERS / ORDERING NEW BOARDS
     ExpressPCB software ends up being when you pay $380 to have the boards printed,
     instead of more like $100 to have them printed elsewhere.
 
-    To generate gerbers:
+    SAVING OUT GERBERS/EXCELLON DRILL
+    ---------------------------------
+    These are necessary for printing up the boards. I use a Makefile to gather them
+    up and zip them together for upload to printing services. Steps in Sprint 6.0 are:
 
-    * File -> Open -> 1a2-pic-IRF-rotary-interlink-REV-F1.lay6
+    * Load the layout file:
+      File -> Open -> 1a2-pic-IRF-rotary-interlink-REV-F1.lay6
 
-    * File -> Export -> Gerber Export
-	    Enable all 7 gerbers:
+    * Export the Gerbers:
+      File -> Export -> Gerber Export
+
+	    Enable all that aren't grayed out, INCLUDING the "Outline":
 
 		    * top/bot copper      ( #1 + #2 )
 		    * top/bot silk        ( #3 + #4 )
 		    * top/bot solder mask ( #5 + #6 )
 		    * outline             ( #7 )
 
-	    Set checkbox: "Include frame (board size)" which always seems to clear itself
-	    each time you save.
+	    Set checkbox: "Include frame (board size)". This always seems to clear itself
+	    each time you save, so be sure to set it each time!
 
-	    FOR SURFACE MOUNT RESISTORS: You can leave out the "smdmask", as that's only
+	    FOR SURFACE MOUNT RESISTORS: You can leave the "smdmask" turned OFF, as that's only
 	    for generating the metal mask used for solder paste. The few surface mount
 	    components on these boards can be hand soldered easily.
 
     * File -> Export -> Excellon
 	    Make sure "Inches" selected
 
-    Then I put the resulting files into a .zip that I can then shop around to the various
-    PCB print houses. I used a Makefile to automatically generate the zip, but it can be done
-    by hand too using tools like Winzip, pkzip, or the zip software that comes with linux.
+    Then I put the resulting files into a .zip using a Makefile that I can
+    then shop around to the various PCB print houses. I used a Makefile to
+    automatically generate the zip, but it can be done by hand too using
+    tools like Winzip, pkzip, or the zip software that comes with linux.
 
-    I found PCBway to work well for the boards I've printed during development, and they
-    have instructions specifically for Sprint 6.0:
+    I found PCBway to work well for the boards I've printed during
+    development, and they have instructions specifically for Sprint 6.0:
     https://www.pcbway.com/blog/help_center/How_to_generate_Gerber_from_Sprint_Layout_6_0.html
 
-    [OPTIONAL]
+    [OPTIONAL] SAVING OUT JPG IMAGES
+    --------------------------------
       I like saving out .jpg images of the PCB board so I can review them on the web from
       coffee shops and such to look for errors, and without needing the Sprint software
       to view it. To do this:
 
-	* Show top/bot copper, top silk, outline, then:
-	  File -> Export -> JPG  -- Save as "1a2-pic--all
+        I. 1a2-REV-XX-all.jpg
+        ---------------------
 
-	* Show top + outline only, then:
-	  File -> Export -> JPG  -- Save as "1a2-pic--top
+        1) At bottom left, ensure visible: "C1", "S1", "C2". Other layers "S2" and "O" should be OFF.
+        2) At bottom left, ensure active: "C1". This ensures top copper draws over bottom copper.
+        3) File -> Export -> JPG
+        4) Resolution: 300 dpi (3rd slider position from left)
+        5) Save as "1a2-REV-XX-all"
 
-      ..and rinse/repeat for "bottom", "top-and-bot", "photo-top" and "photo-bottom".
-      I used a Makefile to package these up to the website.
+        II. 1a2-REV-XX-top-bot.jpg
+        --------------------------
+        Assumes above was just done, and settings still set as above:
+
+        1) At bottom left, disable "S1" (so only C1,C2 are enabled for visible, and C1 still "active")
+        2) File -> Export -> JPG
+        3) Click OK for Resolution
+        4) Save as "1a2-REV-XX-top-bot"
+
+        III. 1a2-REV-XX-photo-top.jpg
+        -----------------------------
+        Assumes above was just done, and settings still set as above:
+
+        1) Click "Photoview" and turn on "Top side C1/S1", "With silkscreen", Board: Green, Soldermask: Gold
+        2) File -> Export -> JPG
+        3) Click OK for Resolution
+        4) Save as "1a2-REV-XX-photo-top"
+
+        IV. 1a2-REV-XX-photo-bot.jpg
+        -----------------------------
+        Assumes above was just done, and settings still set as above:
+
+        1) Turn on "Bottom side C2/S2"
+        2) File -> Export -> JPG
+        3) Click OK for Resolution
+        4) Save as "1a2-REV-XX-photo-bot"
+
+        V. 1a2-REV-XX-bom.txt
+        ---------------------
+        1) Options -> Component Panel
+        2) For "Show:", enable Number, Layer, Package, Comment
+        3) Click "Export" button
+        4) In dialog:
+
+            Exported Data:          Separator:             Text for Layer side
+           -->  (ON)  Number            (off) Comma              Top: Top
+           -->  (ON)  ID                (off) Semicolon       Bottom: Bottom
+           -->  (ON)  Value         --> (ON)  Tab
+                (off) Layer
+                (off) Position      X/Y - Position:     Decimals: 2
+                (off) Rotation          Unit: Mil         (OFF) Suppress trailing zeros
+           -->  (ON)  Package
+           -->  (ON)  Comment       Rotation:
+                                        (off) Rotation with "R" prefix
+
+                                    Filter
+                                        (ON) SMD-Components                            (ON) Top
+                                    --> (ON) Throughhole-Components                    (ON) Bottom
+                                        (off) Only components with Pick+Place data
+
+           When set correctly, under "Preview:" it should show at least 100 or more parts.. scroll down.
+
+        5) Hit "Export.."
+        6) Save as "1a2-REV-XX-bom", type "Textfiles (*.txt)"
+        7) Close..
+
+        VI. SEND CHANGES TO WEBSERVER
+        -----------------------------
+        Go into 'website' directory and run 'make send' as erco on harris.
+        This should build the zip, bom -> html, and send that and jpg's to server.
+        Adjust the index.html if needed.
+
 
 PRINTING BOARDS AT PCB HOUSES
 -----------------------------
