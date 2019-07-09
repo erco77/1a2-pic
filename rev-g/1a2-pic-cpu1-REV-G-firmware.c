@@ -26,13 +26,16 @@
  *
  * "REV G1" differs from "REV G" in the following ways:
  *    > No impact on software at all
+ *    > Added TIP125 surge suppression diodes D22-D25
  *    > Change surface mount resistors to through hole (SMT annoying to solder)
- *    > Spaced apart R25/26/28 for easier soldering/lead trimming
+ *    > Repositioned R25, R26, and R28 (changed to R27) for easier soldering/lead trimming
+ *    > Swapped component numbers for R28 <-> R27: regional sequential numbering
+ *    > Moved C7 next to C5 + C6 for easier assembly
+ *    > Moved JP5 to left of EXT1 for cable clearence
  *    > Increased INTERLINK connector pad size for *solder side only* (more surface area for soldering)
  *    > Increased overall pad size for JP3 & 4 (more surface area for soldering)
  *    > Slight enlarge of LED holes to allow red status leds to flush mount
  *    > Added extra pad holes for 60/1W and 300/1W resistors
- *    > Added TIP125 surge suppression diodes D22-D25
  *
  * "REV G" differs from "REV F" in the following ways:
  *    > REV G added 'SYNC' I/O signal to allow two boards to keep their

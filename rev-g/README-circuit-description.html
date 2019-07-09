@@ -5,11 +5,14 @@
 <PRE>
 
                 =========================================================
-                1A2 KSU BOARD - REV-G - 2 LINE / 4 EXTENSIONS / INTERLINK
+                1A2 KSU BOARD - REV-G1 - 2 LINE / 4 EXTENSIONS / INTERLINK
                 =========================================================
-                erco@seriss.com - 1.0 (REV-G) Jun 29 2019
+                erco@seriss.com - 1.0 (REV-G1) Jun 29 2019
 
                 <I><B>If you find problems in this document, contact: erco@seriss.com</B></I>
+
+                NOTE: In REV-G1, R28 (10K) and R27 (300/1W) component numbers were swapped,
+                      so that now R28 is the 300/1W, and R27 is the 10K.
 
 1.0 OVERVIEW OF THE 1A2 BOARD AND FEATURES
 ==========================================
@@ -49,15 +52,25 @@
     Intercom is also expanded so that one can dial 1 through 8 to buzz any of 
     the 8 extensions, and "0" to buzz all 8.
 
+2.0 (RESERVED)
+==============
 
-2.0 ELECTRICAL DESCRIPTION
+    This section intentionally left empty.
+
+3.0 (RESERVED)
+==============
+
+    This section intentionally left empty.
+
+
+4.0 ELECTRICAL DESCRIPTION
 ==========================
 
     This section describes the electrical design considerations.
 
     Refer to separate schematic and circuit board for actual circuit layout.
 
-    4.1a Design Approach
+    4.0 Design Approach
     --------------------
 
     When desiging this 1A2 control circuit, I started with the circuits
@@ -80,8 +93,8 @@
     and darlington transistors with an open collector output, which makes
     them perfect for this purpose.
 
-        Detect Ringing ("Ring Detect")
-        ------------------------------
+        4.1.1 "Ring Detect": Detects Ringing
+        ------------------------------------
         An optocoupler connected across Tip and Ring can be used to detect
         the presence of AC ring voltage. An R/C filter was used in earlier
         versions of the board to remove noise during zero crossing of the
@@ -92,8 +105,8 @@
         ringing and passes the ring generator's current to the 1A2 phones
         programmed for ringing via the SW2 diode matrix.
 
-        Detect Line Use ("Line Detect")
-        -------------------------------
+        4.1.2 "Line Detect": Detect Line Use
+        ------------------------------------
         The telco's Tip and Ring wires are monitored for current flow via
         the Line Detect optocoupler, wired in series with the telco's "Ring" wire.
         When the extensions are all idle for the line, there is no current flow
@@ -120,8 +133,8 @@
         The PIC chip uses this signal to manage the extension lamps
         and the hold condition for the line.
 
-        CPC Detection
-        -------------
+        4.1.3 CPC Detection
+        -------------------
         If the central office detects the calling party has hung up,
         it briefly opens the Tip/Ring circuit for about 1/2 a second.
 
@@ -134,8 +147,8 @@
         off, telling the PIC firmware to reset the line, releasing any Hold
         condition.
 
-        Holding A Call
-        --------------
+        4.1.4 Holding A Call
+        --------------------
         The CO detects a line is in use the same way we do; detecting
         current flow across Tip and Ring.
 
@@ -150,56 +163,127 @@
 
     Next, the circuit design should consider 1A2 phone inputs and outputs.
 
+    4.2 Phone Outputs
+    -----------------
     The phones only have one "Output" signal to the KSU:
 
-        The A Lead ("A Sense")
-        ----------------------
+        4.2.1 The A Lead ("A Sense")
+        ----------------------------
         A 1A2 phone's only output signal to the KSU is a simple switch closure
         for the A lead.
 
         When any extension's line button is down and the phone off hook,
-        the A lead for that line will be shorted to ground.
+        the A lead for that line will be shorted to ground. So for each line,
+        the wires connected together would be:
 
-            For line #1 this would be pins 27 and 2 (W-O/O-W) connected together.
-            For Line #2 this would be pins 30 and 2 (W-G/O-W) connected together.
-            For Line #3 this would be pins 33 and 2 (R-G/O-W) connected together.
-            For Line #4 this would be pins 36 and 2 (BK-BL/O-W) connected together.
-            For Line #5 this would be pins 39 and 2 (BK-BR/O-W) connected together.
+            line #1: pins 27 (W-O) and 2 (O-W)
+            Line #2: pins 30 (W-G) and 2 (O-W)
+            Line #3: pins 33 (R-G) and 2 (O-W)
+            Line #4: pins 36 (BK-BL) and 2 (O-W)
+            Line #5: pins 39 (BK-BR) and 2 (O-W)
 
-        Since the 25 pair 1A2 extension cables can be quite long (up to 1000 feet),
-        we isolate the simple A lead switch closure from the PIC chip with an 
-        optocoupler (IC5).
+        Since the 25 pair 1A2 extension cables can be quite long (up to 1000 feet)
+        and has the potential to pick up ring currents, line noise and various 
+        other unwanted interference, we isolate the A lead from the PIC chip's
+        input port with an optocoupler (IC5).
 
-        When the line is Idle, the A lead is an open circuit (floating),
-        causing the A1 optocoupler (IC5) to remain OFF, its open collector
-        output connected directly to the PIC chip's RC5 "L1 A SENSE" input,
-        pulled high to +5 by one of the 5.6K resistors in RN1. This causes
-        the PIC chip's input to see logic 1 when the line is idle.
+        When no extension has the line selected, the A Lead is an open circuit
+        (floating). Since it's directly connected to the A1 optocoupler (IC5),
+        the optocoupler is OFF. The optocoupler's open collector output connects
+        directly to the PIC chip's RC5 ("L1 A SENSE") input, which when off is
+        open (floating), and is pulled high to +5 by one of RN1's 5.6K resistors.
+        The PIC firmware sees this condition as logic 1.
 
-        When someone at an extension picks up the line, the A lead is grounded,
-        turning on optocoupler A1, its output brought to ground, causing the
-        PIC chip to see a logic 0 when the A lead is engaged.
+        When someone at an extension picks up the line, the A Lead is grounded.
+        This turns on optocoupler A1, its darlington output goes to ground,
+        causing the PIC chip to see this condition as logic 0.
 
-        Note that when someone puts a call on Hold or hangs up, the A lead
-        is released. It is up to the PIC chip to determine if the call was
-        put on Hold or the person hung up the phone. It does this by starting
-        a 1/10th sec timer when the A lead is lost, and after the timer expires,
-        checks the Line Detect to see if current is still flowing through the
-        phone's hybdid: if it is, the call was put on Hold, and the PIC energizes
-        the Hold relay, putting the call on Hold. Otherwise, the person at the
-        extension Hung Up, so the PIC chip extinguishes the line lamp, and
-        returns the line to the Idle state.
+        When someone puts a call on Hold or hangs up, the A Lead opens.
+        To tell the difference between Hold or Hang Up, the PIC chip compares
+        the A Lead and Line Detect inputs:
+            
+            * On Hold, when the user presses the Hold button down, the A Lead immediately
+              opens first, while Tip and Ring continue to be connected to the phone's hybrid,
+              keeping the Line Detect sensing current. In the short interval before the user
+              releases the Hold button (causing the line buttons to release), the PIC chip
+              needs to detect this condition and energize the Hold relay (K1) to shunt the Hold
+              resistor across the line to put the call on Hold, so by the time the user releases
+              the Hold button (causing the line button to release, disconnecting the phone's
+              hybrid from continuing to draw current across Tip/Ring), the Hold resistor now
+              keeps the line drawing current so the call doesn't drop.
 
-        So the A Lead sensing is used to control these conditions:
+            * On Hang Up, both A Lead and Line Detect optocouplers turn off simultaneously.
+              The PIC sees both "A SENSE" and "LINE DETECT" in the idle condition, turns
+              off the lamps for the line, and resets the line to being idle.
 
-            1) Directing the Hold relay to be on or off
+        So the A Lead sensing, in combination with Line Detect, is used to control 
+        these conditions:
+
+            1) Directing the Hold relay to be either on or off
             2) Directing 1A2 lamps to be on, off, or flash
 
+    So that covers the phone's only output.
+
+    4.3 Phone Inputs
+    ----------------
     The phones have several inputs:
 
-        * Lamp (Visual)
-        * Bell (Audible)
-        * Buzzer (Audible)
+        * 4.3.1 - Lamp (Visual)
+        * 4.3.2 - Bell (Audible)
+        * 4.3.3 - Buzzer (Audible)
+
+    The on board PIC chips control these signals to the phones by way of a ULN2803
+    darlington transistor array (to boost the PIC chip's output current), which in turn
+    controls power transistors and relays to interface to these 1A2 devices:
+
+        * An IRF9530 power transsitor (Q1) drives the Line #1 lamps
+        * A a relay (K3) drives bell ringing for Line #1
+        * A TIP125 (Q7-Q10) drives the buzzers for the 4 extensions
+
+    4.3.1 Lamps
+    -----------
+
+    The line lamps in 1A2 phones are all wired in parallel. A single IRF9530 transistor
+    (Q1) controls the Line #1 lamp in all extensions, lighting them all simultaneously
+    to indicate if a line is in use, or flashes the lamp for incoming calls or calls on Hold.
+
+    When the KSU wants to light the Line #1 lamps, the IRF9530 power transistor (Q1) is
+    energized by control of the PIC firmware, providing a strong +12V signal to power
+    all the lamps.
+
+    The PIC output RA0 ("L1 LAMP") drives a ULN2803 darlington transistor to actually
+    turn on the IRF9530 transistor. When flashing is needed, the PIC firmware handles
+    the timing of turning the transistor on and off.
+
+    4.3.2 Bells
+    -----------
+    The bells are used for ringing phones when there's an incoming call on a line.
+    Ringing for each extension is programmable by the SW1 diode matrix, allowing
+    the installer to configure which extensions will ring for each of the two lines.
+
+    The bell in each extension needs between 70 VAC and 105 VAC to ring. The AC frequency
+    is usually 30Hz for a 1A2 systems, considered to be a "strident ring" appropriate for
+    a business environment. It can also be 20 Hz for the "calmer" ringing usually used
+    for "home" environments.
+
+    The bell ringing voltage and frequency is NOT supplied by the KSU circuit board; 
+    this must be provided by an external "Ring Generator" (or "Frequency Generator"
+    as per Bell System terminology). The KSU circuit board simply switches this external
+    power to the bells as needed to ring them.
+
+    When the PIC chip senses an incoming call on Line #1 via the Ring Detect optocoupler (IC1),
+    it turns on the "L1 RING RLY" output, which by way of the ULN2803, turns on the coil of
+    "L1 RING" relay (K3), which switches the ring generator's power out to the exensions
+    programmed for ringing by SW1's diode matrix. A current limiting 300 ohm 1 watt resistor 
+    (R27 in REV-G, R28 in REV-G1) is connected in series with the ring current (recommended
+    for most ring generator configs).
+
+    The PIC chip also energizes Q4 whenever ANY line is ringing, providing 12 volts to 
+    power any low voltage ring generator devices (like the PowerDSINE or BlackMagick),
+    so that these devices only receive power during ringing, and are off the rest of the time.
+    This 12 volt output can also be used to drive an external relay to switch 115 VAC power
+    for AC powering ring generators, such as the 118A, so that the device is only on 
+    during ringing.
 
 ### I YAM HERE ### <!--
 
