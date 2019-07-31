@@ -201,9 +201,9 @@ void HandleHoldFlash() {
     //      0msec                 500msec              1000msec
     //      :     100msec         :    600msec         :
     //      :     :               :    :               :
-    // _____       _______________      _______________      __ _ _ _
-    //      |     |               |    |               |    |
-    //      |_____|               |____|               |____|
+    // _____       _______________      _______________      __ _ _ _    ON
+    //      |     |       A       |    |       B       |    |
+    //      |_____|               |____|               |____|            OFF
     //      :     :               :                    :
     //      :<--> :<------------->:                    :
     //      : 20% :      80%      :                    :
@@ -214,8 +214,8 @@ void HandleHoldFlash() {
     //      :<---------------------------------------->:
     //                           1 sec
     //
-    G_hold_flash = ( G_msec >= 100 && G_msec <= 500  ) ||
-                   ( G_msec >= 600 && G_msec <= 1000 ) ? 1 : 0;
+    G_hold_flash = ( G_msec >= 100 && G_msec <= 500  ) ||       // A on time
+                   ( G_msec >= 600 && G_msec <= 1000 ) ? 1 : 0; // B on time
 }
 
 // Manage the global G_ring_flash variable.
@@ -287,7 +287,9 @@ void StopHoldTimer() {
     }
 }
 
-// Return the state of current line's 1/20sec hold timer
+// Is 1/20sec hold timer running?
+//    Returns the state of current line's 1/20sec hold timer
+//
 int IsHoldTimer() {
     switch ( G_curr_line ) {
         case 1: return(L1_hold_timer ? 1 : 0);
@@ -298,6 +300,7 @@ int IsHoldTimer() {
 
 // Manage counting down software hold timers (if enabled) for current line.
 //     Since we count down in msecs, make sure we reach exactly zero.
+//
 void HandleHoldTimer() {
     switch ( G_curr_line ) {
         case 1:
@@ -374,24 +377,28 @@ void RingDetectDebounceInit(Debounce *d) {
 // Manage the L1/L2 RING_DET debounce timers
 //     Ignore noise false-triggering RING_DET due to capacitive noise from CO lines
 //     during pickup/hangup.
+//
+// Noisey RING_DET Input:
 //                         _      ___   _______________       __          _
-//  RING_DET:             | | ||||   | |               | ||| |  || |     | |
+//                        | | ||||   | |               | ||| |  || |     | |
 //             ___________| |_||||   |_|               |_|||||  ||_|_____| |_______
 //                       .           . .               .                 .
 //                       .<-- Noise -->.               .<---- Noise ---->.
 //                       .           . .               .                 .
-//                       .           . .
-//  RINGDET COUNTER:                 .    _____________        _
-//                                   ^   /             \      / \/\_
-//  on thresh  - - - - - - - - - - -/ \ /- - - - - - - -\/\/\/ - - -\ - - - - - - - on thresh
-//                                 / . v                             \     _
-//  off thresh - - - - - - - - - _/- . - - - - - - - - - - - - - - - -\ - / \ - - - off thresh
-//             ___________/ \_/\/    .                               . \_/   \____
-//                                   .<-- hits "on" threshold        .
-//                                   .                               .<-- hits "off" threshold
-//                                   ._______________________________.
-//  IsRinging():                     |                               |
-//             ______________________|                               |__________
+//                       .           . .               .                 .
+//                       .           . .               .                 .
+//  Internal RINGDET COUNTER:        . .  _____________.       _         .
+//                       .           ^ . /             \      / \/\_     .
+//  on thresh  - - - - - - - - - - -/ \./- - - - - - - -\- - / - - -\ - -.- - - - - on thresh
+//                       .         /:  v                 \/\/        \   . _
+//  off thresh - - - - - - - - - _/-:- - - - - - - - - - - - - - - - -\ -./ \ - - - off thresh
+//             ___________/ \_/\/   :                                 :\_/   \____
+//                                  :                                 :
+//                                  :<-- hits "on" threshold          :<-- hits "off" threshold
+//                                  :                                 :
+//  IsRinging()                      _________________________________
+//      Output:                     |                                 |
+//             _____________________|                                 |_________
 //
 void HandleRingDetTimers(Debounce *d1, Debounce *d2) {
     DebounceNoisyInput(d1, L1_RING_DET);
