@@ -1060,6 +1060,10 @@ WIRE COLORS
          O - Orange    BL - Blue     BK - Black
          Y - Yellow     V - Violet    S - Slate
 
+    Mostly single letters are used, but where confusion might arise, two letters
+    are used (like BR for brown, BK for black, BL for blue).  To avoid confusion
+    with green (G), gray wires are always referred to as "slate" (S).
+
     In telephone wiring, CAT-3 UTP cable (Category 3, "Unshielded Twisted Pair")
     is used to ensure long runs of signals have the best noise cancellation,
     such that each voice circuit is on its own pair of wires that are physically
@@ -1069,16 +1073,13 @@ WIRE COLORS
     (yellow-slate) consists of two wires: 
 
         Y-S -- A yellow wire with a slate (gray) stripe
-        S-Y -- A slate wire with a yellow stripe
+        S-Y -- A slate (gray) wire with a yellow stripe
 
-    Mostly single letters are used, but where confusion might arise, two letters
-    are used (like BR for brown, BK for black, BL for blue).  To avoid confusion
-    with green (G), gray wires are always referred to as "slate" (S).
-
-    When referring to a *single wire*, the first of the two colors is the primary color,
+    It matters which color is first.
+    When referring to a *single wire*, the first of the two colors is always the main color,
     and the second is the stripe color. So Y-S is a mostly yellow wire with a slate stripe.
 
-    When referring to *wire pairs*, the first letter is the primary color group.
+    When referring to *wire pairs*, the first letter is the main (or "primary") color group.
     In a 25 pair CAT3 UTP cable, wire pairs are broken into 5 color groups of 5 pairs each:
                                                                  __
         White group  - 5 pairs (W-BL, W-O, W-G, W-BR, W-S)         |
@@ -1088,10 +1089,11 @@ WIRE COLORS
         Violet group - 5 pairs (V-BL, V-O, V-G, V-BR, V-S)       __|
 
     So when referring to the pair of wires that are Y-S and S-Y, refer to the pair
-    as "the Y-S pair" (and not the S-Y pair), because the primary color for the group
-    that pair is in is yellow.
+    as "the Y-S pair" (and NOT the S-Y pair), because the main (primary) color for
+    the group the pair is in is /yellow/.
 
-    In this document, the Y-S and Y-O pair are referenced a lot, because the Y-S pair
-    is used for the bells, and the Y-O pair is used for the buzzers.
+    In this document, the Y-S and Y-O pairs are referenced a lot, because they're
+    used by the KSU for bells and buzzer respectively, and often the wiring has to
+    be checked and changed for those pairs.
 
 * * * EDITING: WORK IN PROGRESS * * *
