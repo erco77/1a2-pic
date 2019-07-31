@@ -1,3 +1,9 @@
+<!DOCTYPE html><!--
+# vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
+-->
+<HTML><HEAD><meta charset="UTF-8"></HEAD>
+<PRE>
+
 # vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 
                     88        db         ad888888b,       88      a8P  ad88888ba  88        88  
@@ -35,6 +41,7 @@
                                             2 LINE / 4 EXTENSIONS
                                 ==============================================
                                     erco@seriss.com - 06/27/2019 - REV G
+                                    erco@seriss.com - 07/22/2019 - REV G1
 
                         If you find problems in this document, contact: erco@seriss.com
 
@@ -92,13 +99,13 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     metal (like wire clippings).
 
                                      .   .
-                                  -->.   .<-- 1/4" or more
+                                  --&gt;.   .&lt;-- 1/4" or more
                                      .   .
                                      .   .
                                      .   XXXXXXX
                                     _    XXXXXXX 
                                    | |___XXXXXXX
-                         +------> || |___XXXXXXX
+                         +------&gt; || |___XXXXXXX
                          |         | |   XXXXXXX
                          |         | |   XXXXXXX
                          |         | |   XXXXXXX
@@ -108,7 +115,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                          |    KSU  | |   XXXXXXX
                          |  Board  | |   XXXXXXX
                          |         | |___XXXXXXX
-        Mounting Screws -+------> || |___XXXXXXX <-- Backboard
+        Mounting Screws -+------&gt; || |___XXXXXXX &lt;-- Backboard
                                    |_| / XXXXXXX
                                   /   /  XXXXXXX
                        PC Board _/   /   XXXXXXX
@@ -221,7 +228,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
              existing wire." The wire he's referring to is usually the actual
              bell's red wire.
 
-       The wiring change inside the phone should be as follows:
+       The bell wiring change inside the phone should be as follows:
 
    ...................................................................................
    :                                       :                                         :
@@ -233,9 +240,9 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    :     |      |                          :      |      |                           :
    :      \____/                           :       \____/                            :
    :     __|__|__  RED            _        :      __|__|__  RED              _       :
-   :    |        |-------------->(_) "K"   :     |        |--------.        (_) "K"  :
+   :    |        |--------------&gt;(_) "K"   :     |        |--------.        (_) "K"  :
    :    |        |                _        :     |        |         \        _       :
-   :    |  BELL  | BLK           (_) "A"   :     |  BELL  | BLK      `----->(_) "A"  :
+   :    |  BELL  | BLK           (_) "A"   :     |  BELL  | BLK      `-----&gt;(_) "A"  :
    :    |        |-----+          |        :     |        |-----+            |       :
    :    |________|     |          |        :     |________|     |            |       :
    :                   |          |        :                    |            |       :
@@ -249,7 +256,20 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    :                                       :                                         :
    :.......................................:.........................................:
 
-           Figure B. The diode ringing in-phone wiring change needed for bells.
+           Figure B. The diode ringing in-phone "K/A" wiring change needed for bells.
+
+   Buzzer wiring is usually straight forward, and just a matter of making sure the
+   two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
+
+
+   SPECIAL BUZZER WIRING FOR CALL DIRECTOR (2636) MODEL PHONES
+   -----------------------------------------------------------
+       Call Director model phones, such as the 2636 by default have the buzzer wired
+       to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
+       on Amphenol connector #1 by using the change shown in this diagram:
+
+           <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"
+           ><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" width=400 border=1></a>
 
 
 3. ATTACH PHONE LINES
@@ -333,14 +353,15 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
           wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS 
           (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
 
+          <IMG SRC=images/ring-gen-hookup--118a.png WIDTH=400 border=2>
+<!--
                                 EXT RING GEN
 
-                             12V RING   105 VAC
-                                OUT     20HZ IN
+                       12V RING OUT     105 VAC/20HZ IN
                                __|__   __|__
                               /     \ /     \
 
-                               +   -   ~   ~ 
+                              (+) (-) (~) (~)
            _ _ _____________________________________________________ _ _
                              | O   O   O   O |
                              |_______________|
@@ -354,7 +375,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                                    |  RING      |     |    |__
                                    |  GENERATOR |-----|    |__
                                    |____________|     |____|
-
+-->
 
       4.2 For the PowerDSINE 12VDC ring generator, this board provides
           a 6 pin header at JP5 for directly connecting this device.
@@ -372,44 +393,46 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     |                                                ||   ||   ||   ||   |
     |                                                ||   ||   ||   ||   |
     |                                                ||   ||   ||   ||   |
-    |                                                \|   \|   \|   \|   |
-    |   ___      __     ____               ____                          |
-    |  |   |    |+-|   |oooo|             |oooo|   oooooo                |
-    |__|___|____|__|___|____|_____________|____|_________________________|
-      Line1+2   12VDC   Ring Trigger       Ring      .
-      (RJ-11)   Input   Connector          Gen      /|\
-                                           Power     |
-                                                     |
-                                              Location of "JP5"
-                                                  
-
+    |                                             8  \|   \|   \|   \|   |
+    |   ___      __     ____               ____   8                      |
+    |  |   |    |+-|   |oooo|             |oooo|  8                      |
+    |__|___|____|__|___|____|_____________|____|__.______________________|
+      Line1+2   12VDC   Ring Trigger       Ring  /|\    
+      (RJ-11)   Input   Connector          Gen    |     
+                                           Power  |     
+                                                  |   
+                                        Location of PowerDSINE
+                                           connector "JP5"
 
           The PowerDSINE's 6 pin connector plug should be inserted into 
-          the JP5 header as follows, note the YELLOW wire is to the LEFT:
+          the JP5 header as follows.  Note the PowerDSINE's YELLOW wire
+          should be at the BOTTOM.
 
 
-                          POWERDSINE RING GEN
-                           ______________________________
-                          |  _    _    _    _    _    _  |
-                          | (_)  (_)  (_)  (_)  (_)  (_) |
-                      JP5 |__|____x____|____|____|____|__|
-                             |         |    |    |    |
-                             |         |    |    |    |
-                            YEL       BLK  RED  WHT  BLU
-                             |         |    |    |    |
-                             |         |    |    |    |
-                           __|_________|____|____|____|__
-                          |                              |
-                          |                              |
-                          |                              |
-                          |                              |
-                          |          PowerDSINE          |
-                          |       PCR-SIN03V12F20-C      |
-                          |         (or similar)         |
-                          |                              |
-                          |                              |
-                          |                              |
-                          |______________________________|
+                               JP5     
+                             
+                          BLU  |O| &lt;---------------------------.
+                          WHT  |O| &lt;----------------------.    |
+                          RED  |O| &lt;-----------------.    |    |
+                          BLK  |O| &lt;------------.    |    |    |
+                          x    |O|              |    |    |    |
+                          YEL  |O| &lt;--.         |    |    |    |
+                                      |         |    |    |    |
+                                     YEL       BLK  RED  WHT  BLU
+                                      |         |    |    |    |
+                                    __|_________|____|____|____|__  
+                                   |                              | 
+                                   |                              | 
+                                   |                              | 
+                                   |                              | 
+                                   |          PowerDSINE          | 
+                                   |       PCR-SIN03V12F20-C      | 
+                                   |         (or similar)         | 
+                                   |                              | 
+                                   |                              | 
+                                   |                              | 
+                                   |______________________________| 
+
 
               Figure C. Wiring the PowerDSINE via 6 pin plug to KSU board.
                         Avoid connecting the plug in reverse, as the plug
@@ -553,7 +576,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
                      |________________|
                         .   .
                        /|\ /|\
-                        |   |   <-- jumper or doorbell switch
+                        |   |   &lt;-- jumper or doorbell switch
                         |___|       to ring line #1
 
          To ring Line #1, connect left two terminals on Ring Trigger
@@ -812,7 +835,7 @@ TROUBLESHOOTING
 
     Things to check:
 
-         > Check the telco line polarity.
+         * Check the telco line polarity.
          
            Many of the old Touch-Tone dial pads are sensitive to line polarity,
            so be sure it's right. If necessary, flop the wires at your jack.
@@ -846,7 +869,7 @@ TROUBLESHOOTING
 
     Things to check:
 
-        > Check the telephone cable you have connected between the jack
+        * Check the telephone cable you have connected between the jack
           and the KSU, and verify it's a 4 conductor wire, and not just 2.
           
           Some phone cables only have 2 conductors, the red/grn pair (line #1),
@@ -899,16 +922,16 @@ TROUBLESHOOTING
 
     Things to check:
 
-         > Verify bells of EACH 1A2 extension phone are attached to
+         * Verify bells of EACH 1A2 extension phone are attached to
            the Yellow-Slate wire pair (pins 20/45).
 
-         > Make sure the 1A2 connectors are all pressed down and seated fully.
+         * Make sure the 1A2 connectors are all pressed down and seated fully.
            A half-seated connector can cause lack of ringing.
 
-         > Make sure the "BELL CALL" DIP switches (SW2) are set to "on"
+         * Make sure the "BELL CALL" DIP switches (SW2) are set to "on"
           for the lines/extensions you want to ring during incoming calls.
 
-         > Make sure the external ring generator is attached correctly
+         * Make sure the external ring generator is attached correctly
            and verify AC ring voltage is present during the ring cycle.
 
            An external ring generator must be attached to the card for
@@ -928,7 +951,7 @@ TROUBLESHOOTING
            Refer to "Figure C" and "Figure D" near the top of this document
            for more info.
 
-         > For bell ringing to work properly with the diode oriented ring
+         * For bell ringing to work properly with the diode oriented ring
            circuit for this board, verify all the 1A2 phones have the
            following one wire modification.  Paraphrasing Ed from
            Sundance Communications:
@@ -941,7 +964,7 @@ TROUBLESHOOTING
            The wire he's referring to is usually the actual bell's red wire.
            Refer to "Figure B" (near the top of this document) for more info.
 
-         > 1A2 phones typically have ringers with a single bell + clapper.
+         * 1A2 phones typically have ringers with a single bell + clapper.
            These ringers are sensitive to polarity when mixed with a diode
            ring circuit. If the ringer is not ringing or barely ringing/humming,
            try switching the two wires inside the phone between the bell
@@ -963,13 +986,13 @@ TROUBLESHOOTING
 
     Things to check:
 
-        > Make sure the buzzers are all wired to pins 17/42 (Y-O pair).
+        * Make sure the buzzers are all wired to pins 17/42 (Y-O pair).
 
-        > Make sure the 1A2 connectors are all pressed down and seated fully.
+        * Make sure the 1A2 connectors are all pressed down and seated fully.
           A half-seated connector can prevent the buzzers from working, while
           other features work fine.
 
-        > Make sure the "BUZZ CALL" DIP switches (SW1) are set to "on"
+        * Make sure the "BUZZ CALL" DIP switches (SW1) are set to "on"
           for the lines/extensions you want to buzz during incoming calls.
 
 
@@ -977,16 +1000,16 @@ TROUBLESHOOTING
 
     Things to check:
 
-        > Verify the power supply voltage being fed to the board:
+        * Verify the power supply voltage being fed to the board:
           Put a meter across the two "12V INPUT" terminal screws 
           and verify +12 volts DC is being fed to the board, 
           positive on the left screw, negative on the right. 
           Voltage can range 11.5V to 12.75v, but closer to 12 is best.
 
-        > Ensure the power is true DC, and not "lumpy DC"; put a scope
+        * Ensure the power is true DC, and not "lumpy DC"; put a scope
           on the terminal screws to verify DC and not AC voltage.
 
-        > If 12V is coming into the board, check the 7805 (Q3) near
+        * If 12V is coming into the board, check the 7805 (Q3) near
           the power connector, and verify 5V is between pins 2 and 3:
 
                                   7805
@@ -1011,7 +1034,7 @@ TROUBLESHOOTING
           during the following: touch the red lead to pin 1 should show +12VDC.
           Moving the red lead to pin 3 should show +5VDC.
 
-        > Check the temperature of Q3 (the 7805 at the lower left of the board,
+        * Check the temperature of Q3 (the 7805 at the lower left of the board,
           near power connector). If it gets warm or hot quickly after power is
           connected, SOMETHING MIGHT BE SHORTED OUT - REMOVE POWER QUICKLY.
           
