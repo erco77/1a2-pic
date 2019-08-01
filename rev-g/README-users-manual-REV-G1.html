@@ -1,7 +1,43 @@
 <!DOCTYPE html><!--
 # vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 -->
-<HTML><HEAD><meta charset="UTF-8"></HEAD>
+<HTML>
+<HEAD>
+    <meta charset="UTF-8">
+    <style>
+    /* DivTable.com */
+    .divTable{
+        display: table;
+        width: 75%;
+        margin-left: 40px;
+    }
+    .divTableRow {
+        display: table-row;
+    }
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+    }
+    .divTableCell, .divTableHead {
+        border: 1px solid #999999;
+        display: table-cell;
+        padding: 3px 10px;
+    }
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+    }
+    .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+    }
+    .divTableBody {
+        display: table-row-group;
+    }
+    </style>
+</HEAD>
 <PRE>
 
 # vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
@@ -1091,10 +1127,10 @@ WIRE COLORS
     is the "main" or "primary" color; The "Y-S pair" (yellow-slate) consists of two wires: 
 
         Y-S -- A mainly yellow wire with a slate (gray) stripe
-        <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄</font>
+       <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>
 
         S-Y -- A mainly slate (gray) wire with a yellow stripe
-        <font color=#777>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄</font>
+       <font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font>
 
     So it matters which color appears first; When referring to a *single wire*, the first 
     of the two colors is always the "main" (or "primary") color, and the second color
@@ -1102,44 +1138,99 @@ WIRE COLORS
 
     When referring to *wire pairs*, the first letter is the main (or "primary") color GROUP.
     In a 25 pair CAT3 UTP cable, wire pairs are broken into 5 color groups of 5 pairs each:
-    <small>
-                                                            __
-       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄</font>   | W-BL
-       <font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄</font>   | W-O
-       <font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄</font>   | W-G    "WHITE GROUP"
-       <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄</font>   | W-BR
-       <font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄</font>   | W-S
-       <font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄</font> __| Pair
-                                                            __
-       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄</font>   | R-BL
-       <font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄</font>   | R-O
-       <font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄</font>   | R-G   "RED GROUP"
-       <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄</font>   | R-BR
-       <font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄</font>   | Pair
-                                                              |
-       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄</font>   | R-S
-       <font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄</font> __| Pair
 
-            * WIP *
-                                                                   |
-      "BLACK GROUP"  - 5 pairs (BK-BL, BK-O, BK-G, BK-BR, BK-S)    |-- 25 pairs total
-      "YELLOW GROUP" - 5 pairs (Y-BL, Y-O, Y-G, Y-BR, Y-S)         |
-      "VIOLET GROUP" - 5 pairs (V-BL, V-O, V-G, V-BR, V-S)       __|
-    </small>
+
+                                                    <FONT SIZE=5><B>25 Pairs / 5 "Color Groups"</B></FONT>
+<small>
+<div class="divTable">
+  <div class="divTableBody">
+    <div class="divTableRow">
+        <div class="divTableCell"><CENTER><FONT SIZE=5><B>WHITE GROUP</B></FONT></CENTER>
+    W-BL   <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font>   W-BL
+    BL-W   <font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font>   Pair
+ 
+     W-O   <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font>   W-O
+     O-W   <font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font>   Pair
+
+     W-G   <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font>   W-G
+     G-W   <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font>   Pair
+
+    W-BR   <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font>   W-BR
+    BR-W   <font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font>   Pair
+
+     W-S   <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font>   W-S
+     S-W   <font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font>   Pair
+        </div>
+        <div class="divTableCell"><CENTER><FONT SIZE=5><B>RED GROUP</B></FONT></CENTER>
+    R-BL   <font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font>   R-BL
+    BL-R   <font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font>   Pair
+
+     R-O   <font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font>   R-O
+     O-R   <font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font>   Pair
+
+     R-G   <font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font>   R-G
+     G-R   <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font>   Pair
+
+    R-BR   <font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font>   R-BR
+    BR-R   <font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font>   Pair
+
+     R-S   <font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font>   R-S
+     S-R   <font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font>   Pair
+        </div>
+      </div><div class="divTableRow">
+        <div class="divTableCell"><CENTER><FONT SIZE=5><B>BLACK GROUP</B></FONT></CENTER>
+           <font color=#111>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#111>▄▄▄▄▄▄▄</font>   BK-BL
+           <font color=#00f>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#00f>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#111>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#111>▄▄▄▄▄▄▄</font>   BK-O
+           <font color=#f80>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#f80>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#111>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#111>▄▄▄▄▄▄▄</font>   BK-G
+           <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#111>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#111>▄▄▄▄▄▄▄</font>   BK-BR
+           <font color=#755>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#755>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#111>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#111>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#111>▄▄▄▄▄▄▄</font>   BK-S
+           <font color=#888>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#111>▄</font><font color=#888>▄▄▄▄▄▄▄</font>   Pair
+        </div>
+        <div class="divTableCell"><CENTER><FONT SIZE=5><B>YELLOW GROUP</B></FONT></CENTER>
+           <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>   Y-BL
+           <font color=#00f>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#00f>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>   Y-O
+           <font color=#f80>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#f80>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>   Y-G
+           <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>   Y-BR
+           <font color=#755>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#755>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>   Y-S
+           <font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font>   Pair
+        </div>
+      </div><div class="divTableRow">
+        <div class="divTableCell"><CENTER><FONT SIZE=5><B>VIOLET GROUP</B></FONT></CENTER>
+           <font color=#94f>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#94f>▄▄▄▄▄▄▄</font>   V-BL
+           <font color=#00f>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#00f>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#94f>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#94f>▄▄▄▄▄▄▄</font>   V-O
+           <font color=#f80>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#f80>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#94f>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#94f>▄▄▄▄▄▄▄</font>   V-G
+           <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#94f>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#94f>▄▄▄▄▄▄▄</font>   V-BR
+           <font color=#755>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#755>▄▄▄▄▄▄▄</font>   Pair
+
+           <font color=#94f>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#94f>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#94f>▄▄▄▄▄▄▄</font>   V-S
+           <font color=#888>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#94f>▄</font><font color=#888>▄▄▄▄▄▄▄</font>   Pair
+        </div>
+    </div>
+  </div>
+</div>
+</small>
     So when referring to *wire pairs* in the "yellow group", the "Y" is always
     specified first, e.g. the "Y-S pair" (not the S-Y pair), and the "Y-O pair"
     (and not the O-Y pair).
