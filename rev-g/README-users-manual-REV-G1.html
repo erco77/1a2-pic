@@ -790,6 +790,24 @@ INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
   boards either with separate power adaptors, or one adapter (of suitable
   amperage, 1.5A or higher) wired in parallel to both boards. (See diagram)
 
+  The ribbon cable should be oriented in such a way that the red wire
+  on the cable ends up on the same side of the interlink connectors.
+
+  The recommended cable configuration is shown on the left hand side of
+  in this diagram:
+
+  <a href="images/good-vs-bad-interlink-cabling.jpg"><img src="images/good-vs-bad-interlink-cabling.jpg" width=800></a>
+
+  This allows the boards to not be obscured by the cable so one can
+  easily inspect and configure DIP switches and primary/secondary jumpers.
+
+  Note how in the left ("correct") diagram, the cable at the top
+  does a full 360 degree flip over itself to remain in the same orientation.
+
+  Here's a side view of the cable orientation, just to make it clear:
+
+  <a href="images/interlink-cable-side-view.png"><img src="images/interlink-cable-side-view.png" width=800></a>
+
   Configure one board as the "PRIMARY"; that board's telco inputs will
   appear as LINE 1 and LINE 2 on the extensions. Configure the other board
   as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and
@@ -1069,31 +1087,65 @@ WIRE COLORS
     such that each voice circuit is on its own pair of wires that are physically
     twisted together. Most 1A2 phones have 25 pair (50 conductor) CAT-3 UTP cables.
 
-    Each pair of wires twisted together share the same colors; The "Y-S pair"
-    (yellow-slate) consists of two wires: 
+    Each pair of wires twisted together share the same two colors, just swapping which
+    is the "main" or "primary" color; The "Y-S pair" (yellow-slate) consists of two wires: 
 
-        Y-S -- A yellow wire with a slate (gray) stripe
-        S-Y -- A slate (gray) wire with a yellow stripe
+        Y-S -- A mainly yellow wire with a slate (gray) stripe
+        <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄</font>
 
-    It matters which color is first.
-    When referring to a *single wire*, the first of the two colors is always the main color,
-    and the second is the stripe color. So Y-S is a mostly yellow wire with a slate stripe.
+        S-Y -- A mainly slate (gray) wire with a yellow stripe
+        <font color=#777>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#777>▄▄▄▄</font>
 
-    When referring to *wire pairs*, the first letter is the main (or "primary") color group.
+    So it matters which color appears first; When referring to a *single wire*, the first 
+    of the two colors is always the "main" (or "primary") color, and the second color
+    is the stripe's color. So in Y-S, Y is the primary color, and S is the stripe.
+
+    When referring to *wire pairs*, the first letter is the main (or "primary") color GROUP.
     In a 25 pair CAT3 UTP cable, wire pairs are broken into 5 color groups of 5 pairs each:
-                                                                 __
-        White group  - 5 pairs (W-BL, W-O, W-G, W-BR, W-S)         |
-        Red group    - 5 pairs (R-BL, R-O, R-G, R-BR, R-S)         |
-        Black group  - 5 pairs (BK-BL, BK-O, BK-G, BK-BR, BK-S)    |-- 25 pairs total
-        Yellow group - 5 pairs (Y-BL, Y-O, Y-G, Y-BR, Y-S)         |
-        Violet group - 5 pairs (V-BL, V-O, V-G, V-BR, V-S)       __|
+    <small>
+                                                            __
+       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#ddd>▄▄▄▄</font>   | W-BL
+       <font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#00f>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#ddd>▄▄▄▄</font>   | W-O
+       <font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#f80>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#ddd>▄▄▄▄</font>   | W-G    "WHITE GROUP"
+       <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#0a0>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#ddd>▄▄▄▄</font>   | W-BR
+       <font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#755>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ddd>▄▄▄▄</font>   | W-S
+       <font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ddd>▄</font><font color=#888>▄▄▄▄</font> __| Pair
+                                                            __
+       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#00f>▄</font><font color=#f00>▄▄▄▄</font>   | R-BL
+       <font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#00f>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#f80>▄</font><font color=#f00>▄▄▄▄</font>   | R-O
+       <font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#f80>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#0a0>▄</font><font color=#f00>▄▄▄▄</font>   | R-G   "RED GROUP"
+       <font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#0a0>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#755>▄</font><font color=#f00>▄▄▄▄</font>   | R-BR
+       <font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#755>▄▄▄▄</font>   | Pair
+                                                              |
+       <font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#f00>▄▄▄▄</font>   | R-S
+       <font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#f00>▄</font><font color=#888>▄▄▄▄</font> __| Pair
 
-    So when referring to the pair of wires that are Y-S and S-Y, refer to the pair
-    as "the Y-S pair" (and NOT the S-Y pair), because the main (primary) color for
-    the group the pair is in is /yellow/.
+            * WIP *
+                                                                   |
+      "BLACK GROUP"  - 5 pairs (BK-BL, BK-O, BK-G, BK-BR, BK-S)    |-- 25 pairs total
+      "YELLOW GROUP" - 5 pairs (Y-BL, Y-O, Y-G, Y-BR, Y-S)         |
+      "VIOLET GROUP" - 5 pairs (V-BL, V-O, V-G, V-BR, V-S)       __|
+    </small>
+    So when referring to *wire pairs* in the "yellow group", the "Y" is always
+    specified first, e.g. the "Y-S pair" (not the S-Y pair), and the "Y-O pair"
+    (and not the O-Y pair).
 
-    In this document, the Y-S and Y-O pairs are referenced a lot, because they're
-    used by the KSU for bells and buzzer respectively, and often the wiring has to
-    be checked and changed for those pairs.
+    In this document, the Y-S and Y-O pairs in particular are referenced a lot,
+    because they're used by the KSU for Bells and Buzzer respectively, as often
+    the wiring for those needs to be checked and changed.
 
 * * * EDITING: WORK IN PROGRESS * * *
