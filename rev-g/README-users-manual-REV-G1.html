@@ -3,8 +3,8 @@
 -->
 <HTML>
 <HEAD>
-    <meta charset="UTF-8">
-    <style>
+  <META CHARSET="UTF-8">
+  <STYLE>
     /* DivTable.com */
     .divTable{
         display: table;
@@ -36,7 +36,28 @@
     .divTableBody {
         display: table-row-group;
     }
-    </style>
+    /* EXPAND/COLLAPSE CSS */
+    details       { margin-left: 20px; cursor: pointer; }
+    summary       { font-family: arial,sans-serif; font-weight: bold; }
+    table.openall { width: 100%; }
+    td.openall    { text-align: right; color: blue; cursor: pointer; }
+  </STYLE>
+  <SCRIPT>
+    function OpenAllDetails() {
+      var details = document.getElementsByTagName("details");
+      var len = details.length;
+      for (var i=0; i<len; i++) {
+        details[i].open = true;
+      }
+    }
+    function AddTitleToDetails() {
+      var details = document.getElementsByTagName("details");
+      var len = details.length;
+      for (var i=0; i<len; i++) {
+        details[i].title = "Click to see details..";
+      }
+    }
+  </SCRIPT>
 </HEAD>
 <PRE>
 
@@ -209,8 +230,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     This indicates the CPUs are operating normally.
     
     If leds are NOT flashing, something is WRONG - disconnect power
-    immediately, and refer to the TROUBLESHOOTING section at the
-    end of this document.
+    immediately, and refer to the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section.
 
     IMPORTANT: DON'T CONNECT 12V POWER WITH POLARITY REVERSED.
                This board has NO PROECTION against reverse polarity DC power;
@@ -256,24 +276,21 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     
             > Bells on pins 20/45 (Y-S pair)
             > Buzzers on pins 17/42 (Y-O pair)
-            > Phone networks configured for diode ringing (**)
-
-    (**) Since this board uses a diode network to program ringing, bell
-         ringing is on only 1/2 of the AC wave. Paraphrasing Ed from 
-         Sundance Communications:
-
-            "For any kind of diode ringing to work, the capacitor between
-             network terminals A and K (inside phone) have to be bypassed.
-             Move the wire on terminal 'K' to terminal 'A' along with the
-             existing wire." The wire he's referring to is usually the actual
-             bell's red wire.
+            > Phone hybrid networks configured for diode ringing (see "BELL WIRING" below)
 
 <A NAME="BellWiring"></A>
    BELL WIRING
    -----------
+   Since this board uses a diode network to program ringing, bell ringing is only
+   done on 1/2 of the AC wave. To support this, a small one wire change must be made
+   inside each phone to bypass the ringer capacitor that is between the K and A terminals
+   on the hybrid network. Paraphrasing Ed from Sundance Communications:
 
-   The bell wiring change inside the phone should be as follows:
+       "For any kind of diode ringing to work, the capacitor between hybrid network
+       terminals A and K (inside phone) have to be bypassed. 
+       Move the wire on terminal 'K' to terminal 'A' along with the existing wire." 
 
+   So if a red wire is currently on the K terminal, just move it to the A terminal:
    ...................................................................................
    :                                       :                                         :
    :                 BEFORE                :                  AFTER                  :
@@ -302,6 +319,19 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
            Figure B. The diode ringing in-phone "K/A" wiring change needed for bells.
 
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>Extra Bell Wiring Details</summary>
+   Here's an illustration with actual components from a 2564 and 2565 model phone.
+   Wiring may vary, since used phones may have been changed before. What's shown are
+   the factory wiring from the Bell System Practices documentation.
+
+   Note there are at least two different bell ringer types one can encounter in these phones;
+   the H1A which has 4 wires (R, BK, S, S-R), and H1B which has 2 wires (R and BK).
+   The red arrow shows the wiring change for each type of ringer:
+   <center>
+   <img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" border=1><br>
+   <img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" border=1><br>
+   Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.</center></details>
 <A NAME="BuzzerWiring"></A>
    BUZZER WIRING
    -------------
@@ -309,7 +339,8 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    Buzzer wiring is usually straight forward, and just a matter of making sure the
    two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
 
-
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>Extra 'Call Director' (2636) Buzzer Wiring Details</summary>
    SPECIAL BUZZER WIRING FOR CALL DIRECTOR (2636) MODEL PHONES
    -----------------------------------------------------------
        Call Director model phones, such as the 2636 by default have the buzzer wired
@@ -318,8 +349,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
            <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"
            ><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" width=400 border=1></a>
-
-
+</details>
 <A NAME="ConnectTelco"></A>
 3. ATTACH PHONE LINES
 ---------------------
@@ -397,42 +427,16 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
         * Other commercially available telephone "Ring Generator" or "Frequency Generator"
 
     There are at least three ways to connect an external ring generator,
-    depending on the type:
-    
-      4.1 For an old telco ring generator (like the WECO 118A or VIKING), you can
-          wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS 
-          (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
+    depending on the type.
 
-          <IMG SRC=images/ring-gen-hookup--118a.png WIDTH=400 border=2>
-<!--
-                                EXT RING GEN
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details open><summary>4.1 PowerDSINE 12V Ring Generator</summary>
+    For the PowerDSINE 12VDC ring generator, this board provides
+    a 6 pin header at JP5 for directly connecting this device.
 
-                       12V RING OUT     105 VAC/20HZ IN
-                               __|__   __|__
-                              /     \ /     \
-
-                              (+) (-) (~) (~)
-           _ _ _____________________________________________________ _ _
-                             | O   O   O   O |
-                             |_______________|
-                               x   x   .   .
-                                      /|\ /|\
-                                       |   |
-                                       |   |
-                                       |   |
-                                    ------------     AC POWER
-                                   |  118A      |      ____
-                                   |  RING      |     |    |__
-                                   |  GENERATOR |-----|    |__
-                                   |____________|     |____|
--->
-
-      4.2 For the PowerDSINE 12VDC ring generator, this board provides
-          a 6 pin header at JP5 for directly connecting this device.
-
-          The SIP header is located to the right of the "EXT RING
-          GEN" connector, under the large EXT1 connector, and is
-          labled "POWERDSINE RING GEN" and "JP5":
+    The SIP header is located to the right of the "EXT RING
+    GEN" connector, under the large EXT1 connector, and is
+    labled "POWERDSINE RING GEN" and "JP5":
 
      ____________________________________________________________________
     |                                                                    |
@@ -454,9 +458,9 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                                         Location of PowerDSINE
                                            connector "JP5"
 
-          The PowerDSINE's 6 pin connector plug should be inserted into 
-          the JP5 header as follows.  Note the PowerDSINE's YELLOW wire
-          should be at the BOTTOM.
+    The PowerDSINE's 6 pin connector plug should be inserted into 
+    the JP5 header as follows.  Note the PowerDSINE's YELLOW wire
+    should be at the BOTTOM.
 
 
                                JP5     
@@ -487,12 +491,45 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
               Figure C. Wiring the PowerDSINE via 6 pin plug to KSU board.
                         Avoid connecting the plug in reverse, as the plug
                         does not prevent one from doing so.
+    </details>
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>4.2 Attaching AC Powered Ring Generator (118A, VIKING, etc.)</summary>
+    
+    For an old telco ring generator (like the WECO 118A or VIKING), you can
+    wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS 
+    (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
 
+          <IMG SRC=images/ring-gen-hookup--118a.png WIDTH=400 border=2>
+<!--
+                                EXT RING GEN
 
-      4.3 If you have a PowerDSINE ring generator with the connector cut off,
-          or if you have a Cambridge Electronics 12V ring generator, you can wire
-          it directly to the EXT RING GEN screw terminals as follows, 
-          leaving JP5 unconnected:
+                       12V RING OUT     105 VAC/20HZ IN
+                               __|__   __|__
+                              /     \ /     \
+
+                              (+) (-) (~) (~)
+           _ _ _____________________________________________________ _ _
+                             | O   O   O   O |
+                             |_______________|
+                               x   x   .   .
+                                      /|\ /|\
+                                       |   |
+                                       |   |
+                                       |   |
+                                    ------------     AC POWER
+                                   |  118A      |      ____
+                                   |  RING      |     |    |__
+                                   |  GENERATOR |-----|    |__
+                                   |____________|     |____|
+-->
+    </details>
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>4.3 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
+
+      If you have a PowerDSINE ring generator with the connector cut off,
+      or if you have a Cambridge Electronics 12V ring generator, you can wire
+      it directly to the EXT RING GEN screw terminals as follows, 
+      leaving JP5 unconnected:
 
 
                                   EXT RING GEN
@@ -518,17 +555,17 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                 Figure D. Wiring the PowerDSINE to screw terminals.
 
 
-         For the PowerDSINE, RED/BLK wires are +12/GND outputs to power the device
-         from the board, and WHT/BLU wires are AC ring outputs from the device
-         to the board. Leave the YEL wire ("inhibit") unconnected.
+      For the PowerDSINE, RED/BLK wires are +12/GND outputs to power the device
+      from the board, and WHT/BLU wires are AC ring outputs from the device
+      to the board. Leave the YEL wire ("inhibit") unconnected.
 
-         For the Cambridge Electronics device, wire the +12/GND inputs to the
-         left hand screws on the EXT RING GEN connector, and wire the AC output
-         to the right hand screws.
+      For the Cambridge Electronics device, wire the +12/GND inputs to the
+      left hand screws on the EXT RING GEN connector, and wire the AC output
+      to the right hand screws.
 
-         If you have trouble getting one or more extensions to ring, check the
-         TROUBLESHOOTING section below.
-
+      If you have trouble getting one or more extensions to ring, check the
+      <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section below.
+    </details>
 
 <A NAME="DIPRinging"></A>
 5. SET THE DIP SWITCHES FOR RINGING
@@ -603,7 +640,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
 
          o Try calling Line #1's phone number from a cell phone, or another line.
            If configured, the ringers should ring, and the Line #1 lamp should
-           flash at a 1 second rate. (See the TROUBLESHOOTING section for problems)
+           flash at a 1 second rate. (See the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section for problems)
 
          o Answer the call by selecting Line #1 on the phone, and picking up the
            handset. The lamp should stop blinking and stay on steady.
@@ -618,18 +655,18 @@ TESTING YOUR SETUP FOR THE FIRST TIME
          the two left terminals to ring line #1, or the right two terminals
          to ring line #2:
 
-                      Ring Trigger Connector
-                        Line 1  Line 2
-                         Ring    Ring
-                        _____   _____
-                       /     \ /     \
-   _ _ _____________________________________________________ _ _
-                     |  O   O   O   O |
-                     |________________|
-                        .   .
-                       /|\ /|\
-                        |   |   &lt;-- jumper or doorbell switch
-                        |___|       to ring line #1
+                                Ring Trigger Connector
+                                  Line 1  Line 2
+                                   Ring    Ring
+                                  _____   _____
+                                 /     \ /     \
+             _ _ _____________________________________________________ _ _
+                               |  O   O   O   O |
+                               |________________|
+                                  .   .
+                                 /|\ /|\
+                                  |   |   &lt;-- jumper or doorbell switch
+                                  |___|       to ring line #1
 
          To ring Line #1, connect left two terminals on Ring Trigger
          Connector together briefly with a wire jumper or doorbell
@@ -639,7 +676,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
          This is useful for demos, where you want to demonstrate ringing
          with just power, but no phone line.
 
-    If you have trouble getting ringing to work, see the TROUBLESHOOTING
+    If you have trouble getting ringing to work, see the <A HREF="#TroubleShooting">TROUBLESHOOTING</A>
     section below entitled "No Ringing".
 
 <A NAME="Using"></A>
@@ -1068,6 +1105,7 @@ TROUBLESHOOTING
 
 
  *  PROBLEM: CPU LED NOT FLASHING
+    -----------------------------
 
     Things to check:
 
@@ -1257,3 +1295,4 @@ WIRE COLORS
     the wiring for those needs to be checked and changed.
 
 * * * EDITING: WORK IN PROGRESS * * *
+<script> AddTitleToDetails(); </script>
