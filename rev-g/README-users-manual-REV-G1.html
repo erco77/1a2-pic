@@ -37,10 +37,10 @@
         display: table-row-group;
     }
     /* EXPAND/COLLAPSE CSS */
-    details       { margin-left: 20px; cursor: pointer; }
-    summary       { font-family: arial,sans-serif; font-weight: bold; }
+    details       { margin-left: 20px; }
+    summary       { font-family: arial,sans-serif; font-weight: bold; cursor: pointer; }
     table.openall { width: 100%; }
-    td.openall    { text-align: right; color: blue; cursor: pointer; }
+    td.openall    { text-align: right; color: blue; }
   </STYLE>
   <SCRIPT>
     function OpenAllDetails() {
@@ -50,8 +50,8 @@
         details[i].open = true;
       }
     }
-    function AddTitleToDetails() {
-      var details = document.getElementsByTagName("details");
+    function AddTitleToSummaries() {
+      var details = document.getElementsByTagName("summary");
       var len = details.length;
       for (var i=0; i<len; i++) {
         details[i].title = "Click to see details..";
@@ -329,8 +329,8 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    the H1A which has 4 wires (R, BK, S, S-R), and H1B which has 2 wires (R and BK).
    The red arrow shows the wiring change for each type of ringer:
    <center>
-   <img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" border=1><br>
-   <img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" border=1><br>
+   <a href="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" width=1400 border=1 noshade></a><br>
+   <a href="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" width=1400 border=1 noshade></a><br>
    Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.</center></details>
 <A NAME="BuzzerWiring"></A>
    BUZZER WIRING
@@ -1295,4 +1295,4 @@ WIRE COLORS
     the wiring for those needs to be checked and changed.
 
 * * * EDITING: WORK IN PROGRESS * * *
-<script> AddTitleToDetails(); </script>
+<script> AddTitleToSummaries(); </script>
