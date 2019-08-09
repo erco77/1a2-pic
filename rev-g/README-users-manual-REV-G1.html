@@ -233,7 +233,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     immediately, and refer to the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section.
 
     IMPORTANT: DON'T CONNECT 12V POWER WITH POLARITY REVERSED.
-               This board has NO PROECTION against reverse polarity DC power;
+               This board has NO PROTECTION against reverse polarity DC power;
                doing so will blow random components on the board.
 
     It is advised to use the 12VDC power supply that comes with the
@@ -395,7 +395,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
              While this board IS designed to handle old analog POTS lines,
              THE RESPONSIBILITY IS YOURS whether to connect it without 
-             FCC approval. If you do, it is assumed you are a hobbiest
+             FCC approval. If you do, it is assumed you are a hobbyist
              or EE technician who understands the implications.
 
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -436,7 +436,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
     The SIP header is located to the right of the "EXT RING
     GEN" connector, under the large EXT1 connector, and is
-    labled "POWERDSINE RING GEN" and "JP5":
+    labeled "POWERDSINE RING GEN" and "JP5":
 
      ____________________________________________________________________
     |                                                                    |
@@ -560,8 +560,8 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
       to the board. Leave the YEL wire ("inhibit") unconnected.
 
       For the Cambridge Electronics device, wire the +12/GND inputs to the
-      left hand screws on the EXT RING GEN connector, and wire the AC output
-      to the right hand screws.
+      left-hand screws on the EXT RING GEN connector, and wire the AC output
+      to the right-hand screws.
 
       If you have trouble getting one or more extensions to ring, check the
       <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section below.
@@ -578,7 +578,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
         -------------------
         If you don't have a ring generator, this board can still "ring"
         the phones using the phone's built-in buzzers. Assuming your
-        buzzers are wired to the 17/42 wire pair in each phone (Yel/Orn pair),
+        buzzers are wired to the 17/42 wire pair in each phone (Y-O pair),
         TURN ON the appropriate DIP switches under the "BUZZ CALL" section
         (SW1). The 12VDC supply will handle buzzing the buzzers during ringing.
 
@@ -710,7 +710,7 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     don't accidentally pick up a used line.
 
     Now lift the handset. The line's button should light up on all
-    extenions, indicating you're using the line. You should hear dial tone.
+    extensions, indicating you're using the line. You should hear dial tone.
 
     Dial your call normally, and hang up when you're done.
     When you hang up, the line's light will go out on all phones,
@@ -794,7 +794,7 @@ PHONE SYSTEM ACCESSORIES
     (2018 prices).
 
     There are many sources for these cables, used or new, including
-    ebay and Amazon. Search terminology for this cables vary:
+    ebay and Amazon. Search terminology for these cables vary:
     
          o RJ21 telco cable
          o Amphenol telco cable
@@ -811,8 +811,8 @@ PHONE SYSTEM ACCESSORIES
         "RJ21" refers to the 50 pin amphenol connectors.
 
         "Cat3" refers to the twisted pair rating for voice communications,
-        where the pairs of wire are twisted around each other in a specific
-        way to prevent electrical noise from getting into the voice circuit
+        where the pairs of wire are twisted around each other in specific
+        ways to prevent electrical noise from getting into the voice circuit
         over long runs of wire. I believe higher category numbers, such as
         Cat5, Cat6, etc. should also be OK for old 1a2 wiring, but check
         around for verification.
@@ -846,7 +846,7 @@ PHONE SYSTEM ACCESSORIES
     using the "BUZZ CALL" option, which if configured will "ring"
     the phones using the 1a2 phone's built in buzzers.
 
-    Since this board uses a 12VDC supply, the "Power DSine"
+    Since this board uses a 12VDC supply, the "PowerDSINE"
     PCR-SIN03V12F20-C 12 volt ring generator works well. While
     no longer manufactured, it's still only about $20.00 on
     Amazon and Ebay.
@@ -877,13 +877,13 @@ INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
 
   In short, you connect the two boards together by their INTERLINK
   connector using a 30 pin ribbon cable, pin #1 <-> pin #1, and power the
-  boards either with separate power adaptors, or one adapter (of suitable
+  boards either with separate power adapters, or one adapter (of suitable
   amperage, 1.5A or higher) wired in parallel to both boards. (See diagram)
 
   The ribbon cable should be oriented in such a way that the red wire
   on the cable ends up on the same side of the interlink connectors.
 
-  The recommended cable configuration is shown on the left hand side of
+  The recommended cable configuration is shown on the left-hand side of
   in this diagram:
 
   <a href="images/good-vs-bad-interlink-cabling.jpg"><img src="images/good-vs-bad-interlink-cabling.jpg" width=800></a>
@@ -948,7 +948,7 @@ TROUBLESHOOTING
            Many of the old Touch-Tone dial pads are sensitive to line polarity,
            so be sure it's right. If necessary, flop the wires at your jack.
 
-           Beware some female/female RJ-11 adaptors and/or RJ-11 cables
+           Beware some female/female RJ-11 adapters and/or RJ-11 cables
            are wired to swap Tip/Ring. So even though the jack may be
            wired correctly, the wire or adapters between the jack and KSU
            might be causing the swap problem.
@@ -980,15 +980,15 @@ TROUBLESHOOTING
         * Check the telephone cable you have connected between the jack
           and the KSU, and verify it's a 4 conductor wire, and not just 2.
           
-          Some phone cables only have 2 conductors, the red/grn pair (line #1),
-          and omit the yel/blk pair (line #2), which would cause this problem.
+          Some phone cables only have 2 conductors, the RED/GRN pair (line #1),
+          and omit the YEL/BLK pair (line #2), which would cause this problem.
 
           Closely look at the RJ-11 connectors on your cable; if you only see 
-          red/grn and don't see yel/blk, replace the cable with a 4 conductor
+          RED/GRN and don't see YEL/BLK, replace the cable with a 4 conductor
           cable instead.
 
- *  PROBLEM: Picking up a line lights lamps but gives no dialtone
-    -------------------------------------------------------------
+ *  PROBLEM: Picking up a line lights lamps but gives no dial tone
+    --------------------------------------------------------------
 
     Things to check:
 
@@ -1013,7 +1013,7 @@ TROUBLESHOOTING
          > Verify the CPU STATUS light is blinking. If it's not, then:
 
              a) Pickup the intercom line on an extension and leave the line offhook.
-                (This will cause the on board capacitor to drain throught he intercom).
+                (This will cause the on board capacitor to drain through the intercom).
 
              b) Pull power from the board and wait 10 seconds before plugging
                 the board back in again.
@@ -1045,7 +1045,7 @@ TROUBLESHOOTING
            An external ring generator must be attached to the card for
            the extensions to ring by their bells.
 
-           If a POWERDSINE is attached to JP5, verify it's not partially
+           If a PowerDSINE is attached to JP5, verify it's not partially
            seated on the pins, and is not plugged in reverse. When 
            positioned correctly, the BLUE + WHITE wires will be to the RIGHT, 
            and the YELLOW wire to the LEFT:
