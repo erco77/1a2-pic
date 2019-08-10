@@ -301,25 +301,24 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    :                                       :                                         :
    :                 BEFORE                :                  AFTER                  :
    :                 ------                :                  -----                  :
-   :       ____                            :        ____                             :
-   :      /    \                           :       /    \                            :
-   :     |  .   |                          :      |  .   |                           :
-   :     |      |                          :      |      |                           :
-   :      \____/                           :       \____/                            :
-   :     __|__|__  RED            _        :      __|__|__  RED              _       :
-   :    |        |--------------&gt;(_) "K"   :     |        |--------.        (_) "K"  :
-   :    |        |                _        :     |        |         \        _       :
-   :    |  BELL  | BLK           (_) "A"   :     |  BELL  | BLK      `-----&gt;(_) "A"  :
-   :    |        |-----+          |        :     |        |-----+            |       :
-   :    |________|     |          |        :     |________|     |            |       :
-   :                   |          |        :                    |            |       :
-   :                   |          |        :                    |            |       :
-   :                   O          O        :                    O            O       :
-   :                   /         /         :                   /            /        :
-   :                Y/S       S/Y          :                Y/S          S/Y         :
-   :                (45)      (20)         :                (45)         (20)        :
+   :     ______                            :       ______                            :
+   :    /      \                           :      /      \                           :
+   :   |   ▗    |                          :     |   ▗    |                          :
+   :   |        |                          :     |        |                          :
+   :    \______/                           :      \______/                           :
+   :   ┌──┘  └──┐ RED                      :     ┌──┘  └──┐ RED                      :
+   :   │        ├────────────────▶ ◯  "K"  :     │        ├─────────┐        ◯  "K"  :
+   :   │  BELL  │                          :     │  BELL  │         │                :
+   :   │        │ BLK              ◯  "A"  :     │        │ BLK     └──────▶ ◯  "A"  :
+   :   │        ├─────┐            │       :     │        ├─────┐            │       :
+   :   └────────┘     │            │       :     └────────┘     │            │       :
+   :                  │            │       :                    │            │       :
+   :                  │            │       :                    │            │       :
+   :                  ◯            ◯       :                    ◯            ◯       :
+   :                 Y-S          S-Y      :                   Y-S          S-Y      :
+   :                 (45)         (20)     :                   (45)         (20)     :
    :                                       :                                         :
-   :              PHONE TERMINAL BLOCK     :                PHONE TERMINAL BLOCK     :
+   :               PHONE TERMINAL BLOCK    :                 PHONE TERMINAL BLOCK    :
    :                                       :                                         :
    :.......................................:.........................................:
 
@@ -421,7 +420,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
           external ringer and don't want the 1A2 phones themselves to ring.
 
     To configure a ring generator with the board, you can attach a 105VAC 20Hz-30Hz
-    ring generator to enable bell ringing in the 1A2 phones on the Y/S wire pair.
+    ring generator to enable bell ringing in the 1A2 phones on the Y-S wire pair.
 
     There are several options for supplying a ring generator:
 
@@ -473,16 +472,16 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
                                JP5
 
-                          BLU  |O| &lt;---------------------------.
-                          WHT  |O| &lt;----------------------.    |
-                          RED  |O| &lt;-----------------.    |    |
-                          BLK  |O| &lt;------------.    |    |    |
-                          x    |O|              |    |    |    |
-                          YEL  |O| &lt;--.         |    |    |    |
-                                      |         |    |    |    |
+                          BLU   ◯  ◀───────────────────────────┐
+                          WHT   ◯  ◀──────────────────────┐    │
+                          RED   ◯  ◀─────────────────┐    │    │
+                          BLK   ◯  ◀────────────┐    │    │    │
+                          x     ◯               │    │    │    │
+                          YEL   ◯  ◀──┐         │    │    │    │
+                                      │         │    │    │    │
                                      YEL       BLK  RED  WHT  BLU
-                                      |         |    |    |    |
-                                    __|_________|____|____|____|__
+                                      │         │    │    │    │
+                                    __│_________│____│____│____│__
                                    |                              |
                                    |                              |
                                    |                              |
@@ -517,7 +516,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
                               (+) (-) (~) (~)
            _ _ _____________________________________________________ _ _
-                             | O   O   O   O |
+                             | ◯   ◯   ◯   ◯ |
                              |_______________|
                                x   x   .   .
                                       /|\ /|\
@@ -543,7 +542,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                                   EXT RING GEN
                                   (+) (-) (~) (~)
                _ _ ______________________________________________ _ _
-                                 | O   O   O   O |
+                                 | ◯   ◯   ◯   ◯ |
                                  |_______________|
                                    |   |   |   |
                                    |   |   |   |
@@ -576,8 +575,8 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     </details>
 
 <A NAME="DIPRinging"></A>
-5. SET THE DIP SWITCHES FOR RINGING
------------------------------------
+5. RING PROGRAMMING - SET DIP SWITCHES FOR RINGING
+--------------------------------------------------
 
     There are two sets of 8 dip switches at the bottom of the board,
     SW1 (left) and SW2 (right).
@@ -669,7 +668,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
                                   _____   _____
                                  /     \ /     \
              _ _ _____________________________________________________ _ _
-                               |  O   O   O   O |
+                               |  ◯   ◯   ◯   ◯ |
                                |________________|
                                   .   .
                                  /|\ /|\
@@ -685,7 +684,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
          with just power, but no phone line.
 
     If you have trouble getting ringing to work, see the <A HREF="#TroubleShooting">TROUBLESHOOTING</A>
-    section below entitled "No Ringing".
+    section below entitled <A HREF="#NoRinging">"No ringing"</A>.
 
 <A NAME="Using"></A>
 USING YOUR 1A2 MULTILINE PHONE SYSTEM
@@ -709,7 +708,7 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     Depending on how your system is set up, typically the
     phones "ring" when there's an incoming call, and "buzz"
     when someone wants you to pickup the intercom line to talk.
-    (See "USING THE INTERCOM" below)
+    (See <A NAME="#UsingIntercom">"USING THE INTERCOM"</A> below)
 
     TO MAKE A CALL
     --------------
@@ -746,8 +745,8 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     indicating which line is ringing.
 
     Phone extensions should either ring or buzz, depending on how
-    the phones are programmed to ring. (See RING PROGRAMMING under "Setup").
-
+    the phones are programmed to ring. (See <A HREF="#DIPRinging">RING PROGRAMMING</A> under "Setup").
+<A NAME="UsingIntercom"></A>
     USING THE INTERCOM
     ------------------
     The intercom is a way for people in the office to "inter-communicate",
@@ -764,12 +763,12 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     If your phone buzzes, and the intercom line is lit, it means
     someone wants to talk to you, so pick up that line to talk to
     them.
-
+<!--
     Since phones buzz whenever you push the extension's dial button,
     people can pre-arrange "codes" for buzzing, for instance two
     buzzes means the call on hold is for you, three buzzes means
     someone is here to see you, etc.
-
+-->
 <A NAME="1A2Accessories"></A>
 PHONE SYSTEM ACCESSORIES
 ------------------------
@@ -948,6 +947,7 @@ TROUBLESHOOTING
   if you've found a solution and think others would benefit from it.
 
 
+<A NAME="NoTouchTone"></A>
  *  PROBLEM: Can't dial with Touch-Tone.
     ------------------------------------
 
@@ -970,6 +970,7 @@ TROUBLESHOOTING
            If Tip/Ring are swapped, these TouchTone pads either won't
            dial at all, or will put out very low volume tones.
 
+<A NAME="NoRotary"></A>
  *  PROBLEM: Can't use Rotary to dial extensions on the intercom line
     -----------------------------------------------------------------
 
@@ -984,6 +985,7 @@ TROUBLESHOOTING
     versions IF the telco equipment supports it. Not all modern telco
     equipment supports rotary.
 
+<A NAME="NoLine2"></A>
  *  PROBLEM: Line #1 works, but Line #2 does not
     --------------------------------------------
 
@@ -1002,6 +1004,7 @@ TROUBLESHOOTING
           RED/GRN and don't see YEL/BLK, replace the cable with a 4 conductor
           cable instead.
 
+<A NAME="NoDialtone"></A>
  *  PROBLEM: Picking up a line lights lamps but gives no dial tone
     --------------------------------------------------------------
 
@@ -1012,7 +1015,7 @@ TROUBLESHOOTING
          It's often easy to have one side of the connector or the other
          popped up, not making a full connection.
 
-
+<A NAME="NoLamps"></A>
  *  PROBLEM: Lamps don't light when picking up a line
     -------------------------------------------------
 
@@ -1036,6 +1039,7 @@ TROUBLESHOOTING
              c) The CPU STATUS light should be blinking. If it's not, the board
                 may need servicing.
 
+<A NAME="NoRinging"></A>
  *  PROBLEM: No ringing.
     --------------------
 
@@ -1062,14 +1066,20 @@ TROUBLESHOOTING
 
            If a PowerDSINE is attached to JP5, verify it's not partially
            seated on the pins, and is not plugged in reverse. When
-           positioned correctly, the BLUE + WHITE wires will be to the RIGHT,
-           and the YELLOW wire to the LEFT:
+           positioned correctly, the BLUE + WHITE wires will be at the top,
+           and the YELLOW wire at the bottom:
 
-                             POWERDSINE RING GEN
-                             _    _    _    _    _    _
-                            (_)  (_)  (_)  (_)  (_)  (_)
-                       JP5   |    x    |    |    |    |
-                            YEL       BLK  RED  WHT  BLU
+
+                        POWERDSINE RING GEN
+                               JP5
+
+                          BLU   ◯
+                          WHT   ◯
+                          RED   ◯
+                          BLK   ◯
+                          x     ◯
+                          YEL   ◯
+
 
            Refer to "Figure C" and "Figure D" near the top of this document
            for more info.
@@ -1093,13 +1103,14 @@ TROUBLESHOOTING
            try switching the two wires inside the phone between the bell
            and the hybrid network to see if the bell's polarity is the problem.
 
-         > Note that the 12V output on the "RING GEN POWER" connector only
+         * Note that the 12V output on the "RING GEN POWER" connector only
            outputs 12V during actual ringing. This keeps the power off for
            the ring generator when the phones aren't ringing.
 
            To test ringing without a PTSN network, see "CALL TEST" above,
            using the RING TRIGGER CONNECTOR to easily trigger ringing.
 
+<A NAME="NoBuzzRing"></A>
  *  PROBLEM: Buzz-ringing not working.
     ----------------------------------
 
@@ -1119,6 +1130,7 @@ TROUBLESHOOTING
           for the lines/extensions you want to buzz during incoming calls.
 
 
+<A NAME="NoLed"></A>
  *  PROBLEM: CPU LED NOT FLASHING
     -----------------------------
 
@@ -1136,12 +1148,11 @@ TROUBLESHOOTING
         * If 12V is coming into the board, check the 7805 (Q3) near
           the power connector, and verify 5V is between pins 2 and 3:
 
-                                  7805
-                               -----------
-                              |    ( )    |
+                               -----_-----
+                              |    (_)    |
                               |-----------|
                               |           |
-                              |  7 8 0 5  |
+                              |   7805    |
                               |           |
                               |           |
                               |___________|
