@@ -37,41 +37,62 @@
     .divTableBody {
         display: table-row-group;
     }
+    /* EXPAND/COLLAPSE CSS */
+    details       { margin-left: 20px; }
+    summary       { font-family: arial,sans-serif; font-weight: bold; cursor: pointer; }
+    table.openall { width: 100%; }
+    td.openall    { text-align: right; color: blue; }
   </STYLE>
+  <SCRIPT>
+    function OpenAllDetails() {
+      var details = document.getElementsByTagName("details");
+      var len = details.length;
+      for (var i=0; i<len; i++) {
+        details[i].open = true;
+      }
+    }
+    function AddTitleToSummaries() {
+      var details = document.getElementsByTagName("summary");
+      var len = details.length;
+      for (var i=0; i<len; i++) {
+        details[i].title = "Click to see details..";
+      }
+    }
+  </SCRIPT>
 </HEAD>
 <PRE>
 
 # vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 
-                    88        db         ad888888b,       88      a8P  ad88888ba  88        88  
-                  ,d88       d88b       d8"     "88       88    ,88'  d8"     "8b 88        88  
-                888888      d8'`8b              a8P       88  ,88"    Y8,         88        88  
-                    88     d8'  `8b          ,d8P"        88,d88'     `Y8aaaaa,   88        88  
-                    88    d8YaaaaY8b       a8P"           8888"88,      `"""""8b, 88        88  
-                    88   d8""""""""8b    a8P'             88P   Y8b           `8b 88        88  
-                    88  d8'        `8b  d8"               88     "88, Y8a     a8P Y8a.    .a8P  
-                    88 d8'          `8b 88888888888       88       Y8b "Y88888P"   `"Y8888Y"'   
-                                                                                             
-                                                                                                              
-                  ,ad8888ba,   ,ad8888ba,   888b      88 888888888888 88888888ba    ,ad8888ba,   88           
-                 d8"'    `"8b d8"'    `"8b  8888b     88      88      88      "8b  d8"'    `"8b  88           
-                d8'          d8'        `8b 88 `8b    88      88      88      ,8P d8'        `8b 88           
-                88           88          88 88  `8b   88      88      88aaaaaa8P' 88          88 88           
-                88           88          88 88   `8b  88      88      88""""88'   88          88 88           
-                Y8,          Y8,        ,8P 88    `8b 88      88      88    `8b   Y8,        ,8P 88           
-                 Y8a.    .a8P Y8a.    .a8P  88     `8888      88      88     `8b   Y8a.    .a8P  88           
-                  `"Y8888Y"'   `"Y8888Y"'   88      `888      88      88      `8b   `"Y8888Y"'   88888888888  
-                                                                                                              
-                                                                         
-                              ,ad8888ba,        db        88888888ba  88888888ba,    
-                             d8"'    `"8b      d88b       88      "8b 88      `"8b   
-                            d8'               d8'`8b      88      ,8P 88        `8b  
-                            88               d8'  `8b     88aaaaaa8P' 88         88  
-                            88              d8YaaaaY8b    88""""88'   88         88  
-                            Y8,            d8""""""""8b   88    `8b   88         8P  
-                             Y8a.    .a8P d8'        `8b  88     `8b  88      .a8P   
-                              `"Y8888Y"' d8'          `8b 88      `8b 88888888Y"'    
-                                                                         
+                    88        db         ad888888b,       88      a8P  ad88888ba  88        88
+                  ,d88       d88b       d8"     "88       88    ,88'  d8"     "8b 88        88
+                888888      d8'`8b              a8P       88  ,88"    Y8,         88        88
+                    88     d8'  `8b          ,d8P"        88,d88'     `Y8aaaaa,   88        88
+                    88    d8YaaaaY8b       a8P"           8888"88,      `"""""8b, 88        88
+                    88   d8""""""""8b    a8P'             88P   Y8b           `8b 88        88
+                    88  d8'        `8b  d8"               88     "88, Y8a     a8P Y8a.    .a8P
+                    88 d8'          `8b 88888888888       88       Y8b "Y88888P"   `"Y8888Y"'
+
+
+                  ,ad8888ba,   ,ad8888ba,   888b      88 888888888888 88888888ba    ,ad8888ba,   88
+                 d8"'    `"8b d8"'    `"8b  8888b     88      88      88      "8b  d8"'    `"8b  88
+                d8'          d8'        `8b 88 `8b    88      88      88      ,8P d8'        `8b 88
+                88           88          88 88  `8b   88      88      88aaaaaa8P' 88          88 88
+                88           88          88 88   `8b  88      88      88""""88'   88          88 88
+                Y8,          Y8,        ,8P 88    `8b 88      88      88    `8b   Y8,        ,8P 88
+                 Y8a.    .a8P Y8a.    .a8P  88     `8888      88      88     `8b   Y8a.    .a8P  88
+                  `"Y8888Y"'   `"Y8888Y"'   88      `888      88      88      `8b   `"Y8888Y"'   88888888888
+
+
+                              ,ad8888ba,        db        88888888ba  88888888ba,
+                             d8"'    `"8b      d88b       88      "8b 88      `"8b
+                            d8'               d8'`8b      88      ,8P 88        `8b
+                            88               d8'  `8b     88aaaaaa8P' 88         88
+                            88              d8YaaaaY8b    88""""88'   88         88
+                            Y8,            d8""""""""8b   88    `8b   88         8P
+                             Y8a.    .a8P d8'        `8b  88     `8b  88      .a8P
+                              `"Y8888Y"' d8'          `8b 88      `8b 88888888Y"'
+
 
                                 ==============================================
                                    SERISS CORPORATION - 1A2 KSU CONTROL CARD
@@ -94,8 +115,8 @@
                     |   ___      __      ____               ____     \|   \|   \|   \|   |
                     |  |   |    |+-|    |oooo|             |oooo|                        |
                     |__|___|____|__|____|____|_____________|____|________________________|
-                      Line1+2   12VDC   Ring Trigg.        Ext Ring   
-                      (RJ-11)   Power   Connector          Gen Power  
+                      Line1+2   12VDC   Ring Trigg.        Ext Ring
+                      (RJ-11)   Power   Connector          Gen Power
 
 
 <A NAME="Setup"></A>
@@ -104,7 +125,7 @@ INITIAL SETUP
 
 There is nothing critical about the order of connecting up the board.
 The order shown below is: extensions, power, telco, ring gen.. but
-these can actually be connected up in any order. 
+these can actually be connected up in any order.
 
 If you're new to 1A2 wiring, and are not sure what the wire colors "Y-S" or "S-Y"
 refers to, please see the section on "WIRE COLORS" near the bottom of this document.
@@ -141,7 +162,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                                      .   .
                                      .   .
                                      .   XXXXXXX
-                                    _    XXXXXXX 
+                                    _    XXXXXXX
                                    | |___XXXXXXX
                          +------&gt; || |___XXXXXXX
                          |         | |   XXXXXXX
@@ -179,7 +200,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 ----------------
 
     Connect power by plugging in the 12volt power:
-    
+
      ____________________________________________________________________
     |                                 ::::::: INTERLINK                  |
     |                                                                    |
@@ -193,28 +214,28 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     |   ___      __      ____               ____     \|   \|   \|   \|   |
     |  |   |    |+-|    |oooo|             |oooo|                        |
     |__|___|____|__|____|____|_____________|____|________________________|
-      Line1+2   12VDC   Ring Trigg.        Ext Ring   
-      (RJ-11)   Power   Connector          Gen Power  
+      Line1+2   12VDC   Ring Trigg.        Ext Ring
+      (RJ-11)   Power   Connector          Gen Power
                  .
                 /|\
-                 | 
+                 |
            ......................................................
-           : Attach 12VDC power here. +12VDC on LEFT terminal,  :   
+           : Attach 12VDC power here. +12VDC on LEFT terminal,  :
            : negative on RIGHT terminal. Must be 850mA minimum  :
            : or higher. Stock power blocks are 2000mA (2 amp).  :
            :....................................................:
 
     With 12V power connected, the CPU1 STATUS led should flash at 1 flash
-    per second, and the CPU2 STATUS led should flash at 2 quick flashes per second.
-    This indicates the CPUs are operating normally.
-    
-    If leds are NOT flashing, something is WRONG - disconnect power
-    immediately, and refer to the TROUBLESHOOTING section at the
-    end of this document.
+    per second, and if the intercom line is selected and offhook, the CPU2
+    STATUS led should flash at 2 quick flashes per second. This indicates
+    both CPUs are operating normally.
+
+    If the status leds are NOT flashing, something is WRONG - disconnect power
+    immediately, and refer to the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section.
 
     IMPORTANT: DON'T CONNECT 12V POWER WITH POLARITY REVERSED.
-               This board has NO PROECTION against reverse polarity DC power;
-               doing so will blow random components on the board.
+               This board has NO PROTECTION against reverse polarity DC power;
+               it can blow random components on the board if you do.
 
     It is advised to use the 12VDC power supply that comes with the
     board which is rated 12VDC / 2 Amps. If you use your own DC
@@ -253,27 +274,24 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
     IMPORTANT: When connecting phones for the first time, VERIFY the phones
     are internally wired as follows BEFORE connecting them:
-    
+
             > Bells on pins 20/45 (Y-S pair)
             > Buzzers on pins 17/42 (Y-O pair)
-            > Phone networks configured for diode ringing (**)
-
-    (**) Since this board uses a diode network to program ringing, bell
-         ringing is on only 1/2 of the AC wave. Paraphrasing Ed from 
-         Sundance Communications:
-
-            "For any kind of diode ringing to work, the capacitor between
-             network terminals A and K (inside phone) have to be bypassed.
-             Move the wire on terminal 'K' to terminal 'A' along with the
-             existing wire." The wire he's referring to is usually the actual
-             bell's red wire.
+            > Phone hybrid networks configured for diode ringing (see "BELL WIRING" below)
 
 <A NAME="BellWiring"></A>
    BELL WIRING
    -----------
+   Since this board uses a diode network to program ringing, bell ringing is only
+   done on 1/2 of the AC wave. To support this, a small one wire change must be made
+   inside each phone to bypass the ringer capacitor that is between the K and A terminals
+   on the hybrid network. Paraphrasing Ed from Sundance Communications:
 
-   The bell wiring change inside the phone should be as follows:
+       "For any kind of diode ringing to work, the capacitor between hybrid network
+       terminals A and K (inside phone) have to be bypassed.
+       Move the wire on terminal 'K' to terminal 'A' along with the existing wire."
 
+   So if a red wire is currently on the K terminal, just move it to the A terminal:
    ...................................................................................
    :                                       :                                         :
    :                 BEFORE                :                  AFTER                  :
@@ -302,6 +320,19 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
            Figure B. The diode ringing in-phone "K/A" wiring change needed for bells.
 
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>Extra Bell Wiring Details</summary>
+   Here's an illustration with actual components from a 2564 and 2565 model phone.
+   Wiring may vary, since used phones may have been changed before. What's shown are
+   the factory wiring from the Bell System Practices documentation.
+
+   Note there are at least two different bell ringer types one can encounter in these phones;
+   the H1A which has 4 wires (R, BK, S, S-R), and H1B which has 2 wires (R and BK).
+   The red arrow shows the wiring change for each type of ringer:
+   <center>
+   <a href="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" width=1400 border=1 noshade></a><br>
+   <a href="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" width=1400 border=1 noshade></a><br>
+   Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.</center></details>
 <A NAME="BuzzerWiring"></A>
    BUZZER WIRING
    -------------
@@ -309,7 +340,8 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    Buzzer wiring is usually straight forward, and just a matter of making sure the
    two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
 
-
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>Extra 'Call Director' (2636) Buzzer Wiring Details</summary>
    SPECIAL BUZZER WIRING FOR CALL DIRECTOR (2636) MODEL PHONES
    -----------------------------------------------------------
        Call Director model phones, such as the 2636 by default have the buzzer wired
@@ -318,8 +350,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
            <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"
            ><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" width=400 border=1></a>
-
-
+</details>
 <A NAME="ConnectTelco"></A>
 3. ATTACH PHONE LINES
 ---------------------
@@ -340,11 +371,11 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     |   ___      __      ____               ____     \|   \|   \|   \|   |
     |  |   |    |+-|    |oooo|             |oooo|                        |
     |__|___|____|__|____|____|_____________|____|________________________|
-      Line1+2   12VDC   Ring Trig          Ring   
-      (RJ-11)   Input   Connector          Gen   
-         .                                 Power  
-        /|\          
-         |             
+      Line1+2   12VDC   Ring Trig          Ring
+      (RJ-11)   Input   Connector          Gen
+         .                                 Power
+        /|\
+         |
          Attach to VoIP, XLink, etc.
 
 
@@ -354,7 +385,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
           so that your 1A2 phones can work with your cellphone, both for
           receiving and originating calls.
 
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     WARNING: This card is NOT approved by the FCC for use directly with
              analog PSTN/POTS lines ("Public Switched Telephone Networks",
              "Plain Old Telephone Service")
@@ -364,11 +395,11 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
              XLink described above.
 
              While this board IS designed to handle old analog POTS lines,
-             THE RESPONSIBILITY IS YOURS whether to connect it without 
-             FCC approval. If you do, it is assumed you are a hobbiest
+             THE RESPONSIBILITY IS YOURS whether to connect it without
+             FCC approval. If you do, it is assumed you are a hobbyist
              or EE technician who understands the implications.
 
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 
 <A NAME="RingGen"></A>
@@ -387,7 +418,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
     There are several options for supplying a ring generator:
 
-        * PowerDSINE 12v ring generator 70VAC/20Hz 
+        * PowerDSINE 12v ring generator 70VAC/20Hz
           (can ring 3 or 4 phones using board's own 12v supply)
 
         * Western Electric 118A Ring generator from an old 1A2 KSU
@@ -397,42 +428,16 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
         * Other commercially available telephone "Ring Generator" or "Frequency Generator"
 
     There are at least three ways to connect an external ring generator,
-    depending on the type:
-    
-      4.1 For an old telco ring generator (like the WECO 118A or VIKING), you can
-          wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS 
-          (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
+    depending on the type.
 
-          <IMG SRC=images/ring-gen-hookup--118a.png WIDTH=400 border=2>
-<!--
-                                EXT RING GEN
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details open><summary>4.1 PowerDSINE 12V Ring Generator</summary>
+    For the PowerDSINE 12VDC ring generator, this board provides
+    a 6 pin header at JP5 for directly connecting this device.
 
-                       12V RING OUT     105 VAC/20HZ IN
-                               __|__   __|__
-                              /     \ /     \
-
-                              (+) (-) (~) (~)
-           _ _ _____________________________________________________ _ _
-                             | O   O   O   O |
-                             |_______________|
-                               x   x   .   .
-                                      /|\ /|\
-                                       |   |
-                                       |   |
-                                       |   |
-                                    ------------     AC POWER
-                                   |  118A      |      ____
-                                   |  RING      |     |    |__
-                                   |  GENERATOR |-----|    |__
-                                   |____________|     |____|
--->
-
-      4.2 For the PowerDSINE 12VDC ring generator, this board provides
-          a 6 pin header at JP5 for directly connecting this device.
-
-          The SIP header is located to the right of the "EXT RING
-          GEN" connector, under the large EXT1 connector, and is
-          labled "POWERDSINE RING GEN" and "JP5":
+    The SIP header is located to the right of the "EXT RING
+    GEN" connector, under the large EXT1 connector, and is
+    labeled "POWERDSINE RING GEN" and "JP5":
 
      ____________________________________________________________________
     |                                                                    |
@@ -445,18 +450,19 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     |                                                ||   ||   ||   ||   |
     |                                                \|   \|   \|   \|   |
     |   ___      __     ____               ____                          |
-    |  |   |    |+-|   |oooo|             |oooo|   oooooo                |
-    |__|___|____|__|___|____|_____________|____|_________________________|
-      Line1+2   12VDC   Ring Trigger       Ring      .
-      (RJ-11)   Input   Connector          Gen      /|\
+    |  |   |    |+-|   |oooo|             |oooo|  oooooo                 |
+    |__|___|____|__|___|____|_____________|____|_____.___________________|
+      Line1+2   12VDC   Ring Trigger       Ring     /|\
+      (RJ-11)   Input   Connector          Gen       |
                                            Power     |
                                                      |
-                                              Location of "JP5"
-                                                  
+                                          Location of PowerDSINE
+                                             connector "JP5"
 
 
-          The PowerDSINE's 6 pin connector plug should be inserted into 
-          the JP5 header as follows. Note the PowerDSINE's YELLOW wire 
+
+          The PowerDSINE's 6 pin connector plug should be inserted into
+          the JP5 header as follows. Note the PowerDSINE's YELLOW wire
           should be to the LEFT.
 
 
@@ -486,12 +492,45 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
               Figure C. Wiring the PowerDSINE via 6 pin plug to KSU board.
                         Avoid connecting the plug in reverse, as the plug
                         does not prevent one from doing so.
+    </details>
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>4.2 Attaching AC Powered Ring Generator (118A, VIKING, etc.)</summary>
 
+    For an old telco ring generator (like the WECO 118A or VIKING), you can
+    wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS
+    (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
 
-      4.3 If you have a PowerDSINE ring generator with the connector cut off,
-          or if you have a Cambridge Electronics 12V ring generator, you can wire
-          it directly to the EXT RING GEN screw terminals as follows, 
-          leaving JP5 unconnected:
+          <IMG SRC=images/ring-gen-hookup--118a.png WIDTH=400 border=2>
+<!--
+                                EXT RING GEN
+
+                       12V RING OUT     105 VAC/20HZ IN
+                               __|__   __|__
+                              /     \ /     \
+
+                              (+) (-) (~) (~)
+           _ _ _____________________________________________________ _ _
+                             | O   O   O   O |
+                             |_______________|
+                               x   x   .   .
+                                      /|\ /|\
+                                       |   |
+                                       |   |
+                                       |   |
+                                    ------------     AC POWER
+                                   |  118A      |      ____
+                                   |  RING      |     |    |__
+                                   |  GENERATOR |-----|    |__
+                                   |____________|     |____|
+-->
+    </details>
+  <table class=openall><tr><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
+  ><details><summary>4.3 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
+
+      If you have a PowerDSINE ring generator with the connector cut off,
+      or if you have a Cambridge Electronics 12V ring generator, you can wire
+      it directly to the EXT RING GEN screw terminals as follows,
+      leaving JP5 unconnected:
 
 
                                   EXT RING GEN
@@ -517,17 +556,17 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                 Figure D. Wiring the PowerDSINE to screw terminals.
 
 
-         For the PowerDSINE, RED/BLK wires are +12/GND outputs to power the device
-         from the board, and WHT/BLU wires are AC ring outputs from the device
-         to the board. Leave the YEL wire ("inhibit") unconnected.
+      For the PowerDSINE, RED/BLK wires are +12/GND outputs to power the device
+      from the board, and WHT/BLU wires are AC ring outputs from the device
+      to the board. Leave the YEL wire ("inhibit") unconnected.
 
-         For the Cambridge Electronics device, wire the +12/GND inputs to the
+      For the Cambridge Electronics device, wire the +12/GND inputs to the
       left-hand screws on the EXT RING GEN connector, and wire the AC output
-         to the right hand screws.
+      to the right-hand screws.
 
-         If you have trouble getting one or more extensions to ring, check the
-         TROUBLESHOOTING section below.
-
+      If you have trouble getting one or more extensions to ring, check the
+      <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section below.
+    </details>
 
 <A NAME="DIPRinging"></A>
 5. SET THE DIP SWITCHES FOR RINGING
@@ -546,7 +585,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
         BELL RINGING -- SW2
         -------------------
-        If you have a ring generator attached (step #4) and want the 
+        If you have a ring generator attached (step #4) and want the
         phone extensions to ring, turn on the appropriate DIP switches
         under the "BELL CALL" section (SW2).
 
@@ -602,7 +641,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
 
          o Try calling Line #1's phone number from a cell phone, or another line.
            If configured, the ringers should ring, and the Line #1 lamp should
-           flash at a 1 second rate. (See the TROUBLESHOOTING section for problems)
+           flash at a 1 second rate. (See the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section for problems)
 
          o Answer the call by selecting Line #1 on the phone, and picking up the
            handset. The lamp should stop blinking and stay on steady.
@@ -617,18 +656,18 @@ TESTING YOUR SETUP FOR THE FIRST TIME
          the two left terminals to ring line #1, or the right two terminals
          to ring line #2:
 
-                      Ring Trigger Connector
-                        Line 1  Line 2
-                         Ring    Ring
-                        _____   _____
-                       /     \ /     \
-   _ _ _____________________________________________________ _ _
-                     |  O   O   O   O |
-                     |________________|
-                        .   .
-                       /|\ /|\
-                        |   |   &lt;-- jumper or doorbell switch
-                        |___|       to ring line #1
+                                Ring Trigger Connector
+                                  Line 1  Line 2
+                                   Ring    Ring
+                                  _____   _____
+                                 /     \ /     \
+             _ _ _____________________________________________________ _ _
+                               |  O   O   O   O |
+                               |________________|
+                                  .   .
+                                 /|\ /|\
+                                  |   |   &lt;-- jumper or doorbell switch
+                                  |___|       to ring line #1
 
          To ring Line #1, connect left two terminals on Ring Trigger
          Connector together briefly with a wire jumper or doorbell
@@ -638,7 +677,7 @@ TESTING YOUR SETUP FOR THE FIRST TIME
          This is useful for demos, where you want to demonstrate ringing
          with just power, but no phone line.
 
-    If you have trouble getting ringing to work, see the TROUBLESHOOTING
+    If you have trouble getting ringing to work, see the <A HREF="#TroubleShooting">TROUBLESHOOTING</A>
     section below entitled "No Ringing".
 
 <A NAME="Using"></A>
@@ -656,7 +695,7 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     LINE BUTTONS 1-5
     ----------------
     Next to the red button are the line buttons; the first being
-    Line #1, Line #2, and so on, the last line being Line #5, 
+    Line #1, Line #2, and so on, the last line being Line #5,
     which is the Intercom Line on this board, described below.
 
     Each phone also contains a bell ringer and a buzzer.
@@ -681,8 +720,8 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     PUTTING CALLS ON HOLD
     ---------------------
     You can put an active call on hold by pressing and releasing the
-    red HOLD button. 
-    
+    red HOLD button.
+
     Once on hold, the line's lamp should "wink" at a fast rate, indicating
     the call is on hold. You can then hang up the phone, and the call will
     remain on hold.
@@ -698,7 +737,7 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     When a call comes in, the extensions programmed to ring should ring,
     and the lamp for that line should flash slowly on all extensions,
     indicating which line is ringing.
-    
+
     Phone extensions should either ring or buzz, depending on how
     the phones are programmed to ring. (See RING PROGRAMMING under "Setup").
 
@@ -731,7 +770,7 @@ PHONE SYSTEM ACCESSORIES
     ORDERING PHONES
     ---------------
     To order more phones, check Ebay, Amazon, or other surplus
-    sources for 1a2 multiline phones. AT&T 1A2 models 565, 2564, 
+    sources for 1a2 multiline phones. AT&T 1A2 models 565, 2564,
     2565, and 2830 all have been tested to work with this board.
     Other models may work as well; check the Bell System Practices
     (BSP) wiring diagrams to make sure.
@@ -749,7 +788,7 @@ PHONE SYSTEM ACCESSORIES
     Extension cables need male connectors on one end, and female
     on the other; male end connects to the control card, female
     to the phone's own cable.
-    
+
     These cables tend not to be cheap, as they have many conductors
     and the connectors are industrial quality.  Prices vary between
     $1.00 and $2.00 per foot.. so a 25' cable might be as much as $40.
@@ -757,7 +796,7 @@ PHONE SYSTEM ACCESSORIES
 
     There are many sources for these cables, used or new, including
     ebay and Amazon. Search terminology for these cables vary:
-    
+
          o RJ21 telco cable
          o Amphenol telco cable
          o Cat3 25 pair telco cable
@@ -768,8 +807,8 @@ PHONE SYSTEM ACCESSORIES
     wiring yourself. The cable can be multiple runs of 8 conductor Cat3, Cat5,
     or other telecom compatible UTP (twisted pair) cable.
 
-    Cable terminology: 
-    
+    Cable terminology:
+
         "RJ21" refers to the 50 pin amphenol connectors.
 
         "Cat3" refers to the twisted pair rating for voice communications,
@@ -803,7 +842,7 @@ PHONE SYSTEM ACCESSORIES
     ---------------
     An external ring generator is required to offer the option of
     ringing the bells in the 1a2 phones.
-    
+
     Note bell ringing is not required: phones can still be "rung"
     using the "BUZZ CALL" option, which if configured will "ring"
     the phones using the 1a2 phone's built in buzzers.
@@ -812,7 +851,7 @@ PHONE SYSTEM ACCESSORIES
     PCR-SIN03V12F20-C 12 volt ring generator works well. While
     no longer manufactured, it's still only about $20.00 on
     Amazon and Ebay.
-    
+
     During ringing of 4 lines, it seems to use about 500mA (0.5A),
     so make sure your 12vdc power supply can supply at least 1.5A,
     as the rest of the card uses less than 1 amp under full load of
@@ -874,7 +913,7 @@ INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
   on the SECONDARY jumper (JP4), and none on the PRIMARY jumper (JP3).
   Plug the CO lines that should appear as LINE 3 + 4 into this board.
 
-  Plug up to 8 extensions into the two board's EXT# connectors. 
+  Plug up to 8 extensions into the two board's EXT# connectors.
 
   When someone picks up the intercom line, dialing 1-4 will buzz
   the extensions on the PRIMARY board, EXT 1-4 respectively.
@@ -890,15 +929,15 @@ TROUBLESHOOTING
 ---------------
 
   This section should help you solve the various problems you can have
-  during setup, or when things go wrong. 
+  during setup, or when things go wrong.
 
   Email erco@seriss.com if you encounter problems not defined here, esp.
   if you've found a solution and think others would benefit from it.
- 
+
 
  *  PROBLEM: Can't dial with Touch-Tone.
     ------------------------------------
-    
+
     A common problem is TouchTone dialing won't work to dial out on Line #1
     or Line #2; pushing buttons generates no tones, or very low volume tones,
     but dialing on the intercom works fine.
@@ -906,7 +945,7 @@ TROUBLESHOOTING
     Things to check:
 
          * Check the telco line polarity.
-         
+
            Many of the old Touch-Tone dial pads are sensitive to line polarity,
            so be sure it's right. If necessary, flop the wires at your jack.
 
@@ -918,18 +957,19 @@ TROUBLESHOOTING
            If Tip/Ring are swapped, these TouchTone pads either won't
            dial at all, or will put out very low volume tones.
 
- *  PROBLEM: Can't use the Rotary dial to dial extensions
-    -----------------------------------------------------
+ *  PROBLEM: Can't use Rotary to dial extensions on the intercom line
+    -----------------------------------------------------------------
 
-    Dialing of extensions for buzzing on the intercom line should
-    work on REV F boards for both Rotary and Touch-Tone.
-    
-    Older boards (REV E, REV D..) support Touch-Tone dialing, and
-    don't support rotary to buzz extensions.
+    To buzz extensions with the intercom rotary dialing, only the dialing
+    phone can be offhook. Rotary dialing doesn't work if other extensions
+    are offhook during dialing.
 
-    If you can't use rotary to dial phone numbers over the CO lines
-    (Line 1-4), your telco phone service or interface device (XLink)
-    may not support rotary dialing.
+    Rotary on the intercom line is supported by REV F boards (and
+    higher) only.  Older boards (REV-E, REV-B..) do not support it.
+
+    Rotary on the regular telco lines should work regardless of board
+    versions IF the telco equipment supports it. Not all modern telco
+    equipment supports rotary.
 
  *  PROBLEM: Line #1 works, but Line #2 does not
     --------------------------------------------
@@ -941,11 +981,11 @@ TROUBLESHOOTING
 
         * Check the telephone cable you have connected between the jack
           and the KSU, and verify it's a 4 conductor wire, and not just 2.
-          
+
           Some phone cables only have 2 conductors, the RED/GRN pair (line #1),
           and omit the YEL/BLK pair (line #2), which would cause this problem.
 
-          Closely look at the RJ-11 connectors on your cable; if you only see 
+          Closely look at the RJ-11 connectors on your cable; if you only see
           RED/GRN and don't see YEL/BLK, replace the cable with a 4 conductor
           cable instead.
 
@@ -1008,8 +1048,8 @@ TROUBLESHOOTING
            the extensions to ring by their bells.
 
            If a PowerDSINE is attached to JP5, verify it's not partially
-           seated on the pins, and is not plugged in reverse. When 
-           positioned correctly, the BLUE + WHITE wires will be to the RIGHT, 
+           seated on the pins, and is not plugged in reverse. When
+           positioned correctly, the BLUE + WHITE wires will be to the RIGHT,
            and the YELLOW wire to the LEFT:
 
                              POWERDSINE RING GEN
@@ -1029,8 +1069,8 @@ TROUBLESHOOTING
             "For any kind of diode ringing to work, the capacitor between
              network terminals A and K (inside phone) have to be bypassed.
              Move the wire on terminal 'K' to terminal 'A' along with the
-             existing wire." 
-             
+             existing wire."
+
            The wire he's referring to is usually the actual bell's red wire.
            Refer to "Figure B" (near the top of this document) for more info.
 
@@ -1043,7 +1083,7 @@ TROUBLESHOOTING
          > Note that the 12V output on the "RING GEN POWER" connector only
            outputs 12V during actual ringing. This keeps the power off for
            the ring generator when the phones aren't ringing.
-           
+
            To test ringing without a PTSN network, see "CALL TEST" above,
            using the RING TRIGGER CONNECTOR to easily trigger ringing.
 
@@ -1072,9 +1112,9 @@ TROUBLESHOOTING
     Things to check:
 
         * Verify the power supply voltage being fed to the board:
-          Put a meter across the two "12V INPUT" terminal screws 
-          and verify +12 volts DC is being fed to the board, 
-          positive on the left screw, negative on the right. 
+          Put a meter across the two "12V INPUT" terminal screws
+          and verify +12 volts DC is being fed to the board,
+          positive on the left screw, negative on the right.
           Voltage can range 11.5V to 12.75v, but closer to 12 is best.
 
         * Ensure the power is true DC, and not "lumpy DC"; put a scope
@@ -1100,7 +1140,7 @@ TROUBLESHOOTING
                            1: +12VDC input
                            2: Ground
                            3: +5VDC output
-                                    
+
           Using a volt meter, keep the black (negative) lead on pin 2
           during the following: touch the red lead to pin 1 should show +12VDC.
           Moving the red lead to pin 3 should show +5VDC.
@@ -1108,14 +1148,14 @@ TROUBLESHOOTING
         * Check the temperature of Q3 (the 7805 at the lower left of the board,
           near power connector). If it gets warm or hot quickly after power is
           connected, SOMETHING MIGHT BE SHORTED OUT - REMOVE POWER QUICKLY.
-          
+
           First let it cool, then unplug all connectors, and then plug in JUST
           the power connector. If that corrects the problem, plug things back
           in one at a time until the culprit is determined.
 
           Also: check for any stray metal parts touching either the back of
-          the board (stray screws, metal dust), or metal bits lying across 
-          any of the components on the board that might cause a short. 
+          the board (stray screws, metal dust), or metal bits lying across
+          any of the components on the board that might cause a short.
           Keep in mind stray metal/liquids lying across components may have
           permanently damaged the board to the point where components are blown,
           and may need to be swapped out to properly repair the board.
@@ -1124,7 +1164,7 @@ TROUBLESHOOTING
 WIRE COLORS
 -----------
 
-    Bell System Practices wire color codes are used throughout this document, 
+    Bell System Practices wire color codes are used throughout this document,
     e.g. Y-S and Y-O. The color codes are:
 
          R - Red        G - Green    BR - Brown     W - White
@@ -1141,15 +1181,15 @@ WIRE COLORS
     twisted together. Most 1A2 phones have 25 pair (50 conductor) CAT-3 UTP cables.
 
     Each pair of wires twisted together share the same two colors, just swapping which
-    is the "main" or "primary" color; The "Y-S pair" (yellow-slate) consists of two wires: 
+    is the "main" or "primary" color; The "Y-S pair" (yellow-slate) consists of two wires:
 
         Y-S -- A mainly yellow wire with a slate (gray) stripe
-       <font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font>
+       <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>
 
         S-Y -- A mainly slate (gray) wire with a yellow stripe
-       <font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font><font color=#ff0></font><font color=#888></font>
+       <font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font>
 
-    So it matters which color appears first; When referring to a *single wire*, the first 
+    So it matters which color appears first; When referring to a *single wire*, the first
     of the two colors is always the "main" (or "primary") color, and the second color
     is the stripe's color. So in Y-S, Y is the primary color, and S is the stripe.
 
@@ -1257,3 +1297,4 @@ WIRE COLORS
     the wiring for those needs to be checked and changed.
 
 * * * EDITING: WORK IN PROGRESS * * *
+<script> AddTitleToSummaries(); </script>
