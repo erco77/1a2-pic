@@ -5,6 +5,14 @@
 <HEAD>
   <META CHARSET="UTF-8">
   <STYLE>
+    /* Force Unicode drawing characters to work correctly */
+    @font-face {
+      font-family: myMonospace;
+      src: url(images/DejaVuSansMono.ttf);
+    }
+    .unipre {
+        font-family: myMonospace;
+    }
     /* DivTable.com */
     .divTable{
         display: table;
@@ -38,8 +46,34 @@
         display: table-row-group;
     }
     /* EXPAND/COLLAPSE CSS */
-    details       { margin-left: 20px; }
-    summary       { font-family: arial,sans-serif; font-weight: bold; cursor: pointer; }
+    details {
+      border: 1px solid #E1E1E1;
+      border-radius: 5px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+      color: #363636;
+      margin: 0 0 .4em;
+      padding: 1%;
+    }
+    details[open] {
+      background: #E1E1E1;
+    }
+    summary {
+      background: -webkit-linear-gradient(top, #FAFAFA 50%, #E1E1E1 50%);
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: .8em;
+      font-weight: bold;
+      margin: -1%;
+      padding: 8px 8px;
+      position: relative;
+      width: 100%;
+    }
+    summary:hover, details[open] summary {
+      background: #E1E1E1;
+    }
+    summary::-webkit-details-marker {
+      display: none;
+    }
     table.openall { width: 100%; }
     td.openall    { text-align: right; color: blue; cursor: pointer; }
   </STYLE>
@@ -51,16 +85,21 @@
         details[i].open = true;
       }
     }
-    function AddTitleToSummaries() {
-      var details = document.getElementsByTagName("summary");
-      var len = details.length;
+    function AddTitles() {
+      var eles = document.getElementsByTagName("summary");  // All <summary> tags
+      var len = eles.length;
       for (var i=0; i<len; i++) {
-        details[i].title = "Click to see details..";
+        eles[i].title = "Click to see details..";
+      }
+      eles = document.getElementsByClassName("openall");    // All class=openall elements
+      len = eles.length;
+      for (var i=0; i<len; i++) {
+        eles[i].title = "Click to open ALL the 'collapsed' details on this page..";
       }
     }
   </SCRIPT>
 </HEAD>
-<PRE>
+<PRE class=unipre>
 
 # vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 
@@ -1321,4 +1360,4 @@ WIRE COLORS
     the wiring for those needs to be checked and changed.
 
 * * * EDITING: WORK IN PROGRESS * * *
-<script> AddTitleToSummaries(); </script>
+<script> AddTitles(); </script>
