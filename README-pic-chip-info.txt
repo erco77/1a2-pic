@@ -35,7 +35,7 @@ PICKIT 3 PROGRAMMER WIRING
 
         Software: MikroC PRO for PIC v.5.4.0 <-- GUI used in video
                   Also: MicroChip recommends "MPLAB X IDE Software",
-		        which is what I ended up using.
+                        which is what I ended up using.
 
         Xtal: 32.768kHz tuning fork type crystals for LP oscillator mode.
               Connect between SOSCO and SOSCI pins.
@@ -353,21 +353,21 @@ void HandleLineTransitions(line) {
 
     // Ref: https://electronics.stackexchange.com/questions/171530/pic-microchip-keeps-resetting
     #include <xc.h>
-    // #include <pic16f1709.h>	// the chip I'm using. xc.h gets the chip info from the IDE's project settings
+    // #include <pic16f1709.h>  // the chip I'm using. xc.h gets the chip info from the IDE's project settings
 
     void main(void) {
-	// Set PIC chip oscillator speed
+        // Set PIC chip oscillator speed
         OSCCONbits.IRCF   = 0b1011;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
         OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
         OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
         // Set all data direction bits to outputs (0=out, 1=in)
-	// Example, TRISA bit 0 is RA0 port, TRISA bit 1 is RA1 port, etc.
+        // Example, TRISA bit 0 is RA0 port, TRISA bit 1 is RA1 port, etc.
         TRISA = 0x0;
         TRISB = 0x0;
         TRISC = 0x0;
         while (1) {
-            PORTB = 0xaa;  __delay_ms(500);	// sets all even bits in port B, delay 1/2 sec
-            PORTB = 0x55;  __delay_ms(500);	// sets all odd  bits in port B, delay 1/2 sec
+            PORTB = 0xaa;  __delay_ms(500);     // sets all even bits in port B, delay 1/2 sec
+            PORTB = 0x55;  __delay_ms(500);     // sets all odd  bits in port B, delay 1/2 sec
         }
     }
     _______________________________________________________________________________________________________________
@@ -453,99 +453,99 @@ void HandleLineTransitions(line) {
     PIC INPUTS
     ==========
 
-	To /read/ a particular port bit, e.g. port A bit #0, one can use:
+        To /read/ a particular port bit, e.g. port A bit #0, one can use:
 
-	    val = PORTAbits.RA0;		// read bit #0
+            val = PORTAbits.RA0;                // read bit #0
 
-	       - or -
+               - or -
 
-	    val = (PORTA & 0x00000001);	// read all 8 bits, isolate bit#0
+            val = (PORTA & 0x00000001); // read all 8 bits, isolate bit#0
 
-	To avoid time aliasing, it's probably best in your main() loop to read
-	all the input port values once into some global variables, and then test
-	the bits of those during the loop iteration, e.g.
+        To avoid time aliasing, it's probably best in your main() loop to read
+        all the input port values once into some global variables, and then test
+        the bits of those during the loop iteration, e.g.
 
-	int main() {
-	    while ( 1 ) {
-		G_porta = PORTA;
-		G_portb = PORTB;
-		G_portc = PORTC;
+        int main() {
+            while ( 1 ) {
+                G_porta = PORTA;
+                G_portb = PORTB;
+                G_portc = PORTC;
 
-		// Do stuff reading G_porta/b/c only, not live hardware
+                // Do stuff reading G_porta/b/c only, not live hardware
 
-		__delay_ms(..);
-	    } // while
-	} // main
+                __delay_ms(..);
+            } // while
+        } // main
 
-	Weak Pullup Resistors
-	---------------------
-	Inputs can have internal "weak" pullup resistors assigned to each. To do this,
-	when setting up the port direction bits, you can also turn on weak pullups
-	for which ever inputs you want, e.g. in the following PORTC bits 0-3 are programmed
-	to be inputs, but only bits 0 and 2 are configured with 'weak pullups' enabled:
+        Weak Pullup Resistors
+        ---------------------
+        Inputs can have internal "weak" pullup resistors assigned to each. To do this,
+        when setting up the port direction bits, you can also turn on weak pullups
+        for which ever inputs you want, e.g. in the following PORTC bits 0-3 are programmed
+        to be inputs, but only bits 0 and 2 are configured with 'weak pullups' enabled:
 
-	    OPTION_REGbits.nWPUEN = 0;	// enable WPUEN (weak pullup enable) by /clearing/ the bit
-	    ..
-	    TRISC = 0b00001111;		// program PORTC bits 0-3 as inputs
-	    WPUC  = 0b00000101;		// enable weak pullups for bits 0 and 2
+            OPTION_REGbits.nWPUEN = 0;  // enable WPUEN (weak pullup enable) by /clearing/ the bit
+            ..
+            TRISC = 0b00001111;         // program PORTC bits 0-3 as inputs
+            WPUC  = 0b00000101;         // enable weak pullups for bits 0 and 2
 
-	Schmitt Inputs
-	--------------
-	Inputs can be assigned to either be Schmitt Triggered, or the default TTL style inputs.
-	Here, Schmitt is disabled for all ports:
+        Schmitt Inputs
+        --------------
+        Inputs can be assigned to either be Schmitt Triggered, or the default TTL style inputs.
+        Here, Schmitt is disabled for all ports:
 
-	    // Normal input thresholds
-	    //     1: Schmitt TRigger input used for PORT reads and interrupt-on-change
-	    //     0: TTL input used for PORT reads and interrupt-on-change
-	    //
-	    INLVLA = 0b00000000;
-	    INLVLB = 0b00000000;
-	    INLVLC = 0b00000000;
+            // Normal input thresholds
+            //     1: Schmitt TRigger input used for PORT reads and interrupt-on-change
+            //     0: TTL input used for PORT reads and interrupt-on-change
+            //
+            INLVLA = 0b00000000;
+            INLVLB = 0b00000000;
+            INLVLC = 0b00000000;
 
-	Analog Inputs
-	-------------
-	Inputs can be assigned to read values in analog. See docs for more, but if you're
-	not using analog inputs, it's probably best to explicitly disable analog stuff:
+        Analog Inputs
+        -------------
+        Inputs can be assigned to read values in analog. See docs for more, but if you're
+        not using analog inputs, it's probably best to explicitly disable analog stuff:
 
-	    ANSELA = 0b00000000;
-	    ANSELB = 0b00000000;
-	    ANSELC = 0b00000000;
-	    ADCON0 = 0x0;	// Disable ADC
+            ANSELA = 0b00000000;
+            ANSELB = 0b00000000;
+            ANSELC = 0b00000000;
+            ADCON0 = 0x0;       // Disable ADC
 
-	Comparator
-	----------
-	PIC also supports comparator inputs. See docs for more, but if you're not
-	going to be using the comparator feature, it's probably best to disable it explicitly:
+        Comparator
+        ----------
+        PIC also supports comparator inputs. See docs for more, but if you're not
+        going to be using the comparator feature, it's probably best to disable it explicitly:
 
-	    CM1CON0 = 0x0;
-	    CM2CON0 = 0x0;
-	    CM1CON1 = 0x0;
-	    CM2CON1 = 0x0;
+            CM1CON0 = 0x0;
+            CM2CON0 = 0x0;
+            CM1CON1 = 0x0;
+            CM2CON1 = 0x0;
 
     PIC OUTPUTS
     ===========
 
-	To /write/ to a particular port bit, e.g. port A bit #0, one can use:
+        To /write/ to a particular port bit, e.g. port A bit #0, one can use:
 
-	    LATAbits.LATA0 = 1;		// set single bit in PORTA
+            LATAbits.LATA0 = 1;         // set single bit in PORTA
 
-		- or -
+                - or -
 
-	    PORTA = 0000000001;		// set all 8 bits in PORTA
-	
-	Outputs can either be 'open drain' (the MOS equivalent of "open collector"?) or normal
-	push-pull drive (default I think). Here I'm setting all output bits to be push-pull.
-	Some bits will be 'don't care' because bit settings are only valid for port bits
-	programmed to be outputs. Note too not all PORT bits are available for I/O, only the
-	ones your chip supports:
+            PORTA = 0000000001;         // set all 8 bits in PORTA
+        
+        Outputs can either be 'open drain' (the MOS equivalent of "open collector"?) or normal
+        push-pull drive (default I think). Here I'm setting all output bits to be push-pull.
+        Some bits will be 'don't care' because bit settings are only valid for port bits
+        programmed to be outputs. Note too not all PORT bits are available for I/O, only the
+        ones your chip supports:
 
-	    // Disable 'Open Drain' control:
-	    //     1: open drain drive (sink current only)
-	    //     0: normal push-pull drive (source and sink current)
-	    //
-	    ODCONA = 0b00000000;	
-	    ODCONA = 0b00000000;	
-	    ODCONA = 0b00000000;
+            // Disable 'Open Drain' control:
+            //     1: open drain drive (sink current only)
+            //     0: normal push-pull drive (source and sink current)
+            //
+            ODCONA = 0b00000000;        
+            ODCONA = 0b00000000;        
+            ODCONA = 0b00000000;
 
 ---------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------
@@ -790,5 +790,972 @@ void HandleLineTransitions(line) {
       OPTION_REGbits.PS1  = 1;  //  |-- together selects 1:256
       OPTION_REGbits.PS2  = 1;  // --
 
----
+*******************************************************************************************
+
+    The following are excerpts from Microchip's compiler docs, included here
+    for quick reference: http://ww1.microchip.com/downloads/en/devicedoc/50002053g.pdf
+    This is reformatted slightly to be readable as pure text.
+
+*******************************************************************************************
+
+
+4.3.5 Configuration Bit Access
+------------------------------
+Configuration bits or fuses are used to set up fundamental device operation, such as
+the oscillator mode, watchdog timer, programming mode and code protection. These
+bits must be correctly set to ensure your program executes correctly.
+
+Use the configuration pragma, which has the following forms, to set up your device.
+
+    #pragma config setting = state|value
+    #pragma config register = value
+
+[..]
+
+The settings and states associated with each device can be determined from
+an HTML guide. Open the pic_chipinfo.html file (or the pic18_chipinfo.html
+file) that is located in the pic/docs directory of your compiler
+installation.  
+
+    > ERCO: This is actually in the xc8\v#.##\docs\chips\*.html directory.
+    > ERCO: In my case, with the 16f1709, the docs for that are:
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+16F1709 Support Information
+
+Register: CONFIG1 @ 0x8007
+    FOSC - Oscillator Selection Bits
+        ECH     ECH, External Clock, High Power Mode (4-20 MHz): device clock supplied to CLKIN pins
+        ECM     ECM, External Clock, Medium Power Mode (0.5-4 MHz): device clock supplied to CLKIN pins
+        ECL     ECL, External Clock, Low Power Mode (0-0.5 MHz): device clock supplied to CLKIN pins
+        INTOSC  INTOSC oscillator: I/O function on CLKIN pin
+        EXTRC   EXTRC oscillator: External RC circuit connected to CLKIN pin
+        HS      HS Oscillator, High-speed crystal/resonator connected between OSC1 and OSC2 pins
+        XT      XT Oscillator, Crystal/resonator connected between OSC1 and OSC2 pins
+        LP      LP Oscillator, Low-power crystal connected between OSC1 and OSC2 pins
+
+    WDTE - Watchdog Timer Enable
+        ON      WDT enabled
+        NSLEEP  WDT enabled while running and disabled in Sleep
+        SWDTEN  WDT controlled by the SWDTEN bit in the WDTCON register
+        OFF     WDT disabled
+
+    PWRTE - Power-up Timer Enable
+        OFF     PWRT disabled
+        ON      PWRT enabled
+
+    MCLRE - MCLR Pin Function Select
+        ON      MCLR/VPP pin function is MCLR
+        OFF     MCLR/VPP pin function is digital input
+
+    CP - Flash Program Memory Code Protection
+        OFF     Program memory code protection is disabled
+        ON      Program memory code protection is enabled
+
+    BOREN - Brown-out Reset Enable
+        ON      Brown-out Reset enabled
+        NSLEEP  Brown-out Reset enabled while running and disabled in Sleep
+        SBODEN  Brown-out Reset controlled by the SBOREN bit in the BORCON register
+        OFF     Brown-out Reset disabled
+
+    CLKOUTEN - Clock Out Enable
+        OFF     CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin
+        ON      CLKOUT function is enabled on the CLKOUT pin
+
+    IESO - Internal/External Switchover Mode
+        ON      Internal/External Switchover Mode is enabled
+        OFF     Internal/External Switchover Mode is disabled
+
+    FCMEN - Fail-Safe Clock Monitor Enable
+        ON      Fail-Safe Clock Monitor is enabled
+        OFF     Fail-Safe Clock Monitor is disabled
+
+Register: CONFIG2 @ 0x8008
+    WRT - Flash Memory Self-Write Protection
+        OFF     Write protection off
+        BOOT    000h to 1FFh write protected, 200h to 1FFFh may be modified by EECON control
+        HALF    000h to FFFh write protected, 1000h to 1FFFh may be modified by EECON control
+        ALL     000h to 1FFFh write protected, no addresses may be modified by EECON control
+
+    PPS1WAY - Peripheral Pin Select one-way control
+        ON      The PPSLOCK bit cannot be cleared once it is set by software
+        OFF     The PPSLOCK bit can be set and cleared repeatedly by software
+
+    ZCDDIS - Zero-cross detect disable
+        ON      Zero-cross detect circuit is disabled at POR
+        OFF     Zero-cross detect circuit is enabled at POR
+
+    PLLEN - Phase Lock Loop enable
+        ON      4x PLL is always enabled
+        OFF     4x PLL is enabled when software sets the SPLLEN bit
+
+    STVREN - Stack Overflow/Underflow Reset Enable
+        ON      Stack Overflow or Underflow will cause a Reset
+        OFF     Stack Overflow or Underflow will not cause a Reset
+
+    BORV - Brown-out Reset Voltage Selection
+        LO      Brown-out Reset Voltage (Vbor), low trip point selected.
+        HI      Brown-out Reset Voltage (Vbor), high trip point selected.
+
+    LPBOR - Low-Power Brown Out Reset
+        OFF     Low-Power BOR is disabled
+        ON      Low-Power BOR is enabled
+
+    LVP - Low-Voltage Programming Enable
+        ON      Low-voltage programming enabled
+        OFF     High-voltage on MCLR/VPP must be used for programming
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+    > ERCO: Continuing the compiler docs..
+
+    Click the link to your target device and the page will show you the settings and values
+    that are appropriate with this pragma. Review your device data sheet for more information.
+
+    The value field is a numerical value that can be used in preference to a descriptor.
+    Numerical values can only be specified in decimal or in hexadecimal, the latter radix
+    indicated by the usual 0x prefix. Values must never be specified in binary (i.e., using
+    the 0b prefix).
+
+    Consider the following examples.
+
+        #pragma config WDT = ON // turn on watchdog timer
+        #pragma config WDTPS = 0x1A // specify the timer postscale value
+
+    One pragma can be used to program several settings by separating each setting-value
+    pair with a comma. For example, the above could be specified with one pragma, as in
+    the following.
+
+        #pragma config WDT=ON, WDTPS = 0x1A
+
+    It is recommended that the setting-value pairs be quoted to ensure that the preprocessor
+    does not perform substitution of these tokens, for example:
+
+        #pragma config "BOREN=OFF"
+
+    You should never assume that the OFF and ON tokens used in configuration macros
+    equate to 0 and 1, respectively, as that is often not the case.
+
+    Rather than specify individual settings, each half of the configuration register can be
+    programmed with one numerical value, for example:
+
+        #pragma config CONFIG1L = 0x8F
+
+    Neither the config pragma nor the __CONFIG macro produce executable code, and
+    ideally they should both be placed outside function definitions.
+
+    All the bits in the Configuration Words should be programmed to prevent erratic program
+    behavior. Do not leave them in their default/unprogrammed state. Not all Configuration
+    bits have a default state of logic high; some have a logic low default state.
+    Consult your device data sheet for more information.
+
+    If you are using MPLAB X IDE, take advantage of its built-in tools to generate the
+    required pragmas, so that you can copy and paste them into your source code.
+
+
+    4.3.6 ID Locations
+    ------------------
+
+    The 8-bit PIC devices have locations outside the addressable memory area that can be
+    used for storing program information, such as an ID number. The config pragma is
+    also used to place data into these locations by using a special register name. The
+    pragma is used as follows:
+
+        #pragma config IDLOCx = value
+
+    where x is the number (position) of the ID location, and value is the nibble or byte that
+    is to be positioned into that ID location. The value can only be specified in decimal or
+    in hexadecimal, the latter radix indicated by the usual 0x prefix. Values must never be
+    specified in binary (i.e., using the 0b prefix). If value is larger than the maximum value
+    allowable for each location on the target device, the value will be truncated and a warning
+    message is issued. The size of each ID location varies from device to device. See
+    your device data sheet for more information. For example:
+
+        #pragma config IDLOC0 = 1
+        #pragma config IDLOC1 = 4
+
+    will attempt fill the first two ID locations with 1 and 4. One pragma can be used to program
+    several locations by separating each register-value pair with a comma. For
+    example, the above could also be specified as shown below.
+
+        #pragma config IDLOC0 = 1, IDLOC1 = 4
+
+    The config pragma does not produce executable code and so should ideally be placed
+    outside function definitions.
+
+
+    4.3.7 Using SFRs From C Code
+    ----------------------------
+
+    The Special Function Registers (SFRs) are typically memory mapped registers and are
+    accessed by absolute C structure variables that are placed at the register’s address.
+    These structures can be accessed in the usual way so that no special syntax is required
+    to access SFRs.
+
+    The SFRs control aspects of the MCU and peripheral module operation. Some registers
+    are read-only; some are write-only. Always check your device data sheet for complete
+    information regarding the registers.
+
+    The SFR structures are predefined in header files and are accessible once you have
+    included <xc.h> (see Section 4.3.3 “Device Header Files”) into your source files.
+    Structures are mapped over the entire register and bit-fields within those structures
+    allow access to specific SFR bits. The names of the structures will typically be the same
+    as the corresponding register, as specified in the device data sheet, followed by bits
+    (see Section 2.4.2.5 “How Do I Find The Names Used to Represent SFRs and Bits?”).
+    For example, the following shows code that includes the generic header file, clears
+    PORTA as a whole and sets bit 2 of PORTA using the bit-field definition.
+
+        #include <xc.h>
+        void main(void)
+        {
+            PORTA = 0x00;
+            PORTAbits.RA2 = 1;
+        }
+
+    Care should be taken when accessing some SFRs from C code or from in-line assembly.
+    Some registers are used by the compiler to hold intermediate values of calculations,
+    and writing to these registers directly can result in code failure. A list of registers
+    used by the compiler and can be found in Section 4.7 “Register Usage”.
+
+    4.3.7.1 SPECIAL PIC18 REGISTER ISSUES
+    -------------------------------------
+
+    Some of the SFRs used by PIC18 devices can be grouped to form multi-byte values,
+    e.g., the TMRxH and TMRxL register combine to form a 16-bit timer count value.
+    Depending on the device and mode of operation, there can be hardware requirements
+    to read these registers in certain ways, e.g., often the TMRxL register must be read
+    before trying to read the TMRxH register to obtain a valid 16-bit result.
+
+    It is not recommended that you read a multi-byte variable mapped over these registers
+    as there is no guarantee of the order in which the bytes will be read. It is recommended
+    that each byte of the SFR should be accessed directly, and in the required order, as
+    dictated by the device data sheet. This results in a much higher degree of portability.
+    The following code copies the two timer registers into a C unsigned variable count
+    for subsequent use.
+
+        count = TMR0L;
+        count += TMR0H << 8;
+
+    Macros are also provided to perform reading and writing of the more common timer registers.
+    See the macros READTIMERx and WRITETIMERx in Appendix A. Library Functions.
+    These guarantee the correct byte order is used.
+
+    4.3.8 Bit Instructions
+    ----------------------
+
+    Wherever possible, the MPLAB XC8 C Compiler will attempt to use bit instructions,
+    even on non-bit integer values. For example, when using a bitwise operator and a mask
+    to alter a bit within an integral type, the compiler will check the mask value to determine
+    if a bit instruction can achieve the same functionality.
+
+        unsigned int foo;
+        foo |= 0x40;
+
+    ..will produce the instruction:
+
+        bsf _foo,6
+
+    To set or clear individual bits within integral type, the following macros could be used:
+
+        #define bitset(var, bitno) ((var) |= 1UL << (bitno))
+        #define bitclr(var, bitno) ((var) &= ~(1UL << (bitno)))
+
+    To perform the same operation on foo as above, the bitset macro could be
+    employed as follows:
+
+        bitset(foo, 6);
+
+    4.3.10 Baseline PIC MCU Special Instructions
+    --------------------------------------------
+
+    Baseline devices can use the OPTION and TRIS SFRs, which are not memory
+    mapped.
+
+    The definition of these registers use a special qualifier, __control, to indicate that the
+    registers are write-only, outside the normal address space, and must be accessed
+    using special instructions.
+
+    When these SFRs are written in C code, the compiler will use the appropriate instruction
+    to store the value. So, for example, to set the TRIS register, the following code:
+
+        TRIS = 0xFF;
+
+    would be encoded by the compiler as:
+
+        movlw 0ffh
+        TRIS
+
+    Those Baseline PIC devices which have more than one output port can have
+    __control definitions for objects: TRISA, TRISB and TRISC, and which are used in
+    the same manner as described above.
+
+    Any register that uses the __control qualifier must be accessed as a full byte. If you
+    need to access bits within the register, copy the register to a temporary variable first,
+    then access that temporary variable as required.
+
+    ------------------------------------------------------------------------------------------------------
+                XC8 COMPILER PIC RELATED LIBRARY FUNCTIONS: #include <xc.h>
+    ------------------------------------------------------------------------------------------------------
+
+                            TABLE A-18: DECLARATIONS PROVIDED BY <XC.H>
+    :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    :: Name                            Definition                                                        ::
+    :: ------------------              ----------------------------------------                          ::
+    :: di                              -                                                                 ::
+    :: ei                              -                                                                 ::
+    :: CRLWDT                          -                                                                 ::
+    :: EEPROM_READ                     EEPROM_READ(address)                                              ::
+    :: EEPROM_WRITE                    EEPROM_WRITE(address, value)                                      ::
+    :: NOP                             -                                                                 ::
+    :: READTIMERX                      -                                                                 ::
+    :: RESET                           -                                                                 ::
+    :: SLEEP                           -                                                                 ::
+    :: WRITETIMERX                     WRITETIMER(value)                                                 ::
+    :: eeprom_read                     unsigned char eeprom_read(unsigned char address);                 ::
+    :: eeprom_write                    void eeprom_write(unsigned char address, unsigned char value);    ::
+    :: __debug_break                   -                                                                 ::
+    :: ___mkstr                        ___mkstr(value)                                                   ::
+    :: __EEPROM_DATA                   __EEPROM_DATA(a, b, c, d, e, f, g, h)                             ::
+    :: get_cal_data                    double get_cal_data(const unsigned char *);                       ::
+    :: _delay                          _delay(n)                                                         ::
+    :: _delaywdt                       _delaywdt(n)                                                      ::
+    :: _delay3                         _delay3(n)                                                        ::
+    :: __builtin_software_breakpoint   void __builtin_software_breakpoint(void);                         ::
+    :: __delay_ms                      __delay_ms(time)                                                  ::
+    :: __delay_us                      __delay_us(time)                                                  ::
+    :: __delaywdt_ms                   __delaywdt_ms(time)                                               ::
+    :: __delaywdt_us                   __delaywdt_us(time)                                               ::
+    :: __fpnormalize                   double __fpnormalize(double);                                     ::
+    :: __osccal_val                    unsigned char __osccal_val(void);                                 ::
+    :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    EEPROM_READ
+
+        Synopsis
+            #include <xc.h>
+            unsigned char eeprom_read(unsigned char address);
+
+        Description
+            This function is available for all Mid-range devices that implement EEPROM. For PIC18
+            devices, calls to this routine will instead attempt to call the equivalent functions in the
+            legacy PIC18 peripheral library, which you must download and install separately. It is
+            recommended that for PIC18 devices you use MPLAB MCC to generate EEPROM
+            access code, if possible.
+
+            This function tests and waits for any concurrent writes to EEPROM to conclude before
+            performing the required operation.
+
+        Example
+            #include <xc.h>
+            int
+            main (void)
+            {
+                unsigned char serNo;
+                serNo = eeprom_read(0x20);
+            }
+
+    ___________________________________________________________________________________________
+
+    EEPROM_WRITE
+
+        Synopsis
+            #include <xc.h>
+            void eeprom_write(unsigned char address, unsigned char value);
+
+        Description
+            This function is available for all Mid-range devices that implement EEPROM. For PIC18
+            devices, calls to this routine will instead attempt to call the equivalent functions in the
+            legacy PIC18 peripheral library, which you must download and install separately. It is
+            recommended that for PIC18 devices you use MPLAB MCC to generate EEPROM
+            access code, if possible.
+
+            This function tests and waits for any concurrent writes to EEPROM to conclude before
+            performing the required operation. The function will initiate the write to EEPROM and
+            this process will still be taking place when the function returns. The new data written to
+            EEPROM will become valid at a later time. See your device data sheet for exact information
+            about EEPROM on your target device.
+
+        Example
+            #include <xc.h>
+            int
+            main (void)
+            {
+                eeprom_write(0x20, 0x55);
+            }
+
+    ___________________________________________________________________________________________
+
+    EEPROM_READ (MACRO)
+
+        Synopsis
+            #include <xc.h>
+            EEPROM_READ(address);
+
+        Description
+            This macro is available for all Mid-range devices that implement EEPROM.
+            Unlike the function version, this macro does not wait for any concurrent writes to
+            EEPROM to conclude before performing the required operation.
+
+        Example
+            #include <xc.h>
+            int main (void) {
+                unsigned char serNo;
+                // wait for end-of-write before EEPROM_READ
+                while(WR)
+                continue; // read from EEPROM at address
+                serNo = EEPROM_READ(0x55);
+            }
+
+    ___________________________________________________________________________________________
+
+    EEPROM_WRITE (MACRO)
+
+        Synopsis
+            #include <xc.h>
+            EEPROM_WRITE(address, value);
+
+        Description
+            This macro is available for all Mid-range devices that implement EEPROM.
+            This macro tests and waits for any concurrent writes to EEPROM to conclude before
+            performing the required operation. The function will initiate the write to EEPROM and
+            this process will still be taking place when the function returns. The new data written to
+            EEPROM will become valid at a later time. See your device data sheet for exact information
+            about EEPROM on your target device.
+
+        Example
+            #include <xc.h>
+            int main (void) {
+                EEPROM_WRITE(0x20, 0x55);
+            }
+
+    ___________________________________________________________________________________________
+
+    __BUILTIN_SOFTWARE_BREAKPOINT
+
+        Synopsis
+            #include <xc.h>
+            void __builtin_software_breakpoint(void);
+
+        Description
+            This builtin unconditionally inserts code into the program output which triggers a
+            software breakpoint when the code is executed using a debugger.
+
+            The software breakpoint code is only generated for mid-range and PIC18 devices.
+
+            Baseline devices do not support software breakpoints in this way, and the builtin will be
+            ignored if used with these devices.
+
+        Example
+
+            #include <xc.h>
+            int main (void) {
+                __builtin_software_breakpoint(); // stop here to begin
+                ...
+
+    ___________________________________________________________________________________________
+
+    __CONDITIONAL_SOFTWARE_BREAKPOINT
+
+        Synopsis
+            #include <assert.h>
+            __conditional_software_breakpoint(expression)
+
+        Description
+            This macro implements a light-weight embedded version of the standard C assert()
+            macro, and is used in the same way.
+
+            When executed, the expression argument is evaluated. If the argument is false the
+            macro attempts to halt program execution; the macro performs no action if the argument
+            is true.
+
+            The macro is removed from the program output if the manifest constant NDEBUG is
+            defined. In addition, it is included only for debug builds (i.e., when the __DEBUG macro
+            is defined). Thus, it does not consume device resources for production builds.
+
+            If the target device does not support the ability to halt via a software breakpoint, use of
+            this macro will trigger a compiler error.
+
+        Example
+            #include <assert.h>
+            void getValue(int * ip) {
+                __conditional_software_breakpoint(ip != NULL);
+                ...
+            }
+
+    ___________________________________________________________________________________________
+
+    __DEBUG_BREAK
+
+        Synopsis
+            #include <xc.h>
+            void __debug_break(void);
+
+        Description
+            This macro conditionally inserts code into the program output which triggers a software
+            breakpoint when the code is executed using a debugger. The code is only generated
+            for debug builds (see Section 2.3.7 “What is Different About an MPLAB X IDE Debug
+            Build?”) and is omitted for production builds (i.e., when the __DEBUG macro is defined).
+            The software breakpoint code is only generated for mid-range and PIC18 devices.
+            Baseline devices do not support software breakpoints in this way, and the macro will
+            be ignored if used with these devices.
+
+        Example
+            #include <xc.h>
+            int main (void) {
+                __debug_break(); // stop here to begin
+                ...
+        See also
+            __builtin_software_breakpoint()
+
+    ___________________________________________________________________________________________
+
+    __DELAY_MS, __DELAY_US, __DELAYWDT_US, __DELAYWDT_MS
+
+        Synopsis
+            __delay_ms(x) // request a delay in milliseconds
+            __delay_us(x) // request a delay in microseconds
+            __delaywdt_ms(x) // request a delay in milliseconds
+            __delaywdt_us(x) // request a delay in microseconds
+
+        Description
+            It is often more convenient to request a delay in time-based terms, rather than in cycle
+            counts. The macros __delay_ms(x) and __delay_us(x) are provided to meet this
+            need. These macros convert the time-based request into instruction cycles that can be
+            used with _delay(n). In order to achieve this, these macros require the prior definition
+            of preprocessor macro _XTAL_FREQ, which indicates the system frequency. This
+            macro should equate to the oscillator frequency (in hertz) used by the system. Note that
+            this macro only controls the behavior of these delays and does not affect the device
+            execution speed.
+
+            On PIC18 devices only, you can use the alternate WDT-form of these functions, which
+            uses the CLRWDT instruction as part of the delay code. See the _delaywdt function.
+            The macro argument must be a constant expression. An error will result if these macros
+            are used without defining the oscillator frequency symbol, the delay period requested
+            is too large, or the delay period is not a constant.
+
+        See also
+            _delay(), _delaywdt()
+
+    ___________________________________________________________________________________________
+
+    __EEPROM_DATA
+
+        Synopsis
+
+            #include <xc.h>
+            __EEPROM_DATA(a,b,c,d,e,f,g,h)
+
+        Description
+            This macro is used to store initial values in the device’s EEPROM registers at the time
+            of programming.
+
+            The macro must be given blocks of 8 bytes to write each time it is called, and can be
+            called repeatedly to store multiple blocks.
+
+            __EEPROM_DATA() will begin writing to EEPROM address zero, and auto-increments
+            the address written to by 8 each time it is used.
+
+        Example
+            #include <xc.h>
+            __EEPROM_DATA(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07)
+            __EEPROM_DATA(0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F)
+            void main (void) {
+            }
+
+    ___________________________________________________________________________________________
+
+    __FPNORMALIZE
+
+        Synopsis
+            #include <xc.h>
+            double __fpnormalize(double fnum)
+
+        Description
+            This function can be used to ensure that an arbitrary 32-bit floating-point value (which
+            is not the result of a calculation performed by the compiler) conforms to the "relaxed"
+            floating-point rules (as described in Section 4.4.4 “Floating-Point Data Types”).
+            This function returns the value passed to it, but ensures that any subnormal argument
+            is flushed to zero, and converts any negative zero argument to a positive zero result.
+
+        Example
+            #include <xc.h>
+            void main (void) {
+                double input_fp;
+                // read in a floating-point value from an external source
+                input_fp = getFP();
+                // ensure it is formatted using the relaxed rules
+                input_fp = __fpnormalize(input_fp);
+                ...
+            }
+
+    ___________________________________________________________________________________________
+
+    __OSCCAL_VAL
+
+        Synopsis
+            #include <xc.h>
+            unsigned char __osccal_val(void);
+
+        Description
+            This is a pseudo-function that is defined by the code generator to be a label only. The
+            label’s value is equated to the address of the retlw instruction, which encapsulates
+            the oscillator configuration value. This function is only available for those devices that
+            are shipped with such a value stored in program memory.
+
+            Calls to the function will return the device’s oscillator configuration value, which can
+            then be used in any expression, if required.
+
+            Note that this function is automatically called by the runtime start-up code (unless you
+            have explicitly disabled this option, see Section 3.7.1.14 “osccal”) and you do not need
+            to call it to calibrate the internal oscillator.
+
+        Example
+            #include <xc.h>
+            void main (void) {
+                unsigned char c;
+                c = __osccal_val();
+            }
+
+    ___________________________________________________________________________________________
+
+    _DELAY() , _DELAYWDT
+
+        Synopsis
+            #include <xc.h>
+            void _delay(unsigned long cycles);
+            void _delaywdt(unsigned long cycles);
+
+        Description
+            This is an in-line function that is expanded by the code generator. When called, this routine
+            expands to an in-line assembly delay sequence. The sequence will consist of code
+            that delays for the number of instruction cycles that is specified as the argument. The
+            argument must be a constant expression.
+
+            The _delay in-line function can use loops and the NOP instruction to implement the
+            delay. The _delaywdt in-line function performs the same task, but will use the
+            CLRWDT instruction, as well as loops, to achieve the specified delay.
+
+            An error will result if the requested delay is not a constant expression or is greater than
+            50,463,240 instructions. For even larger delays, call this function multiple times.
+
+        Example
+            #include <xc.h>
+            void main (void) {
+                control |= 0x80;
+                _delay(10); // delay for 10 cycles
+                control &= 0x7F;
+            }
+
+    ___________________________________________________________________________________________
+
+    _DELAY3()
+
+        Synopsis
+            #include <xc.h>
+            void _delay3(unsigned char cycles);
+
+        Description
+            This is an in-line function that is expanded by the code generator. It is only available on
+            PIC18 and enhanced mid-range devices. When called, this routine expands to an
+            in-line assembly delay sequence consisting of code that delays for 3 times the argument
+            value, assuming that the argument can be loaded to WREG in one instruction,
+            and that there are no errata-workaround NOPs present in the loop. If this is not the
+            case, the delay will be longer. The argument can be a byte-sized constant or variable.
+
+        Example
+            #include <xc.h>
+            void main (void) {
+                control |= 0x80;
+                _delay3(10); // delay for 30 cycles
+                control &= 0x7F;
+            }
+
+    ___________________________________________________________________________________________
+
+    ASSERT
+
+        Synopsis
+            #include <assert.h>
+            void assert (int e)
+
+        Description
+            This macro is used for debugging purposes; the basic method of usage is to place
+            assertions liberally throughout your code at points where correct operation of the code
+            depends upon certain conditions being true initially. An assert() routine can be used
+            to ensure at runtime that an assumption holds true. For example, the following
+            statement asserts that mode is larger than zero:
+
+                assert(mode > 0);
+
+            If the expression passed to assert() evaluates to false at runtime, the macro
+            attempts to print diagnostic information and abort the program. A fuller discussion of
+            the uses of assert() is impossible in limited space, but it is closely linked to methods
+            of proving program correctness.
+
+            The assert() macro depends on the implementation of the function _fassert().
+
+            The default _fassert() function, built into the library files, first calls the printf()
+            function, which prints a message identifying the source file and line number of the
+            assertion. Next, _fassert() attempts to terminate program execution by calling
+            abort(). The exact behaviour of abort() is dependent on the selected device and
+            whether the executable is a debug or production build. For debug builds, abort() will
+            consist of a software breakpoint instruction followed by a Reset instruction, if possible.
+
+            For production builds, abort() will consist only of a Reset instruction, if possible. In
+            both cases, if a Reset instruction is not available, a goto instruction that jumps to itself
+            in an endless loop is output.
+
+            The _fassert() routine can be adjusted to ensure it meets your application needs.
+            Include the source file defining this function into your project, if you modify it.
+
+        Example
+            #include <assert.h>
+            void ptrfunc (struct xyz * tp) {
+                assert(tp != 0);
+            }
+
+    ___________________________________________________________________________________________
+
+    CLRWDT
+
+        Synopsis
+            #include <xc.h>
+            CLRWDT();
+
+        Description
+
+            This macro is used to clear the device’s internal watchdog timer.
+
+        Example
+            #include <xc.h>
+            void main (void) {
+                WDTCON=1;
+                /* enable the WDT */
+                CLRWDT();
+            }
+
+    ___________________________________________________________________________________________
+
+    DI, EI
+
+        Synopsis
+            #include <xc.h>
+            void ei (void)
+            void di (void)
+
+        Description
+            The di() and ei() routines disable and re-enable interrupts respectively. These are
+            implemented as macros. The example shows the use of ei() and di() around access
+            to a long variable that is modified during an interrupt. If this was not done, it would be
+            possible to return an incorrect value, if the interrupt occurred between accesses to
+            successive words of the count value.
+
+            The ei() macro should never be called in an interrupt function.
+
+        Example
+            #include <xc.h>
+            long count, val;
+            void __interrupt(high_priority) tick (void) {
+                count++;
+            }
+            void getticks (void) {
+                di();
+                val = count;
+                ei();
+            }
+
+    ___________________________________________________________________________________________
+
+    EVAL_POLY
+
+        Synopsis
+            #include <math.h>
+            double eval_poly (double x, const double * d, int n)
+
+        Description
+            The eval_poly() function evaluates a polynomial, whose coefficients are contained in
+            the array d, at x, for example:
+
+                y = x*x*d2 + x*d1 + d0.
+
+            The order of the polynomial is passed in n.
+
+        Example
+            #include <stdio.h>
+            #include <math.h>
+            void main (void) {
+                double x, y;
+                double d[3] = {1.1, 3.5, 2.7};
+                x = 2.2;
+                y = eval_poly(x, d, 2);
+                printf(“The polynomial evaluated at %f is %f\n”, x, y);
+            }
+
+        Return Value
+            A double value, being the polynomial evaluated at x.
+            abs(), labs()
+
+    ___________________________________________________________________________________________
+
+    GET_CAL_DATA
+
+        Synopsis
+            #include <xc.h>
+            double get_cal_data (const unsigned char * code_ptr)
+
+        Description
+            This function returns the 32-bit floating-point calibration data from the PIC MCU 14000
+            calibration space. It cannot be used with other devices. Only use this function to access
+            KREF, KBG, VHTHERM and KTC (that is, the 32-bit floating-point parameters). FOSC and
+            TWDT can be accessed directly as they are bytes.
+        Example
+            #include <xc.h>
+            void main (void) {
+                double x;
+                unsigned char y;
+                /* Get the slope reference ratio. */
+                x = get_cal_data(KREF);
+                /* Get the WDT time-out. */
+                y = TWDT;
+            }
+
+        Return Value
+            The value of the calibration parameter
+
+    ___________________________________________________________________________________________
+
+    NOP
+
+        Synopsis
+            #include <xc.h>
+            NOP();
+
+        Description
+            Execute NOP instruction here. This is often useful to fine tune delays or create a handle
+            for breakpoints. The NOP instruction is sometimes required during some sensitive
+            sequences in hardware.
+
+        Example
+            #include <xc.h>
+            void crude_delay(void) {
+                RA1 = 0;
+                NOP();
+                RA1 = 1;
+            }
+
+    ___________________________________________________________________________________________
+
+    PUTCH
+
+        Synopsis
+            #include <conio.h>
+            void putch (char c)
+
+        Description
+            The putch() function is provided as an empty stub which can be completed as each
+            project requires. It must be defined if you intend to use the printf() function. Typically
+            this function will accept one byte of data and send this to a peripheral which is
+            associated with stdout.
+
+        Example
+            #include <conio.h>
+            char * x = "This is a string";
+            void main (void) {
+                char * cp;
+                cp = x;
+                while(*x) {
+                    putch(*x++);
+                }
+                putch(’\n’);
+            }
+    ___________________________________________________________________________________________
+
+    READTIMERx
+
+        Synopsis
+            #include <xc.h>
+            unsigned short READTIMERx (void);
+
+        Description
+            The READTIMERx() macro returns the value held by the TMRx register, where x is one
+            of the digits 0, 1 or 3.
+
+        Example
+            #include <xc>
+            void main (void) {
+                while(READTIMER0() != 0xFF)
+                continue;
+                SLEEP();
+            }
+
+        See Also
+            WRITETIMERx()
+
+        Return Value
+            The value held by the TMRx register.
+
+        Note
+            This macro can only be used with PIC18 devices.
+    ___________________________________________________________________________________________
+
+    RESET
+
+        Synopsis
+            #include <xc.h>
+            RESET();
+
+        Description
+            Execute a RESET instruction here. This will trigger a software device Reset.
+
+        Example
+            #include <xc.h>
+            void main(void) {
+                init();
+                while ( ! (fail_code = getStatus())) {
+                    process();
+                }
+                if (fail_code > 2) // something’s serious wrong
+                RESET(); // reset the whole device
+                // otherwise try restart code from main()
+            }
+    ___________________________________________________________________________________________
+
+    SLEEP
+
+        Synopsis
+            #include <xc.h>
+            SLEEP();
+
+        Description
+            This macro is used to put the device into a low-power standby mode.
+
+        Example
+            #include <xc.h>
+            extern void init(void);
+            void main (void) {
+                init(); /* enable peripherals/interrupts */
+                while(1)
+                SLEEP(); /* save power while nothing happening */
+            }
+            WRITETIMERx
+
+        Synopsis
+            #include <xc.h>
+            void WRITETIMERx (int n);
+
+        Description
+            The WRITETIMERx() macro writes the 16-bit argument, n, to both bytes of the TMRx
+            register, where x is one of the digits 0, 1 or 3.
+
+        Example
+            #include <xc.h>
+            void main (void) {
+                WRITETIMER1(0x4A);
+                while(1) {
+                    continue;
+                }
+            }
+        Note
+            This macro can only be used with PIC18 devices.
+
 
