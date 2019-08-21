@@ -23,11 +23,4 @@
     The smallest of AT&T's boxes were steel, about the size of a large shoe
     box, and had several PCB boards in a rack, along with a punch block, 
     heavy power supplies, motor powered rotary switches, etc.
-
-    The revisions of this board that use PIC chips:
-
-        REV E
-	REV E1
-	REV F
-	REV F1
-
+    
