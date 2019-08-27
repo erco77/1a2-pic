@@ -202,33 +202,32 @@
 </span>
 
 <a name="Setup"></a>
-<span class=man_heading>INITIAL SETUP</span><br>
+<span class=man_heading>1.0 - INITIAL SETUP</span><br>
+<br>
+There is nothing critical about the order of connecting up the board. The order shown below is:<br>
+Extensions, Power, Telco, Ring Gen.. but these can actually be connected up in any order.<br>
+<br>
+If you're new to 1A2 wiring, and are not sure what the wire colors "Y-S" or "S-Y"<br>
+refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near the bottom of this document.<br>
+<br>
+<a name="Mounting"></a>
+<span class=man_subheading>1.1 - Mount the board or position it safely before starting</span>
 <UL>
-    There is nothing critical about the order of connecting up the board. The order shown below is:<br>
-    Extensions, Power, Telco, Ring Gen.. but these can actually be connected up in any order.<br>
+    It is important the board isn't lying on metal or conductive when powered up, to prevent shorting out the board.<br>
     <br>
-    If you're new to 1A2 wiring, and are not sure what the wire colors "Y-S" or "S-Y"<br>
-    refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near the bottom of this document.<br>
+    If you plan to interlink two boards, see the <A HREF="#Interlink">"Interlink"</a> section of this document.<br>
     <br>
-    <a name="Mounting"></a>
-    <span class=man_subheading>0. Mount the board or position it safely before starting</span>
-    <UL><BR>
-        It is important that the board is not lying on anything metal when powered up, to prevent<br>
-        shorting out the board.<br>
+    <span class=man_subheading>Free Standing</span><br>
+    If the board is not mounted to a backboard yet, place the board on a non-conducting surface<br>
+    (wood, cardboard, etc) that is free of metal parts that could short out the board, e.g.<br>
+    no staples, paperclips, stray screws/nuts/wire clippings, etc.<br>
     <br>
-        If you plan to interlink two boards, see the <A HREF="#Interlink">"Interlink"</a> section of this document.<br>
+    <span class=man_subheading>Mounting to a Backboard</span><br>
+    If mounting the KSU to a backboard, use screws through all mounting holes with standoffs<br>
+    to keep the board elevated off the backboard's surface, so air can flow along the back<br>
+    to aid in cooling of components, and to prevent catching stray metal (like wire clippings).<br>
     <br>
-        <span class=man_subheading>Free Standing</span><br>
-        If the board is not mounted to a backboard yet, place the board on a non-conducting surface<br>
-        (wood, cardboard, etc) that is free of metal parts that could short out the board, e.g.<br>
-        no staples, paperclips, stray screws/nuts/wire clippings, etc.<br>
-        <br>
-        <span class=man_subheading>Mounting to a Backboard</span><br>
-        If mounting the KSU to a backboard, use screws through all mounting holes with standoffs<br>
-        to keep the board elevated off the backboard's surface, so air can flow along the back<br>
-        to aid in cooling of components, and to prevent catching stray metal (like wire clippings).<br>
-        <br>
-        <span class=ascii_art_small_border>
+    <span class=ascii_art_small_border>
 
                                    .   .
                                 --&gt;.   .&lt;-- 1/4" or more
@@ -257,30 +256,30 @@
 
           <b>Figure A</b>: Side view mounting KSU card to backboard.       <!-- right margin whitespace for border -->
           Standoffs can be metal, nylon, rubber, etc.
-       </span>
-       <p>
-       If metal standoffs are used, make sure their diameter does not exceed the diameter of<br>
-       the white circles around the mounting holes, to prevent shorting traces on the board.<br>
-       <br>
-       For rubber standoffs, insulation from outdoor extension cords can even be used, e.g.<br>
-       <br>
-       <span class=ascii_art>
+   </span>
+   <p>
+   If metal standoffs are used, make sure their diameter does not exceed the diameter of<br>
+   the white circles around the mounting holes, to prevent shorting traces on the board.<br>
+   <br>
+   For rubber standoffs, insulation from outdoor extension cords can even be used, e.g.<br>
+   <br>
+   <span class=ascii_art>
                <a href="images/1a2-board-sideview-standoffs.jpg" title="Click for larger image"
                ><img src="images/1a2-board-sideview-standoffs.jpg" noshade 
                style="height: 700px; border: 1px solid black;"></a><br>
        <b>Figure A2.</b> Side view of actual installation on plywood backboard 
        with yellow rubber standoffs made from an outdoor extension cord.
-       </span>
-       NOTE: Use screws in <u>all 7</u> screw mounting hole positions provided. Not just around the corners,<br>
-       but the ones in the center as well. Center screws prevent boards from bending when plugging/unplugging<br>
-       the large 50 pin Amphenol connectors, which would otherwise mechanically stress solder traces.<br>
-    </UL>
+   </span>
+   NOTE: Use screws in <u>all 7</u> screw mounting hole positions provided. Not just around the corners,<br>
+   but the ones in the center as well. Center screws prevent boards from bending when plugging/unplugging<br>
+   the large 50 pin Amphenol connectors, which would otherwise mechanically stress solder traces.<br>
+</UL>
 
-    <a name="ConnectPower"></a>
-    <span class="man_subheading">1. Connect Power</span><BR>
-    <ul><br>
-        Connect power by plugging in the 12volt power:<br>
-        <br>
+<a name="ConnectPower"></a>
+<span class="man_subheading">1.2 - Connect Power</span><BR>
+<ul>
+    Connect power by plugging in the 12volt power:<br>
+    <br>
     <span class=ascii_art_small_border>
      ____________________________________________________________________
     |                                 ::::::: INTERLINK                  |
@@ -327,7 +326,7 @@
     </UL>
     <P>
     <a name="ConnectExtensions"></a>
-    <span class=man_subheading>2. Connect 1A2 Phone Extensions</span>
+    <span class=man_subheading>1.2 - Connect 1A2 Phone Extensions</span>
     <ul>
         Connect the phone extensions to the card by connecting the large
         amphenol connectors.
@@ -360,25 +359,24 @@
             &gt; Buzzers on pins 17/42 (Y-O pair)
             &gt; Phone hybrid networks configured for diode ringing (see <A HREF="#BellWiring">"Bell Wiring"</A> below)
 
-    For details on phone wiring, see below, sections 2.1 through 2.3.
+    For details on phone wiring, see below, sections 1.2.1 through 1.2.4.
         </span>
-    </UL>
-    <p>
-    <a name="BellWiring"></a>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>2.1 - Bell Wiring</summary>
-    <ul><br>
-       Since this board uses a diode network to program ringing, bell ringing is only done on<br>
-       1/2 of the AC wave. To support this, a small one wire change must be made inside each phone<br>
-       to bypass the ringer capacitor that is between the K and A terminals on the hybrid network.<br>
-       Paraphrasing Ed from Sundance Communications:<br>
-       <ul><br><i>
-          "For any kind of diode ringing to work, the capacitor between hybrid network terminals A and K (inside phone)<br>
-          have to be bypassed.  Move the wire on terminal 'K' to terminal 'A' along with the existing wire."<br>
-       </i></ul>
-       <br>
-       So if a red wire is currently on the 'K' terminal, just move it to the 'A' terminal:<br>
-       <br>
-       <span class=ascii_art_small_border>
+        <p>
+        <a name="BellWiring"></a>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.2.1 - Bell Wiring</summary>
+        <ul><br>
+           Since this board uses a diode network to program ringing, bell ringing is only done on<br>
+           1/2 of the AC wave. To support this, a small one wire change must be made inside each phone<br>
+           to bypass the ringer capacitor that is between the K and A terminals on the hybrid network.<br>
+           Paraphrasing Ed from Sundance Communications:<br>
+           <ul><br><i>
+              "For any kind of diode ringing to work, the capacitor between hybrid network terminals A and K (inside phone)<br>
+              have to be bypassed.  Move the wire on terminal 'K' to terminal 'A' along with the existing wire."<br>
+           </i></ul>
+           <br>
+           So if a red wire is currently on the 'K' terminal, just move it to the 'A' terminal:<br>
+           <br>
+           <span class=ascii_art_small_border>
    ...................................................................................
    :                                       :                                         :
    :                 BEFORE                :                  AFTER                  :
@@ -405,56 +403,56 @@
    :.......................................:.........................................:   <!-- RIGHT MARGIN SPACE -->
 
            Figure B. The diode ringing in-phone "K/A" wiring change needed for bells.
-        </span>
-    </UL>
-    </details>
-    <br>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>2.1b - Extra Bell Wiring Details</summary>
-    <ul><br>
-        Here's an illustration with actual components from a 2564 and 2565 model phone.  Wiring may vary, <br>
-        since used phones may have been changed before. What's shown are the factory wiring from the <br>
-        Bell System Practices documentation.<br>
+            </span>
+        </UL>
+        </details>
         <br>
-        Note there are at least two different bell ringer types one can encounter in these phones; the H1A <br>
-        which has 4 wires (red, blk, slate, slate-red), and H1B which has 2 wires (red and blk).<br>
-        The red arrow shows the wiring change for each type of ringer:
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>1.2.2 - Extra Bell Wiring Details</summary>
         <ul><br>
-            <a href="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" noshade="" height="400" border="1"></a>
-            <p>
-            <a href="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" noshade="" height="400" border="1"></a>
-            <P>
-            Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.<br>
+            Here's an illustration with actual components from a 2564 and 2565 model phone.  Wiring may vary, <br>
+            since used phones may have been changed before. What's shown are the factory wiring from the <br>
+            Bell System Practices documentation.<br>
+            <br>
+            Note there are at least two different bell ringer types one can encounter in these phones; the H1A <br>
+            which has 4 wires (red, blk, slate, slate-red), and H1B which has 2 wires (red and blk).<br>
+            The red arrow shows the wiring change for each type of ringer:
+            <ul><br>
+                <a href="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" noshade="" height="400" border="1"></a>
+                <p>
+                <a href="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" noshade="" height="400" border="1"></a>
+                <P>
+                Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.<br>
+            </ul>
         </ul>
-    </ul>
-    </details>
-    <P>
-<a name="BuzzerWiring"></a>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>2.2 - Buzzer Wiring</summary>
-    <ul><br>
-        Buzzer wiring is usually straight forward, and just a matter of making sure the
-        two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
-    </ul>
-    </details>
-    <P>
-    <a name="CallDirectorWiring"></a>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>2.3 - 'Call Director' (2636) Extra Buzzer Wiring Details</summary>
-    <ul><br>
-        Call Director model phones, such as the 2636 model, by default have the buzzer wired
-        to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
-        on Amphenol connector #1 by using the change shown in this diagram:
+        </details>
+        <P>
+    <a name="BuzzerWiring"></a>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.2.3 - Buzzer Wiring</summary>
         <ul><br>
-            <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" height="616" border="1"></a>
+            Buzzer wiring is usually straight forward, and just a matter of making sure the
+            two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
         </ul>
-    </ul>
-    </details>
-</ul><BR>
-<BR>
-<a name="ConnectTelco"></a>
-<span class="man_subheading">3. Attach Phone Lines</span>
-<UL><BR>
-    Connect the card to your telephone service.
-    The phone source can be VoIP, XLink BT, or other "plain old telephone" compatible source.
-    <span class=ascii_art_small>
+        </details>
+        <P>
+        <a name="CallDirectorWiring"></a>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>1.2.4 - 'Call Director' (2636) Extra Buzzer Wiring Details</summary>
+        <ul><br>
+            Call Director model phones, such as the 2636 model, by default have the buzzer wired
+            to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
+            on Amphenol connector #1 by using the change shown in this diagram:
+            <ul><br>
+                <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" height="616" border="1"></a>
+            </ul>
+        </ul>
+        </details>
+    </ul><BR>
+    <BR>
+    <a name="ConnectTelco"></a>
+    <span class="man_subheading">1.3 - Attach Phone Lines</span>
+    <UL><BR>
+        Connect the card to your telephone service.
+        The phone source can be VoIP, XLink BT, or other "plain old telephone" compatible source.
+        <span class=ascii_art_small>
          ____________________________________________________________________
         |                                 ::::::: INTERLINK                  |
         |                                                                    |
@@ -501,7 +499,7 @@
 </UL>
 <P>
 <a name="RingGen"></a>
-<span class="man_subheading">4. Attaching A Ring Generator (If You Have One)</span>
+<span class="man_subheading">1.4 - Attaching A Ring Generator (If You Have One)</span>
 <UL>
     This step is optional. SKIP THIS STEP, if:
     <UL type=DISC><br>
@@ -524,10 +522,10 @@
     </UL>
     <BR>
     There are at least three ways to connect an external ring generator, depending on the type, listed below<br>
-    in sections 4.1 through 4.3. The most common is to use the <U>PowerDSINE "PCR-SIN03V12F20-C"</U><br>
-    12V Ring Generator described in section 4.1 below:<br>
+    in sections 1.4.1 through 1.4.3. The most common is to use the <U>PowerDSINE "PCR-SIN03V12F20-C"</U><br>
+    12V Ring Generator described in section 1.4.1 below:<br>
     <br>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>4.1 - PowerDSINE 12V Ring Generator</summary>
+    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.4.1 - PowerDSINE 12V Ring Generator</summary>
     <UL><BR>
         For the PowerDSINE 12VDC ring generator, this board provides a 6 pin header at JP5<br>
         for directly connecting this device.<br>
@@ -595,7 +593,7 @@
         </span>
     </ul>
     </details>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>4.2 - Attaching AC Powered Ring Generator (118A, VIKING, etc.)</summary>
+    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>1.4.2 - Attaching AC Powered Ring Generator (118A, VIKING, etc.)</summary>
     <UL><BR>
         For an old telco ring generator (like the WECO 118A or VIKING), you can wire the two Ring AC wires<br>
         to the RIGHT HAND TWO TERMINALS (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:<br>
@@ -605,7 +603,7 @@
         </center>
     </ul>
     </details>
-    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>4.3 - 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
+    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.4.3 - 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
     <UL><BR>
         If you have a PowerDSINE ring generator with the connector cut off, or if you have a Cambridge Electronics<br>
         12V ring generator, you can wire it directly to the EXT RING GEN screw terminals as follows, leaving JP5 unconnected:<br>
@@ -650,7 +648,7 @@
 </UL>
 <BR>
 <a name="DIPRinging"></a>
-<span class=man_subheading>5. - Ring Programming - Set DIP Switches For Ringing</span>
+<span class=man_subheading>1.5 - Ring Programming - Set DIP Switches For Ringing</span>
 <UL>
     There are two sets of 8 dip switches at the bottom of the board, SW1 (left) and SW2 (right):<br>
     <UL><br>
@@ -689,12 +687,12 @@
 </UL>
 <P>
 <a name="Testing"></a>
-<span class=man_subheading>6. Testing Your Setup For The First Time</span>
+<span class=man_subheading>1.6 - Testing Your Setup For The First Time</span>
 <UL>
     With the above "Setup" steps completed and power applied, you should now be able to test the phones.<br>
     Try these tests, in order:<br>
     <br>
-    <span class=man_subheading>6.1 - Intercom Test</span>
+    <span class=man_subheading>1.6.1 - Intercom Test</span>
     <OL type=1><br>
          <LI> Pick up the handset on a phone extension, and press the RIGHT-most line button<br>
               to use the intercom on Line #5.</LI><BR>
@@ -710,7 +708,7 @@
     </OL>
     <P>
     <A NAME="CallTest"></A>
-    <span class=man_subheading>6.2 - Call Test</span>
+    <span class=man_subheading>1.6.2 - Call Test</span>
     <OL type=1><br>
          <LI> Try calling Line #1's phone number from a cell phone, or another line.<br>
               If configured, the ringers should ring, and the Line #1 lamp should<br>
@@ -756,12 +754,14 @@
     If you have trouble getting ringing to work, see the <a href="#Troubleshooting">Troubleshooting</a> section below entitled <a href="#NoRinging">"No ringing"</a>.
 </UL>
 <P>
+<HR>
+<P>
 <a name="Using"></a>
-<span class=man_subheading>7. Using Your 1A2 Multiline Phone System</span>
+<span class=man_heading>7.0 - Using Your 1A2 Multiline Phone System</span>
 <UL>
     Each multiline phone has "line select" buttons to let you pick which phone line you can use.<br>
     <br>
-    <span class=man_subheading>Hold</span><br>
+    <span class=man_subheading>7.1 - Hold</span><br>
     From left-to-right, the first button is the red HOLD button, which lets you put calls on Hold.<br>
     <br>
     To use it, while a call is in progress, press and release the HOLD button to put that call on Hold.<br>
@@ -769,7 +769,7 @@
     Now you can either return to the call by picking up the line again, or you can use the intercom to tell<br>
     someone else the call is for them so they can pick it up.<br>
     <br>
-    <span class=man_subheading>Line Buttons 1-5</span><br>
+    <span class=man_subheading>7.2 - Line Buttons 1-5</span><br>
     Next to the red button are the line buttons; the first being Line #1, Line #2, and so on,<br>
     the last line being Line #5, which is the Intercom Line on this board, described below.<br>
     <br>
@@ -777,7 +777,7 @@
     typically the phones "ring" when there's an incoming call, and "buzz" when someone wants you to<br>
     pickup the intercom line to talk. (See <a href="#UsingIntercom">"Using The Intercom"</a> below)<br>
     <br>
-    <span class=man_subheading>To Make A Call</span><br>
+    <span class=man_subheading>7.3 - To Make A Call</span><br>
     To make a call, push an available line button (that is not already lit). Choose the line button<br>
     BEFORE picking up the handset, so you don't accidentally pick up a call that is in use.<br>
     <br>
@@ -787,7 +787,7 @@
     Dial your call normally, and hang up when you're done.  When you hang up, the line's light will go off<br>
     on all phones, indicating the line has freed up and can be used for new calls.<br>
     <br>
-    <span class=man_subheading>Putting Calls On Hold</span><br>
+    <span class=man_subheading>7.4 - Putting Calls On Hold</span><br>
     You can put an active call on hold by pressing and releasing the red HOLD button.<br>
     <br>
     Once on hold, the line's lamp should "wink" at a fast rate, indicating the call is on hold. <br>
@@ -798,7 +798,7 @@
     If the remote caller hangs up while they are on hold, the light will go out, hold will be released,<br>
     and the line will be free for use again.<br>
     <br>
-    <span class=man_subheading>Incoming Calls</span><br>
+    <span class=man_subheading>7.5 - Incoming Calls</span><br>
     When a call comes in, the extensions programmed to ring should ring, and the lamp for that line<br>
     should flash slowly on all extensions, indicating which line is ringing.<br>
     <br>
@@ -806,7 +806,7 @@
     (See <a href="#DIPRinging">"Ring Programming"</a> under "Setup").<br>
     <br>
     <a name="UsingIntercom"></a>
-    <span class=man_subheading>Using The Intercom</span><br>
+    <span class=man_subheading>7.6 - Using The Intercom</span><br>
     The intercom is a way for people in the office to "inter-communicate", such as if a receptionist wants<br>
     to notify someone at another extension there's a call for them, or if one person wants to briefly talk<br>
     to another.<br>
@@ -858,7 +858,7 @@
     You can use punch blocks with amphenol connectors to punch down cable wiring yourself. The cable can be multiple<br>
     runs of 8 conductor Cat3, Cat5, or other telecom compatible UTP (twisted pair) cable.<br>
     <br>
-    Cable terminology:<br>
+    <span class=man_subheading>8.3 - Cable Terminology</span><br>
     <UL type=DISC><br>
         <LI>"RJ21" refers to the 50 pin amphenol connectors.</LI><BR>
 
@@ -888,7 +888,7 @@
     <br>
     Conductors can be solid or stranded; typically stranded is more flexible, as solid core wire is "stiff".<br>
     <br>
-    <span class=man_heading>8.3 - RING GENERATORS</span><br>
+    <span class=man_heading>8.4 - Ring Generators</span><br>
     An external ring generator is required to offer the option of ringing the bells in the 1a2 phones.<br>
     <br>
     Note bell ringing is not required: phones can still be "rung" using the "BUZZ CALL" option, <br>
@@ -906,7 +906,7 @@
 </ul>
 
 <a name="Interlink"></a>
-<span class=man_heading>9. Interlinking Two Boards - Four Lines / 8 Extensions</span>
+<span class=man_heading>9.0 Interlinking Two Boards - Four Lines / 8 Extensions</span>
 <UL>
   If you have two REVISION F1 boards, you can connect them together with a 30 pin ribbon cable to create<br>
   a single phone system with 4 CO lines and up to 8 extensions that all can be individually buzzed on<br>
@@ -968,7 +968,7 @@
   would benefit from it.<br>
   <br>
   <a name="NoTouchTone"></a>
-  <span class=man_subheading>PROBLEM: Can't dial with Touch-Tone.</span><br>
+  <span class=man_subheading>10.1 - PROBLEM: Can't dial with Touch-Tone.</span><br>
   <UL><BR>
     A common problem is TouchTone dialing won't work to dial out on Line #1 or Line #2; pushing buttons generates no tones,<br>
     or very low volume tones, but dialing on the intercom works fine.<br>
@@ -990,7 +990,7 @@
   </UL>
   <P>
   <a name="NoRotary"></a>
-  <span class=man_subheading>PROBLEM: Can't use Rotary to dial extensions on the intercom line</span><br>
+  <span class=man_subheading>10.2 - PROBLEM: Can't use Rotary to dial extensions on the intercom line</span><br>
   <UL><BR>
     To buzz extensions with the intercom rotary dialing, only the dialing phone can be offhook. Rotary dialing doesn't<br>
     work if other extensions are offhook during dialing.<br>
@@ -1003,7 +1003,7 @@
   </UL>
   <P>
   <a name="NoLine2"></a>
-  <span class=man_subheading>PROBLEM: Line #1 works, but Line #2 does not</span><br>
+  <span class=man_subheading>10.3 - PROBLEM: Line #1 works, but Line #2 does not</span><br>
   <UL><BR>
     You've confirmed your jack has an active Line #1 and Line #2, but Line #2 doesn't work when connected to the KSU.<br>
     <br>
@@ -1021,7 +1021,7 @@
   </UL>
   <P>
   <a name="NoDialtone"></a>
-  <span class=man_subheading>PROBLEM: Picking up a line lights lamps but gives no dial tone</span><br>
+  <span class=man_subheading>10.4 - PROBLEM: Picking up a line lights lamps but gives no dial tone</span><br>
   <UL><BR>
     Things to check:<br>
     <UL><br>
@@ -1032,7 +1032,7 @@
   </UL>
   <P>
   <a name="NoLamps"></a>
-  <span class=man_subheading>PROBLEM: Lamps don't light when picking up a line</span><br>
+  <span class=man_subheading>10.5 - PROBLEM: Lamps don't light when picking up a line</span><br>
   <UL>
     Things to check:<br>
     <UL><br>
@@ -1052,7 +1052,7 @@
   </UL>
   <P>
   <a name="NoRinging"></a>
-  <span class=man_subheading>PROBLEM: No ringing</span><br>
+  <span class=man_subheading>10.6 - PROBLEM: No ringing</span><br>
   <UL>
     One or all extensions aren't ringing with their bells during incoming calls, or when using the<br>
     RING TRIGGER CONNECTOR (as described in the "CALL TEST" section above).<br>
@@ -1106,7 +1106,7 @@
   </UL>
   <P>
   <a name="NoBuzzRing"></a>
-  <span class=man_subheading>PROBLEM: Buzz-ringing not working.</span><br>
+  <span class=man_subheading>10.7 - PROBLEM: Buzz-ringing not working.</span><br>
   <UL>
     This card features "buzz ringing", where the buzzers buzz in place of bell ringing during incoming calls.<br>
     This is useful if you don't have a ring generator.<br>
@@ -1123,7 +1123,7 @@
     </UL>
   </UL>
   <a name="NoLed"></a>
-  <span class=man_subheading>PROBLEM: Cpu Led Not Flashing</span><br>
+  <span class=man_subheading>10.8 - PROBLEM: Cpu Led Not Flashing</span><br>
   <UL><br>
       Things to check:<br>
       <UL><br>
