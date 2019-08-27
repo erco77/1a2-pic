@@ -161,7 +161,7 @@
 
 <A NAME="Setup"></A>
 INITIAL SETUP
-=============
+-------------
 
 There is nothing critical about the order of connecting up the board.
 The order shown below is: extensions, power, telco, ring gen.. but
@@ -221,7 +221,7 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                                     /
                        Statndoffs _/
 
-                   <B>Figure A</B>: Mounting KSU card to backboard.
+                   <B>Figure A</B>: Side view mounting KSU card to backboard.
                   Standoffs can be metal, nylon, rubber, etc.
 
 
@@ -230,13 +230,12 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
         to prevent shorting traces on the board.
 
         It's recommended ALL screw mounting holes be used, especially the
-        corners and center screw, so that plugging/unplugging the
-        large 50 pin connectors doesn't put mechanical bending
-        stress on the board that can fatigue the solder/traces.
+        corners and center screws, so that plugging/unplugging the large 50 pin
+        connectors doesn't mechanically stress the solder traces.
    <ul>
    <a href="images/1a2-board-sideview-standoffs.jpg" title="Click for larger image"><img src="images/1a2-board-sideview-standoffs.jpg" height=600 border=1 noshade></a><br>
-   <B>Figure A2.</B> Actual installation on plywood backboard with 
-   yellow rubber standoffs made from an outdoor extension cord.
+   <B>Figure A2.</B> Side view of actual installation on plywood backboard 
+   with yellow rubber standoffs made from an outdoor extension cord.
    </ul>
 
 <A NAME="ConnectPower"></A>
@@ -263,29 +262,29 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                  .
                 /|\
                  |
-           ......................................................
-           : Attach 12VDC power here. +12VDC on LEFT terminal,  :
-           : negative on RIGHT terminal. Must be 850mA minimum  :
-           : or higher. Stock power blocks are 2000mA (2 amp).  :
-           :....................................................:
+           .......................................................
+           : Attach 12VDC power here. +12VDC on LEFT terminal,   :
+           : negative on RIGHT terminal. Must be 850mA minimum.  :
+           : The stock 2amp supply can drive 2 boards/8 phones.  :
+           :.....................................................:
+
+    IMPORTANT: If you wired the power connector yourself:
+               DO NOT CONNECT 12V POWER WITH POLARITY REVERSED.
+               This board has NO PROTECTION against reverse polarity DC power;
+               it will blow random components on the board if polarity is reversed.
 
     With 12V power connected, the CPU1 STATUS led should flash at 1 flash
-    per second, and if the intercom line is selected and offhook, the CPU2
-    STATUS led should flash at 2 quick flashes per second. This indicates
-    both CPUs are operating normally.
+    per second, and if the intercom line is selected and offhook, CPU2 STATUS
+    led should flash at 2 quick flashes per second. This indicates both CPUs
+    are operating normally.
 
     If the status leds are NOT flashing, something is WRONG - disconnect power
     immediately, and refer to the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section.
 
-    IMPORTANT: DON'T CONNECT 12V POWER WITH POLARITY REVERSED.
-               This board has NO PROTECTION against reverse polarity DC power;
-               it can blow random components on the board if you do.
-
     It is advised to use the 12VDC power supply that comes with the
-    board which is rated 12VDC / 2 Amps. If you use your own DC
-    power supply source, input voltage can safely range from 11.25VDC
-    to 12.75VDC without ill effects.  1 amp is the suggested minimum
-    rating, more if you have more than 4 extensions.
+    board which is rated 12VDC / 2 Amps. If you use your own DC power supply,
+    input voltage can safely range from 11.25VDC to 12.75VDC without ill effects.
+    1 amp is the suggested minimum rating, up to 2 amps if you have more than 4 extensions.
 
 
 <A NAME="ConnectExtensions"></A>
@@ -324,8 +323,8 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
             > Phone hybrid networks configured for diode ringing (see "BELL WIRING" below)
 
 <A NAME="BellWiring"></A>
-   BELL WIRING
-   -----------
+   2.1 - BELL WIRING
+   -----------------
    Since this board uses a diode network to program ringing, bell ringing is only
    done on 1/2 of the AC wave. To support this, a small one wire change must be made
    inside each phone to bypass the ringer capacitor that is between the K and A terminals
@@ -379,19 +378,18 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    </ul>
    Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.</center></details>
 <A NAME="BuzzerWiring"></A>
-   BUZZER WIRING
-   -------------
+   2.2 - BUZZER WIRING
+   -------------------
 
    Buzzer wiring is usually straight forward, and just a matter of making sure the
    two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
 
   <table class=openall><tr><td width=99%></td><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
-  ><details><summary>Extra 'Call Director' (2636) Buzzer Wiring Details</summary>
-   SPECIAL BUZZER WIRING FOR CALL DIRECTOR (2636) MODEL PHONES
-   -----------------------------------------------------------
-       Call Director model phones, such as the 2636 by default have the buzzer wired
-       to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
-       on Amphenol connector #1 by using the change shown in this diagram:
+  ><details><summary>2.3 - 'Call Director' (2636) Extra Buzzer Wiring Details</summary>
+
+   Call Director model phones, such as the 2636 model, by default have the buzzer wired
+   to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
+   on Amphenol connector #1 by using the change shown in this diagram:
 
            <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"
            ><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" width=400 border=1></a>
@@ -658,16 +656,15 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
     This switch arrangement is the same for both SW1 (Buzz Call)
     and SW2 (Bell Call).
 
-
 <A NAME="Testing"></A>
-TESTING YOUR SETUP FOR THE FIRST TIME
-=====================================
+6. TESTING YOUR SETUP FOR THE FIRST TIME
+----------------------------------------
 
     With the above "Setup" steps completed and power applied, you should
     now be able to test the phones. Try these tests, in order:
 
-    Intercom Test
-    -------------
+    6.1 - Intercom Test
+    -------------------
 
          o Pick up the handset on a phone extension, and press the
            RIGHT-most line button to use the intercom on Line #5.
@@ -681,8 +678,8 @@ TESTING YOUR SETUP FOR THE FIRST TIME
            the same line on a different extension. You should both be able
            to talk to each other clearly over the intercom line.
 
-    Call Test
-    ---------
+    6.2 - Call Test
+    ---------------
 
          o Try calling Line #1's phone number from a cell phone, or another line.
            If configured, the ringers should ring, and the Line #1 lamp should
@@ -726,8 +723,8 @@ TESTING YOUR SETUP FOR THE FIRST TIME
     section below entitled <A HREF="#NoRinging">"No ringing"</A>.
 
 <A NAME="Using"></A>
-USING YOUR 1A2 MULTILINE PHONE SYSTEM
--------------------------------------
+7. USING YOUR 1A2 MULTILINE PHONE SYSTEM
+----------------------------------------
 
     Each multiline phone has "line select" buttons to let you
     pick which phone line you can use.
@@ -809,19 +806,19 @@ USING YOUR 1A2 MULTILINE PHONE SYSTEM
     someone is here to see you, etc.
 -->
 <A NAME="1A2Accessories"></A>
-PHONE SYSTEM ACCESSORIES
-------------------------
+8. PHONE SYSTEM ACCESSORIES
+---------------------------
 
-    ORDERING PHONES
-    ---------------
+    8.1 - ORDERING PHONES
+    ---------------------
     To order more phones, check Ebay, Amazon, or other surplus
     sources for 1a2 multiline phones. AT&T 1A2 models 565, 2564,
     2565, and 2830 all have been tested to work with this board.
     Other models may work as well; check the Bell System Practices
     (BSP) wiring diagrams to make sure.
 
-    ORDERING EXTENSION CABLES
-    -------------------------
+    8.2 - ORDERING EXTENSION CABLES
+    -------------------------------
     Extension cables for 1a2 phones are available in a large
     variety of lengths, from short 5 foot extensions to long
     100 foot cables or more.
@@ -883,8 +880,8 @@ PHONE SYSTEM ACCESSORIES
     Conductors can be solid or stranded; typically stranded is more
     flexible, as solid core wire is "stiff".
 
-    RING GENERATORS
-    ---------------
+    8.3 - RING GENERATORS
+    ---------------------
     An external ring generator is required to offer the option of
     ringing the bells in the 1a2 phones.
 
@@ -910,8 +907,8 @@ PHONE SYSTEM ACCESSORIES
     118A.
 
 <A NAME="Interlink"></A>
-INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
----------------------------------------------------
+9. INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
+------------------------------------------------------
   If you have two REVISION F1 boards, you can connect them together
   with a 30 pin ribbon cable to create a single phone system with
   4 CO lines and up to 8 extensions that all can be individually
@@ -976,8 +973,8 @@ INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
   SECONDARY board.
 
 <A NAME="TroubleShooting"></A>
-TROUBLESHOOTING
----------------
+10. TROUBLESHOOTING
+-------------------
 
   This section should help you solve the various problems you can have
   during setup, or when things go wrong.
@@ -1224,8 +1221,8 @@ TROUBLESHOOTING
           and may need to be swapped out to properly repair the board.
 
 <A NAME="1a2WireColors"></A>
-WIRE COLORS
------------
+11. WIRE COLORS
+---------------
 
     Bell System Practices wire color codes are used throughout this document,
     e.g. Y-S and Y-O. The color codes are:
