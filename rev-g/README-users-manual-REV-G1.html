@@ -229,33 +229,34 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     <br>
     <span class=ascii_art_small_border>
 
-                                   .   .
-                                --&gt;.   .&lt;-- 1/4" or more
-                                   .   .
-                                   .   .
-                                   .   XXXXXXX
-                                  _    XXXXXXX
-                                 | |___XXXXXXX
-                       +------&gt; || |___XXXXXXX
-                       |         | |   XXXXXXX
-                       |         | |   XXXXXXX
-                       |         | |   XXXXXXX
-                       |         | |   XXXXXXX
-                       |        /| |   XXXXXXX
-                       |       / | |   XXXXXXX
-                       |    KSU  | |   XXXXXXX
-                       |  Board  | |   XXXXXXX
-                       |         | |___XXXXXXX
-      Mounting Screws -+------&gt; || |___XXXXXXX &lt;-- Backboard
-                                 |_| / XXXXXXX
-                                /   /  XXXXXXX
-                     PC Board _/   /   XXXXXXX
-                                  /
-                     Statndoffs _/
+                                   :    :
+                                ──▷:    :◁── 1/4" or more
+                                   :    :
+                                   :    ░░░░░░░
+                                   :    ░░░░░░░
+                                   :    ░░░░░░░
+                                  ▒▒    ░░░░░░░
+                                ▕╰▒▒────░░░░░░░
+                        ┌─────▶ ▕╭▒▒────░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+          Mounting      │         ▒▒    ░░░░░░░
+           Screws  ─────┤         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │       ▕╰▒▒────░░░░░░░
+                        └─────▶ ▕╭▒▒────░░░░░░░
+                                  ▒▒ ╱  ░░░░░░░
+                                 ╱  ╱   ░░░░░░░╲       
+                     KSU Board ▁╱  ╱    ░░░░░░░ ╲▁ Backboard
+                                  ╱     ░░░░░░░
+                      Standoffs ▁╱      ░░░░░░░
 
 
-          <b>Figure A</b>: Side view mounting KSU card to backboard.       <!-- right margin whitespace for border -->
-          Standoffs can be metal, nylon, rubber, etc.
+          <b>Figure A</b>: Side view of KSU board mounted to backboard.       <!-- RIGHT MARGIN SPACE -->
+                    Standoffs can be metal, nylon, rubber, etc.
    </span>
    <p>
    If metal standoffs are used, make sure their diameter does not exceed the diameter of<br>
@@ -296,20 +297,23 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     |__|___|____|__|____|____|_____________|____|________________________|
       Line1+2   12VDC   Ring Trig.         Ext Ring
       (RJ-11)   Power   Connector          Gen Power
-                 .
-                /|\
-                 |
-           .......................................................
-           : Attach 12VDC power here. +12VDC on LEFT terminal,   :
-           : negative on RIGHT terminal. Must be 850mA minimum.  :
-           : The stock 2amp supply can drive 2 boards/8 phones.  :
-           :.....................................................:
+                  ▲
+                 ╱┃╲
+                  ┃
+                  ┃
+           .........................................................
+           : Attach 12VDC power here. POSITIVE on LEFT.            :
+           : NEGATIVE on RIGHT. Must be 850mA minimum.             :
+           : The stock 2.5 amp supply can drive 2 boards/8 phones. :
+           :.......................................................:
 
-
-    IMPORTANT: If you wired the power connector yourself:
-               DO NOT CONNECT 12V POWER WITH POLARITY REVERSED.
-               This board has NO PROTECTION against reverse polarity DC power;
-               it will blow random components on the board if polarity is reversed.    <!-- right margin space -->
+    ▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘
+    ▘   <B><U>IMPORTANT</U></B>                                                                  ▘
+    ▘     If you wired the connector yourself: MAKE SURE POLARITY IS CORRECT!      ▘
+    ▘     DO NOT CONNECT 12V POWER WITH POLARITY REVERSED, IT WILL KILL THE CARD.  ▘
+    ▘     This board has NO PROTECTION against reverse polarity DC power;          ▘
+    ▘     it will blow random components on the board if polarity is reversed.     ▘    <!-- RIGHT MARGIN SPACE -->
+    ▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘
         </span><br>
         <br>
         With 12V power connected, the CPU1 STATUS led should flash at 1 flash per second, and if the<br>
@@ -344,9 +348,10 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     |   ___      __      ____               ____     \|   \|   \|   \|   |
     |  |   |    |+-|    |oooo|             |oooo|                        |
     |__|___|____|__|____|____|_____________|____|________________________|
-      Line1+2   12VDC   Ring Trig          Ext       .     .    .    .
-      (RJ-11)   1.5A    Connector          Ring     /|\   /|\  /|\  /|\
-                                           Gen       |     |    |    |
+      Line1+2   12VDC   Ring Trig          Ext       ▲     ▲    ▲    ▲
+      (RJ-11)   1.5A    Connector          Ring     ╱┃╲   ╱┃╲  ╱┃╲  ╱┃╲
+                                           Gen       ┃     ┃    ┃    ┃
+                                                     ┃     ┃    ┃    ┃
                                                ....................................
                                                : Attach extensions to the phone's :
                                                : large 50 pin Amphenol connectors :
@@ -453,25 +458,27 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
         Connect the card to your telephone service.
         The phone source can be VoIP, XLink BT, or other "plain old telephone" compatible source.
         <span class=ascii_art_small>
-         ____________________________________________________________________
-        |                                 ::::::: INTERLINK                  |
-        |                                                                    |
-        |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
-        |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
-        |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
-        |                                      :  :      ||   ||   ||   ||   |
-        |                    o CPU2            :  :      ||   ||   ||   ||   |
-        |                      STATUS          :  :      ||   ||   ||   ||   |
-        |                                         :      ||   ||   ||   ||   |
-        |   ___      __      ____               ____     \|   \|   \|   \|   |
-        |  |   |    |+-|    |oooo|             |oooo|                        |
-        |__|___|____|__|____|____|_____________|____|________________________|
-          Line1+2   12VDC   Ring Trig          Ring
-          (RJ-11)   Input   Connector          Gen
-             .                                 Power
-            /|\
-             |
-             Attach to VoIP, XLink, etc.
+               ____________________________________________________________________
+              |                                 ::::::: INTERLINK                  |
+              |                                                                    |
+              |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
+              |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
+              |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
+              |                                      :  :      ||   ||   ||   ||   |
+              |                    o CPU2            :  :      ||   ||   ||   ||   |
+              |                      STATUS          :  :      ||   ||   ||   ||   |
+              |                                         :      ||   ||   ||   ||   |
+              |   ___      __      ____               ____     \|   \|   \|   \|   |
+              |  |   |    |+-|    |oooo|             |oooo|                        |
+              |__|___|____|__|____|____|_____________|____|________________________|
+                Line1+2   12VDC   Ring Trig          Ring
+                (RJ-11)   Input   Connector          Gen
+                   ▲                                 Power
+                  ╱┃╲ 
+                   ┃
+                   ┃
+            Attach to Telco
+          (VoIP, XLink, etc.)
     </span>
     <span class="man_subheading">NOTE:</span>
     <UL>
@@ -481,7 +488,8 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
         and originating calls.<br>
     </UL>
     <BR>
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *<br>
+    ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤<BR>
+    <BR>
     <span class="man_subheading">WARNING:</span>
     <UL>
         This card is NOT approved by the FCC for use directly with analog PSTN/POTS lines<br>
@@ -495,7 +503,7 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
         assumed you are a hobbyist or EE technician who understands the implications.<br>
         <br>
     </UL>
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *<br>
+    ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤<BR>
 </UL>
 <P>
 <a name="RingGen"></a>
@@ -546,11 +554,11 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     |                                             8  \|   \|   \|   \|   |
     |   ___      __     ____               ____   8                      |
     |  |   |    |+-|   |oooo|             |oooo|  8                      |
-    |__|___|____|__|___|____|_____________|____|__.______________________|    <!-- RIGHT MARGIN SPACE -->
-      Line1+2   12VDC   Ring Trig.         Ring  /|\
-      (RJ-11)   Input   Connector          Gen    |
-                                           Power  |
-                                                  |
+    |__|___|____|__|___|____|_____________|____|_________________________|    <!-- RIGHT MARGIN SPACE -->
+      Line1+2   12VDC   Ring Trig.         Ring   ▲ 
+      (RJ-11)   Input   Connector          Gen   ╱┃╲
+                                           Power  ┃
+                                                  ┃
                                         Location of PowerDSINE
                                            connector "JP5"
         </span><br>
@@ -735,19 +743,19 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
                                   _____   _____
                                  /     \ /     \
              _ _ _____________________________________________________ _ _          <!-- RIGHT MARGIN SPACE -->
-                               |  ◯   ◯   ◯   ◯ |
-                               |________________|
-                                  .   .
-                                 /|\ /|\
-                                  |   |   &lt;-- Briefly jumper with a wire
-                                  |___|       to ring line #1
+                               |  ◯   ◯   ◯   ◯  |
+                               |_________________|
+                                  ▲   ▲
+                                  ┃   ┃
+                                  ┃   ┃   &lt;-- Briefly jumper with a wire
+                                  ┃▁▁▁┃       or doorbell switch to ring line #1
 
     </span><br>
     <br>
     To ring Line #1, connect LEFT two screw terminals on Ring Trigger Connector together briefly with a<br>
     wire jumper or doorbell type switch.<br>
     <br>
-    To ring Line #2, do the same but to the RIGHT two terminals.<br>
+    To ring Line #2, do the same with the RIGHT two terminals.<br>
     <br>
     This is useful for demos, where you want to demonstrate ringing with just power, but no phone line.<br>
     <br>
@@ -909,7 +917,7 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
 <span class=man_heading>4.0 - Interlinking Two Boards - Four Lines / 8 Extensions</span>
 <UL>
   If you have two REVISION F1 boards, you can connect them together with a 30 pin ribbon cable to create<br>
-  a single phone system with 4 CO lines and up to 8 extensions that all can be individually buzzed on<br>
+  a single phone system with 4 Telco lines and up to 8 extensions that all can be individually buzzed on<br>
   the intercom line (by dialing 1 through 8).<br>
   <br>
   For info on how to configure two boards with the INTERLINK connector, refer to this page which includes<br>
@@ -945,10 +953,10 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
   The PRIMARY board's intercom circuit will manage the intercom line for all 8 possible extensions.<br>
   <br>
   To configure the PRIMARY board, make sure all the jumper blocks are all installed on the PRIMARY jumper (JP3), <br>
-  and none on the SECONDARY (JP4). Plug the CO lines that should be LINE 1 + 2 into this board.<br>
+  and none on the SECONDARY (JP4). Plug the Telco lines that should be LINE 1 + 2 into this board.<br>
   <br>
   To configure the SECONDARY board, make sure all jumper blocks are installed on the SECONDARY jumper (JP4),<br>
-  and none on the PRIMARY jumper (JP3).  Plug the CO lines that should appear as LINE 3 + 4 into this board.<br>
+  and none on the PRIMARY jumper (JP3).  Plug the Telco lines that should appear as LINE 3 + 4 into this board.<br>
   <br>
   Plug up to 8 extensions into the two board's EXT# connectors.<br>
   <br>
@@ -1072,13 +1080,14 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
            POWERDSINE RING GEN          <!-- RIGHT MARGIN SPACE -->
 
                   JP5
-
-             BLU   ◯
-             WHT   ◯
-             RED   ◯
-             BLK   ◯
-             x     ◯
-             YEL   ◯
+                  ┌─┐
+             BLU  │◯│
+             WHT  │◯│
+             RED  │◯│
+             BLK  │◯│
+             x    │◯│
+             YEL  │◯│
+                  └─┘
 
            </span></UL><BR>
            Refer to <A HREF="#Figure_C">"Figure C"</A> and <A HREF="#Figure_D">"Figure D"</A> near the top of this document for more info.</LI><br>
