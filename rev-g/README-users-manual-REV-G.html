@@ -1,17 +1,63 @@
-<!DOCTYPE html><!--
-# vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
--->
-<HTML>
-<HEAD>
-  <META CHARSET="UTF-8">
-  <STYLE>
-    /* Force Unicode drawing characters to work correctly */
+<!DOCTYPE html>
+<!-- vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
+  -->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <style>
+    /* Good monospace font that can do box drawing characters for ASCII art */
     @font-face {
       font-family: myMonospace;
-      src: url(images/DejaVuSansMono.ttf);
+      src: url(images/DejaVuSansMono.ttf);      /* source: linux font */
     }
-    .unipre {
+    /* Good font for the manual itself */
+    @font-face {
+      font-family: KSUManualFont;
+      src: url(images/PTSansNarrowBoldCondensed--PTN77F.ttf); /* source: https://www.fontsquirrel.com/fonts/pt-sans */
+    }
+    /* Default font for page */
+    body {
+        font-family: KSUManualFont;
+        font-size: 1.1em;
+        margin-left: 30px;
+    }
+    a {
+        color: #800;                    /* link color for all states of link */
+    }
+    /* Font for headings + subheadings */
+    .man_heading {
+        font-weight: bolder;            /* bolder than default */
+        text-decoration: underline;     /* underlined */
+        font-size: 1.3em;               /* 30% larger than default */
+    }
+    .man_subheading {
+        font-weight: bold;              /* normal bold */
+        text-decoration: underline;     /* underlined */
+        font-size: 1.15em;              /* 15% larger than default */
+    }
+    .ascii_art {
+        display: block;
+        unicode-bidi: embed;
         font-family: myMonospace;
+        white-space: pre;
+        font-size: .8em;                /* 20% smaller than default */
+    }
+    .ascii_art_small {
+        display: block;
+        unicode-bidi: embed;
+        font-family: myMonospace;
+        white-space: pre;
+        font-size: .7em;                /* 70% smaller than default */
+    }
+    .ascii_art_small_border {
+        display: block;
+        unicode-bidi: embed;
+        font-family: myMonospace;
+        white-space: pre;
+        font-size: .7em;                /* 70% smaller than default */
+        border: 1px solid black;
+        display: inline-block;
+        background: white;
     }
     /* DivTable.com */
     .divTable{
@@ -61,7 +107,7 @@
       background: -webkit-linear-gradient(top, #FAFAFA 50%, #E1E1E1 50%);
       border-radius: 5px;
       cursor: pointer;
-      font-size: .8em;
+      font-size: 1.2em;
       font-weight: bold;
       margin: -1%;
       padding: 8px 8px;
@@ -75,9 +121,9 @@
       display: none;
     }
     table.openall { width: 100%; }
-    td.openall    { text-align: right; color: blue; cursor: pointer; }
-  </STYLE>
-  <SCRIPT>
+    td.openall    { text-align: right; color: #800; cursor: pointer; }
+  </style>
+  <script>
     function OpenAllDetails() {
       var details = document.getElementsByTagName("details");
       var len = details.length;
@@ -89,7 +135,7 @@
       var eles = document.getElementsByTagName("summary");  // All <summary> tags
       var len = eles.length;
       for (var i=0; i<len; i++) {
-        eles[i].title = "Click to see details..";
+        eles[i].title = "Click to open/close details..";
       }
       eles = document.getElementsByClassName("openall");    // All class=openall elements
       len = eles.length;
@@ -97,244 +143,250 @@
         eles[i].title = "Click to open ALL the 'collapsed' details on this page..";
       }
     }
-  </SCRIPT>
-</HEAD>
-<PRE class=unipre>
+  </script>
+</head>
+<body>
+<span class=ascii_art style="font-size: .5em;">
 
-# vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
-
-                    88        db         ad888888b,       88      a8P  ad88888ba  88        88
-                  ,d88       d88b       d8"     "88       88    ,88'  d8"     "8b 88        88
-                888888      d8'`8b              a8P       88  ,88"    Y8,         88        88
-                    88     d8'  `8b          ,d8P"        88,d88'     `Y8aaaaa,   88        88
-                    88    d8YaaaaY8b       a8P"           8888"88,      `"""""8b, 88        88
-                    88   d8""""""""8b    a8P'             88P   Y8b           `8b 88        88
-                    88  d8'        `8b  d8"               88     "88, Y8a     a8P Y8a.    .a8P
-                    88 d8'          `8b 88888888888       88       Y8b "Y88888P"   `"Y8888Y"'
-
-
-                  ,ad8888ba,   ,ad8888ba,   888b      88 888888888888 88888888ba    ,ad8888ba,   88
-                 d8"'    `"8b d8"'    `"8b  8888b     88      88      88      "8b  d8"'    `"8b  88
-                d8'          d8'        `8b 88 `8b    88      88      88      ,8P d8'        `8b 88
-                88           88          88 88  `8b   88      88      88aaaaaa8P' 88          88 88
-                88           88          88 88   `8b  88      88      88""""88'   88          88 88
-                Y8,          Y8,        ,8P 88    `8b 88      88      88    `8b   Y8,        ,8P 88
-                 Y8a.    .a8P Y8a.    .a8P  88     `8888      88      88     `8b   Y8a.    .a8P  88
-                  `"Y8888Y"'   `"Y8888Y"'   88      `888      88      88      `8b   `"Y8888Y"'   88888888888
+                            88        db         ad888888b,       88      a8P  ad88888ba  88        88
+                          ,d88       d88b       d8"     "88       88    ,88'  d8"     "8b 88        88
+                        888888      d8'`8b              a8P       88  ,88"    Y8,         88        88
+                            88     d8'  `8b          ,d8P"        88,d88'     `Y8aaaaa,   88        88
+                            88    d8YaaaaY8b       a8P"           8888"88,      `"""""8b, 88        88
+                            88   d8""""""""8b    a8P'             88P   Y8b           `8b 88        88
+                            88  d8'        `8b  d8"               88     "88, Y8a     a8P Y8a.    .a8P
+                            88 d8'          `8b 88888888888       88       Y8b "Y88888P"   `"Y8888Y"'
 
 
-                              ,ad8888ba,        db        88888888ba  88888888ba,
-                             d8"'    `"8b      d88b       88      "8b 88      `"8b
-                            d8'               d8'`8b      88      ,8P 88        `8b
-                            88               d8'  `8b     88aaaaaa8P' 88         88
-                            88              d8YaaaaY8b    88""""88'   88         88
-                            Y8,            d8""""""""8b   88    `8b   88         8P
-                             Y8a.    .a8P d8'        `8b  88     `8b  88      .a8P
-                              `"Y8888Y"' d8'          `8b 88      `8b 88888888Y"'
+                     ,ad8888ba,    ,ad8888ba,   888b      88 888888888888 88888888ba    ,ad8888ba,   88
+                    d8"'    `"8b  d8"'    `"8b  8888b     88      88      88      "8b  d8"'    `"8b  88
+                   d8'           d8'        `8b 88 `8b    88      88      88      ,8P d8'        `8b 88
+                   88            88          88 88  `8b   88      88      88aaaaaa8P' 88          88 88
+                   88            88          88 88   `8b  88      88      88""""88'   88          88 88
+                   Y8,           Y8,        ,8P 88    `8b 88      88      88    `8b   Y8,        ,8P 88
+                    Y8a.    .a8P  Y8a.    .a8P  88     `8888      88      88     `8b   Y8a.    .a8P  88
+                     `"Y8888Y"'    `"Y8888Y"'   88      `888      88      88      `8b   `"Y8888Y"'   88888888888
 
 
-                                ==============================================
-                                   SERISS CORPORATION - 1A2 KSU CONTROL CARD
-                                            2 LINE / 4 EXTENSIONS
-                                ==============================================
-                                    erco@seriss.com - 06/27/2019 - REV G
+                                      ,ad8888ba,        db        88888888ba  88888888ba,
+                                     d8"'    `"8b      d88b       88      "8b 88      `"8b
+                                    d8'               d8'`8b      88      ,8P 88        `8b
+                                    88               d8'  `8b     88aaaaaa8P' 88         88
+                                    88              d8YaaaaY8b    88""""88'   88         88
+                                    Y8,            d8""""""""8b   88    `8b   88         8P
+                                     Y8a.    .a8P d8'        `8b  88     `8b  88      .a8P
+                                      `"Y8888Y"' d8'          `8b 88      `8b 88888888Y"'
+</span><span class=ascii_art>
+                ==============================================
+                   SERISS CORPORATION - 1A2 KSU CONTROL CARD
+                            2 LINE / 4 EXTENSIONS
+                ==============================================
+                    erco@seriss.com - 06/27/2019 - REV G
+                    erco@seriss.com - 07/22/2019 - REV G1
 
-                        If you find problems in this document, contact: erco@seriss.com
+        If you find problems in this document, contact: erco@seriss.com
 
-                     ____________________________________________________________________
-                    |                                 ::::::: INTERLINK                  |
-                    |                                                                    |
-                    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
-                    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
-                    |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
-                    |                                      :  :      ||   ||   ||   ||   |
-                    |                     o CPU2           :  :      ||   ||   ||   ||   |
-                    |                       STATUS         :  :      ||   ||   ||   ||   |
-                    |                                         :      ||   ||   ||   ||   |
-                    |   ___      __      ____               ____     \|   \|   \|   \|   |
-                    |  |   |    |+-|    |oooo|             |oooo|                        |
-                    |__|___|____|__|____|____|_____________|____|________________________|
-                      Line1+2   12VDC   Ring Trigg.        Ext Ring
-                      (RJ-11)   Power   Connector          Gen Power
-
-
-<A NAME="Setup"></A>
-INITIAL SETUP
-=============
-
-There is nothing critical about the order of connecting up the board.
-The order shown below is: extensions, power, telco, ring gen.. but
-these can actually be connected up in any order.
-
-If you're new to 1A2 wiring, and are not sure what the wire colors "Y-S" or "S-Y"
-refers to, please see the section on "WIRE COLORS" near the bottom of this document.
-
-<A NAME="Mounting"></A>
-0. Mount the board or position it safely before starting
---------------------------------------------------------
-
-    It is important that the board is not lying on anything metal
-    when powered up, to prevent shorting out the board.
-
-    If you plan to interlink two boards, see the INTERLINK section
-    of this document.
-
-    Free Standing
-    -------------
-
-    If the board is not mounted to a backboard yet, place the board
-    on a non-conducting surface (wood, cardboard, etc) that is free
-    of metal parts (no staples, paperclips, stray screws/nuts/wire
-    clippings, etc).
-
-    Mounting to a Backboard
-    -----------------------
-
-    If mounting the KSU to a backboard, use screws through all
-    mounting holes with standoffs to keep the board elevated off
-    the backboard's surface so air can flow along the back to aid
-    in cooling of components, and to keep it clear of catching stray
-    metal (like wire clippings).
-
-                                     .   .
-                                  --&gt;.   .&lt;-- 1/4" or more
-                                     .   .
-                                     .   .
-                                     .   XXXXXXX
-                                    _    XXXXXXX
-                                   | |___XXXXXXX
-                         +------&gt; || |___XXXXXXX
-                         |         | |   XXXXXXX
-                         |         | |   XXXXXXX
-                         |         | |   XXXXXXX
-                         |         | |   XXXXXXX
-                         |        /| |   XXXXXXX
-                         |       / | |   XXXXXXX
-                         |    KSU  | |   XXXXXXX
-                         |  Board  | |   XXXXXXX
-                         |         | |___XXXXXXX
-        Mounting Screws -+------&gt; || |___XXXXXXX &lt;-- Backboard
-                                   |_| / XXXXXXX
-                                  /   /  XXXXXXX
-                       PC Board _/   /   XXXXXXX
-                                    /
-                       Statndoffs _/
-
-                   <B>Figure A</B>: Mounting KSU card to backboard.
-                  Standoffs can be metal, nylon, rubber, etc.
-
-
-        If metal standoffs are used, make sure their diameter does not
-        exceed the diameter of the white circles around the mounting holes,
-        to prevent shorting traces on the board.
-
-        It's recommended ALL screw mounting holes be used, especially the
-        corners and center screw, so that plugging/unplugging the
-        large 50 pin connectors doesn't put mechanical bending
-        stress on the board that can fatigue the solder/traces.
-   <ul>
-   <a href="images/1a2-board-sideview-standoffs.jpg" title="Click for larger image"><img src="images/1a2-board-sideview-standoffs.jpg" height=600 border=1 noshade></a><br>
-   <B>Figure A2.</B> Actual installation on plywood backboard with 
-   yellow rubber standoffs made from an outdoor extension cord.
-   </ul>
-
-<A NAME="ConnectPower"></A>
-1. CONNECT POWER
-----------------
-
-    Connect power by plugging in the 12volt power:
-
-     ____________________________________________________________________
-    |                                 ::::::: INTERLINK                  |
-    |                                                                    |
-    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
-    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
-    |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
-    |                                      :  :      ||   ||   ||   ||   |
-    |                    o CPU2            :  :      ||   ||   ||   ||   |
-    |                      STATUS          :  :      ||   ||   ||   ||   |
-    |                                         :      ||   ||   ||   ||   |
-    |   ___      __      ____               ____     \|   \|   \|   \|   |
-    |  |   |    |+-|    |oooo|             |oooo|                        |
-    |__|___|____|__|____|____|_____________|____|________________________|
-      Line1+2   12VDC   Ring Trigg.        Ext Ring
+     ___________________________________________________________________
+    |                                 ::::::: INTERLINK                 |
+    |                                              EXT1 EXT2 EXT3 EXT4  |
+    |      o      o      o           o     A                            |
+    |     LINE1  CPU    LINE2      ICM     :  B     ╱▔▏  ╱▔▏  ╱▔▏  ╱▔▏  |
+    |     STATUS STATUS STATUS  STATUS     :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                      :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                     o CPU2           :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                       STATUS         :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                         :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |   ___      __      ____               ____    ╲_▏  ╲_▏  ╲_▏  ╲_▏  |
+    |  |   |    |+-|    |oooo|             |oooo|                       |
+    |__|___|____|__|____|____|_____________|____|_______________________|
+      Line1+2   12VDC   Ring Trig.         Ext Ring
       (RJ-11)   Power   Connector          Gen Power
-                 .
-                /|\
-                 |
-           ......................................................
-           : Attach 12VDC power here. +12VDC on LEFT terminal,  :
-           : negative on RIGHT terminal. Must be 850mA minimum  :
-           : or higher. Stock power blocks are 2000mA (2 amp).  :
-           :....................................................:
-
-    With 12V power connected, the CPU1 STATUS led should flash at 1 flash
-    per second, and if the intercom line is selected and offhook, the CPU2
-    STATUS led should flash at 2 quick flashes per second. This indicates
-    both CPUs are operating normally.
-
-    If the status leds are NOT flashing, something is WRONG - disconnect power
-    immediately, and refer to the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section.
-
-    IMPORTANT: DON'T CONNECT 12V POWER WITH POLARITY REVERSED.
-               This board has NO PROTECTION against reverse polarity DC power;
-               it can blow random components on the board if you do.
-
-    It is advised to use the 12VDC power supply that comes with the
-    board which is rated 12VDC / 2 Amps. If you use your own DC
-    power supply source, input voltage can safely range from 11.25VDC
-    to 12.75VDC without ill effects.  1 amp is the suggested minimum
-    rating, more if you have more than 4 extensions.
 
 
-<A NAME="ConnectExtensions"></A>
-2. CONNECT 1A2 PHONE EXTENSIONS
--------------------------------
+</span>
 
-    Connect the phone extensions to the card by connecting the large
-    amphenol connectors.
+<a name="Setup"></a>
+<span class=man_heading>1.0 - INITIAL SETUP</span><br>
+<br>
+There is nothing critical about the order of connecting up the board. The order shown below is:<br>
+Extensions, Power, Telco, Ring Gen.. but these can actually be connected up in any order.<br>
+<br>
+If you're new to 1A2 wiring, and are not sure what the wire colors "Y-S" or "S-Y"<br>
+refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near the bottom of this document.<br>
+<br>
+<a name="Mounting"></a>
+<span class=man_subheading>1.1 - Mount the board or position it safely before starting</span>
+<UL>
+    It is important the board isn't lying on metal or conductive when powered up, to prevent shorting out the board.<br>
+    <br>
+    If you plan to interlink two boards, see the <A HREF="#Interlink">"Interlink"</a> section of this document.<br>
+    <br>
+    <span class=man_subheading>Free Standing</span><br>
+    If the board is not mounted to a backboard yet, place the board on a non-conducting surface<br>
+    (wood, cardboard, etc) that is free of metal parts that could short out the board, e.g.<br>
+    no staples, paperclips, stray screws/nuts/wire clippings, etc.<br>
+    <br>
+    <span class=man_subheading>Mounting to a Backboard</span><br>
+    If mounting the KSU to a backboard, use screws through all mounting holes with standoffs<br>
+    to keep the board elevated off the backboard's surface, so air can flow along the back<br>
+    to aid in cooling of components, and to prevent catching stray metal (like wire clippings).<br>
+    <br>
+    <span class=ascii_art_small_border>
 
+                                   :    :
+                                ──▷:    :◁── 1/4" or more
+                                   :    :
+                                   :    ░░░░░░░
+                                   :    ░░░░░░░
+                                   :    ░░░░░░░
+                                  ▒▒    ░░░░░░░
+                                ▕╰▒▒────░░░░░░░
+                        ┌─────▶ ▕╭▒▒────░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+          Mounting      │         ▒▒    ░░░░░░░
+           Screws  ─────┤         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │         ▒▒    ░░░░░░░
+                        │       ▕╰▒▒────░░░░░░░
+                        └─────▶ ▕╭▒▒────░░░░░░░
+                                  ▒▒ ╱  ░░░░░░░
+                                 ╱  ╱   ░░░░░░░╲       
+                     KSU Board ▁╱  ╱    ░░░░░░░ ╲▁ Backboard
+                                  ╱     ░░░░░░░
+                      Standoffs ▁╱      ░░░░░░░
+
+
+          <b>Figure A</b>: Side view of KSU board mounted to backboard.       <!-- RIGHT MARGIN SPACE -->
+                    Standoffs can be metal, nylon, rubber, etc.
+   </span>
+   <p>
+   If metal standoffs are used, make sure their diameter does not exceed the diameter of<br>
+   the white circles around the mounting holes, to prevent shorting traces on the board.<br>
+   <br>
+   For rubber standoffs, insulation from outdoor extension cords can even be used, e.g.<br>
+   <br>
+   <span class=ascii_art>
+               <a href="images/1a2-board-sideview-standoffs.jpg" title="Click for larger image"
+               ><img src="images/1a2-board-sideview-standoffs.jpg" noshade 
+               style="height: 700px; border: 1px solid black;"></a><br>
+       <b>Figure A2.</b> Side view of actual installation on fire retardant plywood backboard 
+       with yellow rubber standoffs made from an outdoor extension cord.
+   </span>
+   NOTE: Use screws in <u>all 7</u> screw mounting hole positions provided. Not just around the corners,<br>
+   but the ones in the center as well. Center screws prevent boards from bending when plugging/unplugging<br>
+   the large 50 pin Amphenol connectors, which would otherwise mechanically stress solder traces.<br>
+</UL>
+
+<a name="ConnectPower"></a>
+<span class="man_subheading">1.2 - Connect Power</span><BR>
+<ul>
+    Connect power by plugging in the 12volt power:<br>
+    <br>
+    <span class=ascii_art_small_border>
      ____________________________________________________________________
     |                                 ::::::: INTERLINK                  |
-    |                                                                    |
-    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
-    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
-    |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
-    |                                      :  :      ||   ||   ||   ||   |
-    |                    o CPU2            :  :      ||   ||   ||   ||   |
-    |                      STATUS          :  :      ||   ||   ||   ||   |
-    |                                         :      ||   ||   ||   ||   |
-    |   ___      __      ____               ____     \|   \|   \|   \|   |
+    |                                               EXT1 EXT2 EXT3 EXT4  |
+    |      o      o      o           o     A                             |
+    |     LINE1  CPU    LINE2      ICM     :  B      ╱▔▏  ╱▔▏  ╱▔▏  ╱▔▏  |
+    |     STATUS STATUS STATUS  STATUS     :  :      ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                      :  :      ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                    o CPU2            :  :      ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                      STATUS          :  :      ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                         :      ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |   ___      __      ____               ____     ╲_▏  ╲_▏  ╲_▏  ╲_▏  |
     |  |   |    |+-|    |oooo|             |oooo|                        |
     |__|___|____|__|____|____|_____________|____|________________________|
-      Line1+2   12VDC   Ring Trig          Ext       .     .    .    .
-      (RJ-11)   1.5A    Connector          Ring     /|\   /|\  /|\  /|\
-                                           Gen       |     |    |    |
+      Line1+2   12VDC   Ring Trig.         Ext Ring
+      (RJ-11)   Power   Connector          Gen Power
+                  ▲
+                 ╱┃╲
+                  ┃
+                  ┃
+           .........................................................
+           : Attach 12VDC power here. POSITIVE on LEFT.            :
+           : NEGATIVE on RIGHT. Must be 850mA minimum.             :
+           : The stock 2.5 amp supply can drive 2 boards/8 phones. :
+           :.......................................................:
+
+    ▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘
+    ▘   <B><U>IMPORTANT</U></B>                                                                  ▘
+    ▘     If you wired the connector yourself: MAKE SURE POLARITY IS CORRECT!      ▘
+    ▘     DO NOT CONNECT 12V POWER WITH POLARITY REVERSED, IT WILL KILL THE CARD.  ▘
+    ▘     This board has NO PROTECTION against reverse polarity DC power;          ▘
+    ▘     it will blow random components on the board if polarity is reversed.     ▘    <!-- RIGHT MARGIN SPACE -->
+    ▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘▘
+        </span><br>
+        <br>
+        With 12V power connected, the CPU1 STATUS led should flash at 1 flash per second, and if the<br>
+        intercom line is selected and offhook, CPU2 STATUS led should flash at 2 quick flashes per second.<br>
+        This indicates both CPUs are operating normally.<br>
+    <br>
+        If the status leds are NOT flashing, something is WRONG - disconnect power immediately, and refer<br>
+        to the <a href="#Troubleshooting">Troubleshooting</a> section.<br>
+    <br>
+        It is advised to use the 12VDC power supply that comes with the board which is rated 12VDC / 2 Amps.<br>
+        If you use your own DC power supply, input voltage can safely range from 11.25VDC to 12.75VDC without<br>
+        ill effect. 1 amp is the suggested minimum rating, up to 2 amps if you have more than 4 extensions.<br>
+        <P>
+    </UL>
+    <P>
+    <a name="ConnectExtensions"></a>
+    <span class=man_subheading>1.2 - Connect 1A2 Phone Extensions</span>
+    <ul>
+        Connect the phone extensions to the card by connecting the large
+        amphenol connectors.
+        <span class=ascii_art>
+     ___________________________________________________________________ 
+    |                                 ::::::: INTERLINK                 |
+    |                                              EXT1 EXT2 EXT3 EXT4  |
+    |      o      o      o           o     A                            |
+    |     LINE1  CPU    LINE2      ICM     :  B     ╱▔▏  ╱▔▏  ╱▔▏  ╱▔▏  |
+    |     STATUS STATUS STATUS  STATUS     :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                      :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                    o CPU2            :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                      STATUS          :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                         :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |   ___      __      ____               ____    ╲_▏  ╲_▏  ╲_▏  ╲_▏  |
+    |  |   |    |+-|    |oooo|             |oooo|                       |
+    |__|___|____|__|____|____|_____________|____|_______________________|
+      Line1+2   12VDC   Ring Trig          Ext       ▲    ▲    ▲    ▲
+      (RJ-11)   1.5A    Connector          Ring     ╱┃╲  ╱┃╲  ╱┃╲  ╱┃╲
+                                           Gen       ┃    ┃    ┃    ┃
+                                                     ┃    ┃    ┃    ┃
                                                ....................................
-                                               : Attach extensions to the         :
+                                               : Attach extensions to the phone's :
                                                : large 50 pin Amphenol connectors :
                                                :..................................:
 
     IMPORTANT: When connecting phones for the first time, VERIFY the phones
     are internally wired as follows BEFORE connecting them:
 
-            > Bells on pins 20/45 (Y-S pair)
-            > Buzzers on pins 17/42 (Y-O pair)
-            > Phone hybrid networks configured for diode ringing (see "BELL WIRING" below)
+            &gt; Bells on pins 20/45 (Y-S pair)
+            &gt; Buzzers on pins 17/42 (Y-O pair)
+            &gt; Phone hybrid networks configured for diode ringing (see <A HREF="#BellWiring">"Bell Wiring"</A> below)
 
-<A NAME="BellWiring"></A>
-   BELL WIRING
-   -----------
-   Since this board uses a diode network to program ringing, bell ringing is only
-   done on 1/2 of the AC wave. To support this, a small one wire change must be made
-   inside each phone to bypass the ringer capacitor that is between the K and A terminals
-   on the hybrid network. Paraphrasing Ed from Sundance Communications:
-
-       "For any kind of diode ringing to work, the capacitor between hybrid network
-       terminals A and K (inside phone) have to be bypassed.
-       Move the wire on terminal 'K' to terminal 'A' along with the existing wire."
-
-   So if a red wire is currently on the K terminal, just move it to the A terminal:
+    For details on phone wiring, see below, sections 1.2.1 through 1.2.4.
+        </span>
+        <p>
+        <a name="BellWiring"></a>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.2.1 - Bell Wiring</summary>
+        <ul><br>
+           Since this board uses a diode network to program ringing, bell ringing is only done on<br>
+           1/2 of the AC wave. To support this, a small one wire change must be made inside each phone<br>
+           to bypass the ringer capacitor that is between the K and A terminals on the hybrid network.<br>
+           Paraphrasing Ed from Sundance Communications:<br>
+           <ul><br><i>
+              "For any kind of diode ringing to work, the capacitor between hybrid network terminals<br>
+              A and K (inside phone) have to be bypassed.  Move the wire on terminal 'K' to terminal 'A'<br>
+              along with the existing wire."<br>
+           </i></ul>
+           <br>
+           So if a red wire is currently on the 'K' terminal, just move it to the 'A' terminal:<br>
+           <br>
+           <span class=ascii_art_small_border>
    ...................................................................................
    :                                       :                                         :
    :                 BEFORE                :                  AFTER                  :
@@ -358,230 +410,233 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
    :                                       :                                         :
    :               PHONE TERMINAL BLOCK    :                 PHONE TERMINAL BLOCK    :
    :                                       :                                         :
-   :.......................................:.........................................:
+   :.......................................:.........................................:   <!-- RIGHT MARGIN SPACE -->
 
            Figure B. The diode ringing in-phone "K/A" wiring change needed for bells.
-
-  <table class=openall><tr><td width=99%></td><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
-  ><details><summary>Extra Bell Wiring Details</summary>
-   Here's an illustration with actual components from a 2564 and 2565 model phone.
-   Wiring may vary, since used phones may have been changed before. What's shown are
-   the factory wiring from the Bell System Practices documentation.
-
-   Note there are at least two different bell ringer types one can encounter in these phones;
-   the H1A which has 4 wires (R, BK, S, S-R), and H1B which has 2 wires (R and BK).
-   The red arrow shows the wiring change for each type of ringer:
-   <ul>
-   <a href="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" width=1400 border=1 noshade></a>
-
-   <a href="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" width=1400 border=1 noshade></a>
-   </ul>
-   Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.</center></details>
-<A NAME="BuzzerWiring"></A>
-   BUZZER WIRING
-   -------------
-
-   Buzzer wiring is usually straight forward, and just a matter of making sure the
-   two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
-
-  <table class=openall><tr><td width=99%></td><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
-  ><details><summary>Extra 'Call Director' (2636) Buzzer Wiring Details</summary>
-   SPECIAL BUZZER WIRING FOR CALL DIRECTOR (2636) MODEL PHONES
-   -----------------------------------------------------------
-       Call Director model phones, such as the 2636 by default have the buzzer wired
-       to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
-       on Amphenol connector #1 by using the change shown in this diagram:
-
-           <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"
-           ><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" width=400 border=1></a>
-</details>
-<A NAME="ConnectTelco"></A>
-3. ATTACH PHONE LINES
----------------------
-
-    Connect the card to your telephone service.
-    The phone source can be VoIP, XLink BT, or other "plain old telephone" compatible source.
-
-     ____________________________________________________________________
-    |                                 ::::::: INTERLINK                  |
-    |                                                                    |
-    |      o      o      o           o     A        EXT1 EXT2 EXT3 EXT4  |
-    |     LINE1  CPU    LINE2      ICM     :  B      /|   /|   /|   /|   |
-    |     STATUS STATUS STATUS  STATUS     :  :      ||   ||   ||   ||   |
-    |                                      :  :      ||   ||   ||   ||   |
-    |                    o CPU2            :  :      ||   ||   ||   ||   |
-    |                      STATUS          :  :      ||   ||   ||   ||   |
-    |                                         :      ||   ||   ||   ||   |
-    |   ___      __      ____               ____     \|   \|   \|   \|   |
-    |  |   |    |+-|    |oooo|             |oooo|                        |
-    |__|___|____|__|____|____|_____________|____|________________________|
-      Line1+2   12VDC   Ring Trig          Ring
-      (RJ-11)   Input   Connector          Gen
-         .                                 Power
-        /|\
-         |
-         Attach to VoIP, XLink, etc.
-
-
-    NOTE: Xtreme Technologies "Xlink BT" and "XLink BTTN" are Bluetooth
-          Gateway devices that can interface cell phones to PTSN output
-          over BlueTooth. It works fine to use that device as the PTSN source,
-          so that your 1A2 phones can work with your cellphone, both for
-          receiving and originating calls.
-
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    WARNING: This card is NOT approved by the FCC for use directly with
-             analog PSTN/POTS lines ("Public Switched Telephone Networks",
-             "Plain Old Telephone Service")
-
-             Legally it can only be attached to phone systems that
-             use an interface of some kind, like VoIP or like the
-             XLink described above.
-
-             While this board IS designed to handle old analog POTS lines,
-             THE RESPONSIBILITY IS YOURS whether to connect it without
-             FCC approval. If you do, it is assumed you are a hobbyist
-             or EE technician who understands the implications.
-
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-
-<A NAME="RingGen"></A>
-4. ATTACHING A RING GENERATOR (IF YOU HAVE ONE)
------------------------------------------------
-
+            </span><br>
+            <br>
+            While you have the phone open, verify the bell's RED (+) wire is in fact connected to S-Y,<br>
+            and the bell's BLACK (-) wire is connected to the Y-S wire, just like the diagram above.<br>
+            If it's switched around for some reason, <U>change the wiring to match the diagram</U>, because polarity matters.<br>
+        </UL>
+        </details>
+        <br>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>1.2.2 - Extra Bell Wiring Details</summary>
+        <ul><br>
+            Here's an illustration with actual components from a 2564 and 2565 model phone.  Wiring may vary, <br>
+            since used phones may have been changed before. What's shown are the factory wiring from the <br>
+            Bell System Practices documentation.<br>
+            <br>
+            Note there are at least two different bell ringer types one can encounter in these phones; the H1A <br>
+            which has 4 wires (red, blk, slate, slate-red), and H1B which has 2 wires (red and blk).<br>
+            The red arrow shows the wiring change for each type of ringer:
+            <ul><br>
+                <a href="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1A-ringer-terminal-board-k-a-wiring.jpg" noshade="" height="400" border="1"></a>
+                <p>
+                <a href="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" title="Click for larger image"><img src="images/1a2-H1B-ringer-terminal-board-k-a-wiring.jpg" noshade="" height="400" border="1"></a>
+                <P>
+                Figure B.2. The diode ringing in-phone "K/A" wiring change needed for bells.<br>
+            </ul>
+        </ul>
+        </details>
+        <P>
+    <a name="BuzzerWiring"></a>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.2.3 - Buzzer Wiring</summary>
+        <ul><br>
+            Buzzer wiring is usually straight forward, and just a matter of making sure the
+            two blue wires from the buzzer are connected to the Y-O pair on the terminal board.
+        </ul>
+        </details>
+        <P>
+        <a name="CallDirectorWiring"></a>
+        <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>1.2.4 - 'Call Director' (2636) Extra Buzzer Wiring Details</summary>
+        <ul><br>
+            Call Director model phones, such as the 2636 model, by default have the buzzer wired
+            to the Y-S pair on Amphenol connector #2. This can be changed to the Y-O pair
+            on Amphenol connector #1 by using the change shown in this diagram:
+            <ul><br>
+                <a href="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png"><img src="images/call-director-buzzer-rewiring-for-1a2-ksu-small.png" height="616" border="1"></a>
+            </ul>
+        </ul>
+        </details>
+    </ul><BR>
+    <BR>
+    <a name="ConnectTelco"></a>
+    <span class="man_subheading">1.3 - Attach Phone Lines</span>
+    <UL><BR>
+        Connect the card to your telephone service.
+        The phone source can be VoIP, XLink BT, or other "plain old telephone" compatible source.
+        <span class=ascii_art_small>
+               ___________________________________________________________________
+              |                                 ::::::: INTERLINK                 |
+              |                                              EXT1 EXT2 EXT3 EXT4  |
+              |      o      o      o           o     A                            |
+              |     LINE1  CPU    LINE2      ICM     :  B     ╱▔▏  ╱▔▏  ╱▔▏  ╱▔▏  |
+              |     STATUS STATUS STATUS  STATUS     :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+              |                                      :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+              |                    o CPU2            :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+              |                      STATUS          :  :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+              |                                         :     ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+              |   ___      __      ____               ____    ╲_▏  ╲_▏  ╲_▏  ╲_▏  |
+              |  |   |    |+-|    |oooo|             |oooo|                       |
+              |__|___|____|__|____|____|_____________|____|_______________________|
+                Line1+2   12VDC   Ring Trig          Ring
+                (RJ-11)   Input   Connector          Gen
+                   ▲                                 Power
+                  ╱┃╲ 
+                   ┃
+                   ┃
+            Attach to Telco
+          (VoIP, XLink, etc.)
+    </span>
+    <span class="man_subheading">NOTE:</span>
+    <UL>
+        Xtreme Technologies "Xlink BT" and "XLink BTTN" are Bluetooth Gateway devices that can<br>
+        interface cell phones to PTSN output over BlueTooth. It works fine to use that device as<br>
+        the PTSN source, so that your 1A2 phones can work with your cellphone, both for receiving<br>
+        and originating calls.<br>
+    </UL>
+    <BR>
+    ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤<BR>
+    <BR>
+    <span class="man_subheading">WARNING:</span>
+    <UL>
+        This card is NOT approved by the FCC for use directly with analog PSTN/POTS lines<br>
+        ("Public Switched Telephone Networks", "Plain Old Telephone Service")<br>
+        <br>
+        Legally it can only be attached to phone systems that use an interface of some kind,<br>
+        like VoIP or like the XLink described above.<br>
+        <br>
+        While this board IS designed to handle old analog POTS lines, THE RESPONSIBILITY<br>
+        IS YOURS to connect it to public phone service without FCC approval. If you do, it is<br>
+        assumed you are a hobbyist or EE technician who understands the implications.<br>
+        <br>
+    </UL>
+    ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤  ◢◤<BR>
+</UL>
+<P>
+<a name="RingGen"></a>
+<span class="man_subheading">1.4 - Attaching A Ring Generator (If You Have One)</span>
+<UL>
     This step is optional. SKIP THIS STEP, if:
-
-        > You don't have an external ring generator
-
-        > You intend to use "BUZZ RINGING" instead, or you have your own
-          external ringer and don't want the 1A2 phones themselves to ring.
-
-    To configure a ring generator with the board, you can attach a 105VAC 20Hz-30Hz
-    ring generator to enable bell ringing in the 1A2 phones on the Y-S wire pair.
-
-    There are several options for supplying a ring generator:
-
-        * PowerDSINE 12v ring generator 70VAC/20Hz
-          (can ring 3 or 4 phones using board's own 12v supply)
-
-        * Western Electric 118A Ring generator from an old 1A2 KSU
-
-        * VIKING PS-48-RGA (supplies 90VAC 20Hz at 10REN, can ring up to 30 phones)
-
-        * Other commercially available telephone "Ring Generator" or "Frequency Generator"
-
-    There are at least three ways to connect an external ring generator,
-    depending on the type.
-
-  <table class=openall><tr><td width=99%></td><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
-  ><details open><summary>4.1 PowerDSINE 12V Ring Generator</summary>
-    For the PowerDSINE 12VDC ring generator, this board provides
-    a 6 pin header at JP5 for directly connecting this device.
-
-    The SIP header is located to the right of the "EXT RING
-    GEN" connector, under the large EXT1 connector, and is
-    labeled "POWERDSINE RING GEN" and "JP5":
-
+    <UL type=DISC><br>
+        <li>You don't have an external ring generator</li><br>
+        <li>You intend to use "BUZZ RINGING" instead, or you have your own external ringer and don't want<br>
+            the 1A2 phones' ringers to ring.</li><br>
+    </UL>
+    To configure a ring generator with the board, you can attach a 105VAC 20Hz-30Hz ring generator to enable<br>
+    bell ringing in the 1A2 phones on the Y-S wire pair.<br>
+    <br>
+    There are several options for supplying a ring generator:<br>
+    <UL><BR>
+        * PowerDSINE 12v ring generator 70VAC/20Hz (can ring 3 or 4 phones using board's own 12v supply)<br>
+        <br>
+        * Western Electric 118A Ring generator from an old 1A2 KSU<br>
+        <br>
+        * VIKING PS-48-RGA (supplies 90VAC 20Hz at 10REN, can ring up to 30 phones)<br>
+        <br>
+        * Other commercially available telephone "Ring Generator" or "Frequency Generator"<br>
+    </UL>
+    <BR>
+    There are at least three ways to connect an external ring generator, depending on the type, listed below<br>
+    in sections 1.4.1 through 1.4.3. The most common is to use the <U>PowerDSINE "PCR-SIN03V12F20-C"</U><br>
+    12V Ring Generator described in section 1.4.1 below:<br>
+    <br>
+    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.4.1 - PowerDSINE 12V Ring Generator</summary>
+    <UL><BR>
+        For the PowerDSINE 12VDC ring generator, this board provides a 6 pin header at JP5<br>
+        for directly connecting this device.<br>
+        <br>
+        The SIP header is located to the right of the "EXT RING GEN" connector, under and between<br>
+        the large EXT1 + EXT2 connectors, and is labeled "POWERDSINE RING GEN" and "JP5":<br>
+        <br>
+        <span class=ascii_art_small_border>
      ____________________________________________________________________
     |                                                                    |
     |                                               EXT1 EXT2 EXT3 EXT4  |
-    |                                                /|   /|   /|   /|   |
-    |                                                ||   ||   ||   ||   |
-    |                                                ||   ||   ||   ||   |
-    |                                                ||   ||   ||   ||   |
-    |                                                ||   ||   ||   ||   |
-    |                                                ||   ||   ||   ||   |
-    |                                                \|   \|   \|   \|   |
-    |   ___      __     ____               ____                          |
-    |  |   |    |+-|   |oooo|             |oooo|  oooooo                 |
-    |__|___|____|__|___|____|_____________|____|_____.___________________|
-      Line1+2   12VDC   Ring Trigger       Ring     /|\
-      (RJ-11)   Input   Connector          Gen       |
-                                           Power     |
-                                                     |
-                                          Location of PowerDSINE
-                                             connector "JP5"
+    |                                                                    |
+    |                                                ╱▔▏  ╱▔▏  ╱▔▏  ╱▔▏  |
+    |                                                ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                                ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                                ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                                ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |                                                ▏ ▏  ▏ ▏  ▏ ▏  ▏ ▏  |
+    |   ___      __     ____               ____      ╲_▏  ╲_▏  ╲_▏  ╲_▏  |
+    |  |   |    |+-|   |oooo|             |oooo|  JP5 .....              |
+    |__|___|____|__|___|____|_____________|____|_________________________|    <!-- RIGHT MARGIN SPACE -->
+      Line1+2   12VDC   Ring Trig.         Ring        ▲ 
+      (RJ-11)   Input   Connector          Gen        ╱┃╲
+                                           Power       ┃
+                                                       ┃
+                                              Location of PowerDSINE
+                                                 connector "JP5"
+        </span><br>   
+        <br>
+        The PowerDSINE's 6 pin connector plug should be inserted into the JP5 header as follows.<br>
+        Note the PowerDSINE's YELLOW wire should be at the LEFT.<br>
+        <br>
+        <A NAME="Figure_C"></A>
+        <span class=ascii_art_small_border>
 
 
 
-          The PowerDSINE's 6 pin connector plug should be inserted into
-          the JP5 header as follows. Note the PowerDSINE's YELLOW wire
-          should be to the LEFT.
+                       ┌────────────────────────────┐
+                 JP5   │ ◯    ◯    ◯    ◯    ◯    ◯ │
+                       └────────────────────────────┘
+                         ▲    x    ▲    ▲    ▲    ▲
+                         │         │    │    │    │
+                         │         │    │    │    │
+                        YEL       BLK  RED  WHT  BLU
+                         │         │    │    │    │
+                       __│_________│____│____│____│__
+                      |                              |
+                      |                              |
+                      |                              |
+                      |                              |
+                      |          PowerDSINE          |
+                      |       PCR-SIN03V12F20-C      |
+                      |         (or similar)         |
+                      |                              |
+                      |                              |
+                      |                              |                     <!-- RIGHT MARGIN SPACE -->
+                      |______________________________|
 
 
-                          POWERDSINE RING GEN
-                           ______________________________
-                          |  _    _    _    _    _    _  |
-                          | (_)  (_)  (_)  (_)  (_)  (_) |
-                      JP5 |__|____x____|____|____|____|__|
-                             |         |    |    |    |
-                             |         |    |    |    |
-                            YEL       BLK  RED  WHT  BLU
-                             |         |    |    |    |
-                             |         |    |    |    |
-                           __|_________|____|____|____|__
-                          |                              |
-                          |                              |
-                          |                              |
-                          |                              |
-                          |          PowerDSINE          |
-                          |       PCR-SIN03V12F20-C      |
-                          |         (or similar)         |
-                          |                              |
-                          |                              |
-                          |                              |
-                          |______________________________|
+          Figure C. Wiring the PowerDSINE via 6 pin plug to KSU board.
+                    Avoid connecting the plug in reverse, as the plug
+                    does not prevent one from doing so.
 
-              Figure C. Wiring the PowerDSINE via 6 pin plug to KSU board.
-                        Avoid connecting the plug in reverse, as the plug
-                        does not prevent one from doing so.
+        </span>
+    </ul>
     </details>
-  <table class=openall><tr><td width=99%></td><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
-  ><details><summary>4.2 Attaching AC Powered Ring Generator (118A, VIKING, etc.)</summary>
-
-    For an old telco ring generator (like the WECO 118A or VIKING), you can
-    wire the two Ring AC wires to the RIGHT HAND TWO TERMINALS
-    (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:
-
-          <IMG SRC=images/ring-gen-hookup--118a.png WIDTH=400 border=2>
-<!--
-                                EXT RING GEN
-
-                       12V RING OUT     105 VAC/20HZ IN
-                               __|__   __|__
-                              /     \ /     \
-
-                              (+) (-) (~) (~)
-           _ _ _____________________________________________________ _ _
-                             | ◯   ◯   ◯   ◯ |
-                             |_______________|
-                               x   x   .   .
-                                      /|\ /|\
-                                       |   |
-                                       |   |
-                                       |   |
-                                    ------------     AC POWER
-                                   |  118A      |      ____
-                                   |  RING      |     |    |__
-                                   |  GENERATOR |-----|    |__
-                                   |____________|     |____|
--->
+    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details><summary>1.4.2 - Attaching AC Powered Ring Generator (118A, VIKING, etc.)</summary>
+    <UL><BR>
+        For an old telco ring generator (like the WECO 118A or VIKING), you can wire the two Ring AC wires<br>
+        to the RIGHT HAND TWO TERMINALS (labelled "105 VAC/20HZ IN") on the 4 pin EXT RING GEN connector:<br>
+        <br>
+        <center>
+          <img src="foo_files/ring-gen-hookup--118a.png" width="400" border="2">
+        </center>
+    </ul>
     </details>
-  <table class=openall><tr><td width=99%></td><td class=openall onclick="OpenAllDetails();">+Open All</td></tr></table
-  ><details><summary>4.3 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
+    <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.4.3 - 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
+    <UL><BR>
+        If you have a PowerDSINE ring generator with the connector cut off, or if you have a Cambridge Electronics<br>
+        12V ring generator, you can wire it directly to the EXT RING GEN screw terminals as follows, leaving JP5 unconnected:<br>
+        <br><A NAME="Figure_D"></A>
+        <span class=ascii_art_small_border>
 
-      If you have a PowerDSINE ring generator with the connector cut off,
-      or if you have a Cambridge Electronics 12V ring generator, you can wire
-      it directly to the EXT RING GEN screw terminals as follows,
-      leaving JP5 unconnected:
+                                   EXT RING GEN
 
-
-                                  EXT RING GEN
                                   (+) (-) (~) (~)
-               _ _ ______________________________________________ _ _
-                                 | ◯   ◯   ◯   ◯ |
-                                 |_______________|
+                                 ┏━━━━━━━━━━━━━━━┓
+                                 ┃               ┃
+                                 ┃               ┃
+                                 ┃_______________┃
+               _ _ ______________┃ _   _   _   _ ┃_______________ _ _
+                                 ┃(\) (\) (\) (\)┃ 
+                                 ┃ ▔   ▔   ▔   ▔ ┃ 
+                                 ┗━━━━━━━━━━━━━━━┛
                                    |   |   |   |
                                    |   |   |   |
                                   RED BLK WHT BLU
@@ -589,59 +644,56 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
                                    |   |   |   |
                               _____|___|___|___|_____
                              |                       |
-                             |                    YEL|------ (tape off, do not connect)
+                             |                    YEL|------ (tape off, do not connect)     <!-- RIGHT MARGIN SPACE -->
+                             |                       |
                              |                       |
                              |       PowerDSINE      |
                              |   PCR-SIN03V12F20-C   |
+                             |                       |
                              |                       |
                              |                       |
                              |_______________________|
 
                 Figure D. Wiring the PowerDSINE to screw terminals.
 
-
-      For the PowerDSINE, RED/BLK wires are +12/GND outputs to power the device
-      from the board, and WHT/BLU wires are AC ring outputs from the device
-      to the board. Leave the YEL wire ("inhibit") unconnected.
-
-      For the Cambridge Electronics device, wire the +12/GND inputs to the
-      left-hand screws on the EXT RING GEN connector, and wire the AC output
-      to the right-hand screws.
-
+      </span><br>
+      <br>
+      For the PowerDSINE, RED/BLK wires are +12/GND outputs to power the device from the board, and WHT/BLU wires<br>
+      are AC ring outputs from the device to the board.  Leave the YEL wire ("inhibit") unconnected.<br>
+      <br>
+      For the Cambridge Electronics device, wire the +12/GND inputs to the left-hand screws on the EXT RING GEN connector,<br>
+      and wire the AC output to the right-hand screws.<br>
+      <br>
       If you have trouble getting one or more extensions to ring, check the
-      <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section below.
+      <a href="#Troubleshooting">Troubleshooting</a> section below.
+    </UL>
     </details>
-
-<A NAME="DIPRinging"></A>
-5. RING PROGRAMMING - SET DIP SWITCHES FOR RINGING
---------------------------------------------------
-
-    There are two sets of 8 dip switches at the bottom of the board,
-    SW1 (left) and SW2 (right).
-
-        BUZZ RINGING -- SW1
-        -------------------
-        If you don't have a ring generator, this board can still "ring"
-        the phones using the phone's built-in buzzers. Assuming your
-        buzzers are wired to the 17/42 wire pair in each phone (Y-O pair),
-        TURN ON the appropriate DIP switches under the "BUZZ CALL" section
-        (SW1). The 12VDC supply will handle buzzing the buzzers during ringing.
-
-        BELL RINGING -- SW2
-        -------------------
-        If you have a ring generator attached (step #4) and want the
-        phone extensions to ring, turn on the appropriate DIP switches
-        under the "BELL CALL" section (SW2).
-
-    If you don't want the phones to buzz or ring during incoming calls,
-    such as if you have your own ringing system (bell boxes, etc), then
-    you can turn off /all/ the DIP switches for SW1 and SW2, and leave
-    any ring generator connection unconnected.
-
-    Note that for each switch turned on, that enables ringing for a particular
-    line to a particular extension. The first two switches manage Ext 1,
-    the second two switches manage Ext #2, etc. Here's a full breakdown:
-
+    <P>
+</UL>
+<BR>
+<a name="DIPRinging"></a>
+<span class=man_subheading>1.5 - Ring Programming - Set DIP Switches For Ringing</span>
+<UL>
+    There are two sets of 8 dip switches at the bottom of the board, SW1 (left) and SW2 (right):<br>
+    <UL><br>
+        <span class=man_subheading>Buzz Ringing -- SW1</span><br>
+        If you don't have a ring generator, this board can still "ring" the phones using the phone's<br>
+        built-in buzzers. Assuming your buzzers are wired to the 17/42 wire pair in each phone (Y-O pair),<br>
+        TURN ON the appropriate DIP switches under the "BUZZ CALL" section (SW1). The 12VDC supply will handle<br>
+        buzzing the buzzers during ringing.<br>
+        <br>
+        <span class=man_subheading>Bell Ringing -- SW2</span><br>
+        If you have a ring generator attached (step #4) and want the phone extensions to ring, turn on the<br>
+        appropriate DIP switches under the "BELL CALL" section (SW2).<br>
+    </UL><br>
+    If you don't want the phones to buzz or ring during incoming calls, such as if you have your own<br>
+    ringing system (bell boxes, etc), then you can turn off /all/ the DIP switches for SW1 and SW2,<br>
+    and leave any ring generator connection unconnected.<br>
+    <br>
+    Note that for each switch turned on, that enables ringing for a particular line to a particular extension.<br>
+    The first two switches manage Ext 1, the second two switches manage Ext #2, etc. Here's a full breakdown:<br>
+    <br>
+    <span class=ascii_art>
                   Switch #1: ON for ringing Line #1 on Extension #1
                   Switch #2: ON for ringing Line #2 on Extension #1
 
@@ -653,705 +705,635 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
 
                   Switch #1: ON for ringing Line #1 on Extension #4
                   Switch #2: ON for ringing Line #2 on Extension #4
+    </span>
+    <br>
+    This switch arrangement is the same for both SW1 (Buzz Call) and SW2 (Bell Call).<br>
+</UL>
+<P>
+<a name="Testing"></a>
+<span class=man_subheading>1.6 - Testing Your Setup For The First Time</span>
+<UL>
+    With the above "Setup" steps completed and power applied, you should now be able to test the phones.<br>
+    Try these tests, in order:<br>
+    <br>
+    <span class=man_subheading>1.6.1 - Intercom Test</span>
+    <OL type=1><br>
+         <LI> Pick up the handset on a phone extension, and press the RIGHT-most line button<br>
+              to use the intercom on Line #5.</LI><BR>
 
-    This switch arrangement is the same for both SW1 (Buzz Call)
-    and SW2 (Bell Call).
+         <LI> The lamp for that line should light on all the extensions.</LI><BR>
 
+         <LI> Try dialing "1". It should buzz the phone plugged into EXT1 on the card.<br>
+              Dial "2" to buzz the EXT2 phone, etc.</LI><BR>
 
-<A NAME="Testing"></A>
-TESTING YOUR SETUP FOR THE FIRST TIME
-=====================================
+         <LI> While you're using the intercom line, have someone else pickup the same line<br>
+              on a different extension. You should both be able to talk to each other clearly<br>
+              over the intercom line.</LI><BR>
+    </OL>
+    <P>
+    <A NAME="CallTest"></A>
+    <span class=man_subheading>1.6.2 - Call Test</span>
+    <OL type=1><br>
+         <LI> Try calling Line #1's phone number from a cell phone, or another line.<br>
+              If configured, the ringers should ring, and the Line #1 lamp should<br>
+              flash at a 1 second rate. (See the <a href="#Troubleshooting">Troubleshooting</a> section for problems)</LI><br>
 
-    With the above "Setup" steps completed and power applied, you should
-    now be able to test the phones. Try these tests, in order:
+         <LI> Answer the call by selecting Line #1 on the phone, and picking up the<br>
+              handset. The lamp should stop blinking and stay on steady.</LI><BR>
 
-    Intercom Test
-    -------------
-
-         o Pick up the handset on a phone extension, and press the
-           RIGHT-most line button to use the intercom on Line #5.
-
-         o The lamp for that line should light on all the extensions.
-
-         o Try dialing "1". It should buzz the phone plugged into EXT1
-           on the card. Dial "2" to buzz the EXT2 phone, etc.
-
-         o While you're using the intercom line, have someone else pickup
-           the same line on a different extension. You should both be able
-           to talk to each other clearly over the intercom line.
-
-    Call Test
-    ---------
-
-         o Try calling Line #1's phone number from a cell phone, or another line.
-           If configured, the ringers should ring, and the Line #1 lamp should
-           flash at a 1 second rate. (See the <A HREF="#TroubleShooting">TROUBLESHOOTING</A> section for problems)
-
-         o Answer the call by selecting Line #1 on the phone, and picking up the
-           handset. The lamp should stop blinking and stay on steady.
-
-         o Try putting the call on hold by pressing the red HOLD button.
-           The Line #1 lamp should flash quickly, indicating the call is now
-           on HOLD. You can now hangup and the call will remain on HOLD
-           until you, or someone at another extension picks up the call.
-
-         If you don't have a live phone network configured, you can
-         force ringing using the "Ring Trigger Connector" by shorting
-         the two left terminals to ring line #1, or the right two terminals
-         to ring line #2:
+         <LI> Try putting the call on hold by pressing the red HOLD button.<br>
+              The Line #1 lamp should flash quickly, indicating the call is now on HOLD.<br>
+              You can now hangup and the call will remain on HOLD until you, or someone at<br>
+              another extension picks up the call.</LI><BR>
+    </OL><BR>
+    If you don't have a live phone network configured, you can force ringing using the<br>
+    "Ring Trigger Connector" by shorting the two left terminals to ring line #1, or the<br>
+    right two terminals to ring line #2:<br>
+    <br>
+    <span class=ascii_art_small_border>
 
                                 Ring Trigger Connector
+
                                   Line 1  Line 2
                                    Ring    Ring
                                   _____   _____
                                  /     \ /     \
-             _ _ _____________________________________________________ _ _
-                               |  ◯   ◯   ◯   ◯ |
-                               |________________|
-                                  .   .
-                                 /|\ /|\
-                                  |   |   &lt;-- jumper or doorbell switch
-                                  |___|       to ring line #1
+             _ _ _____________________________________________________ _ _          <!-- RIGHT MARGIN SPACE -->
+                               |  ◯   ◯   ◯   ◯  |
+                               |_________________|
+                                  ▲   ▲
+                                  ┃   ┃
+                                  ┃   ┃   &lt;-- Briefly jumper with a wire
+                                  ┃▁▁▁┃       or doorbell switch to ring line #1
 
-         To ring Line #1, connect left two terminals on Ring Trigger
-         Connector together briefly with a wire jumper or doorbell
-         type switch.  To ring Line #2, do the same for the right two
-         terminals.
-
-         This is useful for demos, where you want to demonstrate ringing
-         with just power, but no phone line.
-
-    If you have trouble getting ringing to work, see the <A HREF="#TroubleShooting">TROUBLESHOOTING</A>
-    section below entitled <A HREF="#NoRinging">"No ringing"</A>.
-
-<A NAME="Using"></A>
-USING YOUR 1A2 MULTILINE PHONE SYSTEM
--------------------------------------
-
-    Each multiline phone has "line select" buttons to let you
-    pick which phone line you can use.
-
-    HOLD
-    ----
-    From left-to-right, the first button is the red HOLD button,
-    which lets you put calls on Hold.
-
-    LINE BUTTONS 1-5
-    ----------------
-    Next to the red button are the line buttons; the first being
-    Line #1, Line #2, and so on, the last line being Line #5,
-    which is the Intercom Line on this board, described below.
-
-    Each phone also contains a bell ringer and a buzzer.
-    Depending on how your system is set up, typically the
-    phones "ring" when there's an incoming call, and "buzz"
-    when someone wants you to pickup the intercom line to talk.
-    (See <A NAME="#UsingIntercom">"USING THE INTERCOM"</A> below)
-
-    TO MAKE A CALL
-    --------------
-    To make a call, push an available line button (that is not already
-    lit). Choose the line button BEFORE picking up the handset, so you
-    don't accidentally pick up a used line.
-
-    Now lift the handset. The line's button should light up on all
-    extensions, indicating you're using the line. You should hear dial tone.
-
-    Dial your call normally, and hang up when you're done.
-    When you hang up, the line's light will go out on all phones,
-    indicating the line is available for new calls.
-
-    PUTTING CALLS ON HOLD
-    ---------------------
-    You can put an active call on hold by pressing and releasing the
-    red HOLD button.
-
-    Once on hold, the line's lamp should "wink" at a fast rate, indicating
-    the call is on hold. You can then hang up the phone, and the call will
-    remain on hold.
-
-    Any extension can then pick up the winking line to return from hold
-    and continue the call.
-
-    If the remote caller hangs up while they are on hold, the light will
-    go out, hold will be released, and the line will be free for use again.
-
-    INCOMING CALLS
-    ---------------
-    When a call comes in, the extensions programmed to ring should ring,
-    and the lamp for that line should flash slowly on all extensions,
-    indicating which line is ringing.
-
-    Phone extensions should either ring or buzz, depending on how
-    the phones are programmed to ring. (See <A HREF="#DIPRinging">RING PROGRAMMING</A> under "Setup").
-<A NAME="UsingIntercom"></A>
-    USING THE INTERCOM
-    ------------------
-    The intercom is a way for people in the office to "inter-communicate",
-    such as if a receptionist wants to notify someone at another extension
-    there's a call for them, or if one person wants to briefly talk to
-    another.
-
-    To use the intercom, push the Line #5 button, and dial the number
-    of the extension you want to talk to. Pushing "1" on the dial pad
-    will buzz the buzzer for that extension. If a person is available
-    at that extension, they should pick up the intercom line and talk
-    to you.
-
-    If your phone buzzes, and the intercom line is lit, it means
-    someone wants to talk to you, so pick up that line to talk to
-    them.
+    </span><br>
+    <br>
+    To ring Line #1, connect LEFT two screw terminals on Ring Trigger Connector together briefly with a<br>
+    wire jumper or doorbell type switch.<br>
+    <br>
+    To ring Line #2, do the same with the RIGHT two terminals.<br>
+    <br>
+    This is useful for demos, where you want to demonstrate ringing with just power, but no phone line.<br>
+    <br>
+    If you have trouble getting ringing to work, see the <a href="#Troubleshooting">Troubleshooting</a> section below entitled <a href="#NoRinging">"No ringing"</a>.
+</UL>
+<P>
+<HR>
+<P>
+<a name="Using"></a>
+<span class=man_heading>2.0 - Using Your 1A2 Multiline Phone System</span>
+<UL>
+    Each multiline phone has "line select" buttons to let you pick which phone line you can use.<br>
+    <br>
+    <span class=man_subheading>2.1 - Hold</span><br>
+    From left-to-right, the first button is the red HOLD button, which lets you put calls on Hold.<br>
+    <br>
+    To use it, while a call is in progress, press and release the HOLD button to put that call on Hold.<br>
+    The button will pop up and the line lamp will start winking at a fast rate indicating the line is on Hold.<br>
+    Now you can either return to the call by picking up the line again, or you can use the intercom to tell<br>
+    someone else the call is for them so they can pick it up.<br>
+    <br>
+    <span class=man_subheading>2.2 - Line Buttons 1-5</span><br>
+    Next to the red button are the line buttons; the first being Line #1, Line #2, and so on,<br>
+    the last line being Line #5, which is the Intercom Line on this board, described below.<br>
+    <br>
+    Each phone also contains a bell ringer and a buzzer.  Depending on how your system is set up,<br>
+    typically the phones "ring" when there's an incoming call, and "buzz" when someone wants you to<br>
+    pickup the intercom line to talk. (See <a href="#UsingIntercom">"Using The Intercom"</a> below)<br>
+    <br>
+    <span class=man_subheading>2.3 - To Make A Call</span><br>
+    To make a call, push an available line button (that is not already lit). Choose the line button<br>
+    BEFORE picking up the handset, so you don't accidentally pick up a call that is in use.<br>
+    <br>
+    Now lift the handset. The line's button should light up on all extensions, indicating you're using the line.<br>
+    You should hear dial tone.<br>
+    <br>
+    Dial your call normally, and hang up when you're done.  When you hang up, the line's light will go off<br>
+    on all phones, indicating the line has freed up and can be used for new calls.<br>
+    <br>
+    <span class=man_subheading>2.4 - Putting Calls On Hold</span><br>
+    You can put an active call on hold by pressing and releasing the red HOLD button.<br>
+    <br>
+    Once on hold, the line's lamp should "wink" at a fast rate, indicating the call is on hold. <br>
+    You can then hang up the phone, and the call will remain on hold.<br>
+    <br>
+    Any extension can then pick up the winking line to return from hold and continue the call.<br>
+    <br>
+    If the remote caller hangs up while they are on hold, the light will go out, hold will be released,<br>
+    and the line will be free for use again.<br>
+    <br>
+    <span class=man_subheading>2.5 - Incoming Calls</span><br>
+    When a call comes in, the extensions programmed to ring should ring, and the lamp for that line<br>
+    should flash slowly on all extensions, indicating which line is ringing.<br>
+    <br>
+    Phone extensions should either ring or buzz, depending on how the phones are programmed to ring.<br>
+    (See <a href="#DIPRinging">"Ring Programming"</a> under "Setup").<br>
+    <br>
+    <a name="UsingIntercom"></a>
+    <span class=man_subheading>2.6 - Using The Intercom</span><br>
+    The intercom is a way for people in the office to "inter-communicate", such as if a receptionist wants<br>
+    to notify someone at another extension there's a call for them, or if one person wants to briefly talk<br>
+    to another.<br>
+    <br>
+    To use the intercom, push the Line #5 button, and dial the number of the extension you want to talk to.<br>
+    Pushing "1" on the dial pad will buzz the buzzer for that extension. If a person is available at that <br>
+    extension, they should pick up the intercom line and talk to you.<br>
+    <br>
+    If your phone buzzes, and the intercom line is lit, it means someone wants to talk to you, so pick up<br>
+    that line to talk to them.
 <!--
     Since phones buzz whenever you push the extension's dial button,
     people can pre-arrange "codes" for buzzing, for instance two
     buzzes means the call on hold is for you, three buzzes means
     someone is here to see you, etc.
 -->
-
-<A NAME="1A2Accessories"></A>
-PHONE SYSTEM ACCESSORIES
-------------------------
-
-    ORDERING PHONES
-    ---------------
-    To order more phones, check Ebay, Amazon, or other surplus
-    sources for 1a2 multiline phones. AT&T 1A2 models 565, 2564,
-    2565, and 2830 all have been tested to work with this board.
-    Other models may work as well; check the Bell System Practices
-    (BSP) wiring diagrams to make sure.
-
-    ORDERING EXTENSION CABLES
-    -------------------------
-    Extension cables for 1a2 phones are available in a large
-    variety of lengths, from short 5 foot extensions to long
-    100 foot cables or more.
-
-    Practically, it's best to purchase several 25' cables than
-    one long cable, as they can be chained together easily if
-    need be to attain longer lengths for flexibility.
-
-    Extension cables need male connectors on one end, and female
-    on the other; male end connects to the control card, female
-    to the phone's own cable.
-
-    These cables tend not to be cheap, as they have many conductors
-    and the connectors are industrial quality.  Prices vary between
-    $1.00 and $2.00 per foot.. so a 25' cable might be as much as $40.
-    (2018 prices).
-
-    There are many sources for these cables, used or new, including
-    ebay and Amazon. Search terminology for these cables vary:
-
-         o RJ21 telco cable
-         o Amphenol telco cable
-         o Cat3 25 pair telco cable
-         o Cat3 50 conductor telco cable
-         o 26AWG UTP Telco 25PR
-
-    You can use punch blocks with amphenol connectors to punch down cable
-    wiring yourself. The cable can be multiple runs of 8 conductor Cat3, Cat5,
-    or other telecom compatible UTP (twisted pair) cable.
-
-    Cable terminology:
-
-        "RJ21" refers to the 50 pin amphenol connectors.
-
-        "Cat3" refers to the twisted pair rating for voice communications,
-        where the pairs of wire are twisted around each other in specific
-        ways to prevent electrical noise from getting into the voice circuit
-        over long runs of wire. I believe higher category numbers, such as
-        Cat5, Cat6, etc. should also be OK for old 1a2 wiring, but check
-        around for verification.
-
-        "UTP" stands for "Unshielded Twisted Pair", which is typical of
-        telephone cables for noise reduction.
-
-        "25PR" means "25 pairs" of wire inside the cable, or 50 conductors total.
-
-        "AMP" or "Amphenol" refers to the connector ends.
-
-        M/F, F/M, F/F, M/M refer to the connector types at either end of the cable.
-        You only want M/F or F/M (they're the same thing):
-
-            o M/F or F/M refer to Male/Female connector ends
-            o F/F refers to Female/Female connector ends (you DON'T want these)
-            o M/M refers to Male/Male connector ends (you DON'T want these)
-
-    Be sure to get Male/Female ("M/F" or "F/M") connector ends on your
-    extension cables.
-
-    Conductors can be solid or stranded; typically stranded is more
-    flexible, as solid core wire is "stiff".
-
-    RING GENERATORS
-    ---------------
-    An external ring generator is required to offer the option of
-    ringing the bells in the 1a2 phones.
-
-    Note bell ringing is not required: phones can still be "rung"
-    using the "BUZZ CALL" option, which if configured will "ring"
-    the phones using the 1a2 phone's built in buzzers.
-
-    Since this board uses a 12VDC supply, the "PowerDSINE"
-    PCR-SIN03V12F20-C 12 volt ring generator works well. While
-    no longer manufactured, it's still only about $20.00 on
-    Amazon and Ebay.
-
-    During ringing of 4 lines, it seems to use about 500mA (0.5A),
-    so make sure your 12vdc power supply can supply at least 1.5A,
-    as the rest of the card uses less than 1 amp under full load of
-    4 extensions + 2 lines.
-
-    Another manufacturer is Cambridge Electronics, which sells
-    a similar 12volt ring generator called the "Black Magic".
-
-    Or, you can use any of the old telco ring generators
-    that provide ~70-105 VAC, 20-30Hz ring voltage like the
-    118A.
-
-<A NAME="Interlink"></A>
-INTERLINKING TWO BOARDS - FOUR LINES / 8 EXTENSIONS
----------------------------------------------------
-  If you have two REVISION F1 boards, you can connect them together
-  with a 30 pin ribbon cable to create a single phone system with
-  4 CO lines and up to 8 extensions that all can be individually
-  buzzed on the intercom line (by dialing 1 through 8).
-
-  For info on how to configure two boards with the INTERLINK connector,
-  refer to this page which includes diagrams and descriptions:
-  http://seriss.com/1a2-ksu/rev-f1/data/1a2-pic-IRF-rotary-interlink-REV-F1-0015.png
-
-  In short, you connect the two boards together by their INTERLINK
-  connector using a 30 pin ribbon cable, pin #1 <-> pin #1, and power the
-  boards either with separate power adapters, or one adapter (of suitable
-  amperage, 1.5A or higher) wired in parallel to both boards. (See diagram)
-
-  The ribbon cable should be oriented in such a way that the red wire
-  on the cable ends up on the same side of the interlink connectors.
-
-  The recommended cable configuration is shown on the left-hand side of
-  in this diagram:
-
-  <a href="images/good-vs-bad-interlink-cabling.jpg"><img src="images/good-vs-bad-interlink-cabling.jpg" width=800></a>
-
-  This allows the boards to not be obscured by the cable so one can
-  easily inspect and configure DIP switches and primary/secondary jumpers.
-
-  Note how in the left ("correct") diagram, the cable at the top
-  does a full 360 degree flip over itself to remain in the same orientation.
-
-  Here's a <U><B>side view</B></U> of the preferred cable orientation, just to make it clear:
-
-  <a href="images/interlink-cable-side-view.png"><img src="images/interlink-cable-side-view.png" width=800></a>
-
-  One can also trivially route the cable straight across the top of the two boards
-  as shown below, useful for simple testing.. but this orientation blocks access
-  to jumpers/DIP switches, so the <U><B>above</B></U> diagram is preferred:
-
-  <a href="images/interlink-cable-side-view2.png"><img src="images/interlink-cable-side-view2.png" width=800></a>
-
-  Configure one board as the "PRIMARY"; that board's telco inputs will
-  appear as LINE 1 and LINE 2 on the extensions. Configure the other board
-  as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and
-  LINE 4 on the extensions. The PRIMARY board's intercom circuit will manage
-  the intercom line for all 8 possible extensions.
-
-  To configure the PRIMARY board, make sure all the jumper blocks are
-  all installed on the PRIMARY jumper (JP3), and none on the SECONDARY
-  (JP4). Plug the CO lines that should be LINE 1 + 2 into this board.
-
-  To configure the SECONDARY board, make sure all jumper blocks are installed
-  on the SECONDARY jumper (JP4), and none on the PRIMARY jumper (JP3).
-  Plug the CO lines that should appear as LINE 3 + 4 into this board.
-
-  Plug up to 8 extensions into the two board's EXT# connectors.
-
-  When someone picks up the intercom line, dialing 1-4 will buzz
-  the extensions on the PRIMARY board, EXT 1-4 respectively.
-  And dialing 5-8 will buzz the extensions on the SECONDARY board,
-  EXT 1-4 respectively.
-
-  Note that connectors EXT 1/2/3/4 on the SECONDARY board will really
-  be EXT 5/6/7/8, so you may want to relabel the connectors on the
-  SECONDARY board.
-
-<A NAME="TroubleShooting"></A>
-TROUBLESHOOTING
----------------
-
-  This section should help you solve the various problems you can have
-  during setup, or when things go wrong.
-
-  Email erco@seriss.com if you encounter problems not defined here, esp.
-  if you've found a solution and think others would benefit from it.
-
-
-<A NAME="NoTouchTone"></A>
- *  PROBLEM: Can't dial with Touch-Tone.
-    ------------------------------------
-
-    A common problem is TouchTone dialing won't work to dial out on Line #1
-    or Line #2; pushing buttons generates no tones, or very low volume tones,
-    but dialing on the intercom works fine.
-
-    Things to check:
-
-         * Check the telco line polarity.
-
-           Many of the old Touch-Tone dial pads are sensitive to line polarity,
-           so be sure it's right. If necessary, flop the wires at your jack.
-
-           Beware some female/female RJ-11 adapters and/or RJ-11 cables
-           are wired to swap Tip/Ring. So even though the jack may be
-           wired correctly, the wire or adapters between the jack and KSU
-           might be causing the swap problem.
-
-           If Tip/Ring are swapped, these TouchTone pads either won't
-           dial at all, or will put out very low volume tones.
-
-<A NAME="NoRotary"></A>
- *  PROBLEM: Can't use Rotary to dial extensions on the intercom line
-    -----------------------------------------------------------------
-
-    To buzz extensions with the intercom rotary dialing, only the dialing
-    phone can be offhook. Rotary dialing doesn't work if other extensions
-    are offhook during dialing.
-
-    Rotary on the intercom line is supported by REV F boards (and
-    higher) only.  Older boards (REV-E, REV-B..) do not support it.
-
-    Rotary on the regular telco lines should work regardless of board
-    versions IF the telco equipment supports it. Not all modern telco
-    equipment supports rotary.
-
-<A NAME="NoLine2"></A>
- *  PROBLEM: Line #1 works, but Line #2 does not
-    --------------------------------------------
-
-    You've confirmed your jack has an active Line #1 and Line #2, but
-    Line #2 doesn't work when connected to the KSU.
-
-    Things to check:
-
-        * Check the telephone cable you have connected between the jack
-          and the KSU, and verify it's a 4 conductor wire, and not just 2.
-
-          Some phone cables only have 2 conductors, the RED/GRN pair (line #1),
-          and omit the YEL/BLK pair (line #2), which would cause this problem.
-
-          Closely look at the RJ-11 connectors on your cable; if you only see
-          RED/GRN and don't see YEL/BLK, replace the cable with a 4 conductor
-          cable instead.
-
-<A NAME="NoDialtone"></A>
- *  PROBLEM: Picking up a line lights lamps but gives no dial tone
-    --------------------------------------------------------------
-
-    Things to check:
-
-         Make sure the 50 pin connectors between the KSU board and
-         the extensions are fully seated, and not partially connected.
-         It's often easy to have one side of the connector or the other
-         popped up, not making a full connection.
-
-<A NAME="NoLamps"></A>
- *  PROBLEM: Lamps don't light when picking up a line
-    -------------------------------------------------
-
-    Things to check:
-
-         > Verify the telephone line connection.
-           If there's no voltage on the telco connection, the line sensing
-           won't activate and thus the lamps won't light.
-
-         > Make sure the 50 pin connectors between the KSU board and
-           the extensions are fully seated, and not partially connected.
-
-         > Verify the CPU STATUS light is blinking. If it's not, then:
-
-             a) Pickup the intercom line on an extension and leave the line offhook.
-                (This will cause the on board capacitor to drain through the intercom).
-
-             b) Pull power from the board and wait 10 seconds before plugging
-                the board back in again.
-
-             c) The CPU STATUS light should be blinking. If it's not, the board
-                may need servicing.
-
-<A NAME="NoRinging"></A>
- *  PROBLEM: No ringing.
-    --------------------
-
-        One or all extensions aren't ringing with their bells during
-        incoming calls, or when using the RING TRIGGER CONNECTOR (as described
-        in the "CALL TEST" section above).
-
-    Things to check:
-
-         * Verify bells of EACH 1A2 extension phone are attached to
-           the Yellow-Slate wire pair (pins 20/45).
-
-         * Make sure the 1A2 connectors are all pressed down and seated fully.
-           A half-seated connector can cause lack of ringing.
-
-         * Make sure the "BELL CALL" DIP switches (SW2) are set to "on"
-          for the lines/extensions you want to ring during incoming calls.
-
-         * Make sure the external ring generator is attached correctly
-           and verify AC ring voltage is present during the ring cycle.
-
-           An external ring generator must be attached to the card for
-           the extensions to ring by their bells.
-
-           If a PowerDSINE is attached to JP5, verify it's not partially
-           seated on the pins, and is not plugged in reverse. When
-           positioned correctly, the BLUE + WHITE wires will be to the RIGHT,
-           and the YELLOW wire to the LEFT:
-
-                             POWERDSINE RING GEN
-
-                             ◯    ◯    ◯    ◯    ◯    ◯ 
-                       JP5   |    x    |    |    |    |
-                            YEL       BLK  RED  WHT  BLU
-
-           Refer to "Figure C" and "Figure D" near the top of this document
-           for more info.
-
-         * For bell ringing to work properly with the diode oriented ring
-           circuit for this board, verify all the 1A2 phones have the
-           following one wire modification.  Paraphrasing Ed from
-           Sundance Communications:
-
-            "For any kind of diode ringing to work, the capacitor between
-             network terminals A and K (inside phone) have to be bypassed.
-             Move the wire on terminal 'K' to terminal 'A' along with the
-             existing wire."
-
-           The wire he's referring to is usually the actual bell's red wire.
-           Refer to "Figure B" (near the top of this document) for more info.
-
-         * 1A2 phones typically have ringers with a single bell + clapper.
-           These ringers are sensitive to polarity when mixed with a diode
-           ring circuit. If the ringer is not ringing or barely ringing/humming,
-           try switching the two wires inside the phone between the bell
-           and the hybrid network to see if the bell's polarity is the problem.
-
-         * Note that the 12V output on the "RING GEN POWER" connector only
-           outputs 12V during actual ringing. This keeps the power off for
-           the ring generator when the phones aren't ringing.
-
-           To test ringing without a PTSN network, see "CALL TEST" above,
-           using the RING TRIGGER CONNECTOR to easily trigger ringing.
-
-<A NAME="NoBuzzRing"></A>
- *  PROBLEM: Buzz-ringing not working.
-    ----------------------------------
-
-        This card features "buzz ringing", where the buzzers buzz in place
-        of bell ringing during incoming calls. This is useful if you don't
-        have a ring generator.
-
-    Things to check:
-
-        * Make sure the buzzers are all wired to pins 17/42 (Y-O pair).
-
-        * Make sure the 1A2 connectors are all pressed down and seated fully.
-          A half-seated connector can prevent the buzzers from working, while
-          other features work fine.
-
-        * Make sure the "BUZZ CALL" DIP switches (SW1) are set to "on"
-          for the lines/extensions you want to buzz during incoming calls.
-
-
-<A NAME="NoLed"></A>
- *  PROBLEM: CPU LED NOT FLASHING
-    -----------------------------
-
-    Things to check:
-
-        * Verify the power supply voltage being fed to the board:
-          Put a meter across the two "12V INPUT" terminal screws
-          and verify +12 volts DC is being fed to the board,
-          positive on the left screw, negative on the right.
-          Voltage can range 11.5V to 12.75v, but closer to 12 is best.
-
-        * Ensure the power is true DC, and not "lumpy DC"; put a scope
-          on the terminal screws to verify DC and not AC voltage.
-
-        * If 12V is coming into the board, check the 7805 (Q3) near
-          the power connector, and verify 5V is between pins 2 and 3:
-
-                               -----_-----
-                              |    (_)    |
-                              |-----------|
-                              |           |
-                              |   7805    |
-                              |           |
-                              |           |
-                              |___________|
-                                 |  |  |     Q3
-                                 |  |  |
-                                 |  |  |
-                                 1  2  3
-
-                           1: +12VDC input
-                           2: Ground
-                           3: +5VDC output
-
-          Using a volt meter, keep the black (negative) lead on pin 2
-          during the following: touch the red lead to pin 1 should show +12VDC.
-          Moving the red lead to pin 3 should show +5VDC.
-
-        * Check the temperature of Q3 (the 7805 at the lower left of the board,
-          near power connector). If it gets warm or hot quickly after power is
-          connected, SOMETHING MIGHT BE SHORTED OUT - REMOVE POWER QUICKLY.
-
-          First let it cool, then unplug all connectors, and then plug in JUST
-          the power connector. If that corrects the problem, plug things back
-          in one at a time until the culprit is determined.
-
-          Also: check for any stray metal parts touching either the back of
-          the board (stray screws, metal dust), or metal bits lying across
-          any of the components on the board that might cause a short.
-          Keep in mind stray metal/liquids lying across components may have
-          permanently damaged the board to the point where components are blown,
-          and may need to be swapped out to properly repair the board.
-
-<A NAME="1a2WireColors"></A>
-WIRE COLORS
------------
-
-    Bell System Practices wire color codes are used throughout this document,
-    e.g. Y-S and Y-O. The color codes are:
-
-         R - Red        G - Green    BR - Brown     W - White
-         O - Orange    BL - Blue     BK - Black
-         Y - Yellow     V - Violet    S - Slate
-
-    Mostly single letters are used, but where confusion might arise, two letters
-    are used (like BR for brown, BK for black, BL for blue).  To avoid confusion
-    with green (G), gray wires are always referred to as "slate" (S).
-
-    In telephone wiring, CAT-3 UTP cable (Category 3, "Unshielded Twisted Pair")
-    is used to ensure long runs of signals have the best noise cancellation,
-    such that each voice circuit is on its own pair of wires that are physically
-    twisted together. Most 1A2 phones have 25 pair (50 conductor) CAT-3 UTP cables.
-
-    Each pair of wires twisted together share the same two colors, just swapping which
-    is the "main" or "primary" color; The "Y-S pair" (yellow-slate) consists of two wires:
-
+</UL>
+<P>
+<a name="1A2Accessories"></a>
+<span class=man_heading>3.0 - Phone System Accessories</span><br>
+<UL>
+    <span class=man_subheading>3.1 - Ordering Phones</span><br>
+    To order more phones, check Ebay, Amazon, or other surplus sources for 1a2 multiline phones.<br>
+    AT&amp;T 1A2 models 565, 2564, 2565, and 2830 all have been tested to work with this board.<br>
+    Other models may work as well; check the Bell System Practices (BSP) wiring diagrams to make sure.<br>
+    <br>
+    <span class=man_subheading>3.2 - Ordering Extension Cables</span><br>
+    Extension cables for 1a2 phones are available in a large variety of lengths, from short 5 foot extensions<br>
+    to long 100 foot cables or more.<br>
+    <br>
+    Practically, it's best to purchase several 25' cables than one long cable, as they can be chained together<br>
+    easily if need be to attain longer lengths for flexibility.<br>
+    <br>
+    Extension cables need male connectors on one end, and female on the other; male end connects to the control card,<br>
+    female to the phone's own cable.<br>
+    <br>
+    These cables tend not to be cheap, as they have many conductors and the connectors are industrial quality.<br>
+    Prices vary between $1.00 and $2.00 per foot.. so a 25' cable might be as much as $40.  (2018 prices).<br>
+    <br>
+    There are many sources for these cables, used or new, including ebay and Amazon. Search terminology for these<br>
+    cables vary:<br>
+    <ul type=disc><br>
+         <li> RJ21 telco cable</li>
+         <li> Amphenol telco cable</li>
+         <li> Cat3 25 pair telco cable</li>
+         <li> Cat3 50 conductor telco cable</li>
+         <li> 26AWG UTP Telco 25PR</li>
+    </ul><br>
+    You can use punch blocks with amphenol connectors to punch down cable wiring yourself. The cable can be multiple<br>
+    runs of 8 conductor Cat3, Cat5, or other telecom compatible UTP (twisted pair) cable.<br>
+    <br>
+    <span class=man_subheading>3.3 - Cable Terminology</span><br>
+    <UL type=DISC><br>
+        <LI>"RJ21" refers to the 50 pin amphenol connectors.</LI><BR>
+
+        <LI> "Cat3" refers to the twisted pair rating for voice communications,<br>
+             where the pairs of wire are twisted around each other in specific<br>
+             ways to prevent electrical noise from getting into the voice circuit<br>
+             over long runs of wire. I believe higher category numbers, such as<br>
+             Cat5, Cat6, etc. should also be OK for old 1a2 wiring, but check<br>
+             around for verification.</LI><BR>
+
+        <LI>"UTP" stands for "Unshielded Twisted Pair", which is typical of<br>
+            telephone cables for noise reduction.</LI><BR>
+
+        <LI>"25PR" means "25 pairs" of wire inside the cable, or 50 conductors total.</LI><BR>
+
+        <LI>"AMP" or "Amphenol" refers to the connector ends.</LI><BR>
+
+        <LI>M/F, F/M, F/F, M/M refer to the connector types at either end of the cable.<br>
+            You only want M/F or F/M (they're the same thing):<br>
+            <UL TYPE=DISC><br>
+               <LI> M/F or F/M refer to Male/Female connector ends</LI>
+               <LI> F/F refers to Female/Female connector ends (you DON'T want these)</LI>
+               <LI> M/M refers to Male/Male connector ends (you DON'T want these)</LI>
+            </UL></LI><BR>
+    </UL>
+    Be sure to get Male/Female ("M/F" or "F/M") connector ends on your extension cables.<br>
+    <br>
+    Conductors can be solid or stranded; typically stranded is more flexible, as solid core wire is "stiff".<br>
+    <br>
+    <span class=man_heading>3.4 - Ring Generators</span><br>
+    An external ring generator is required to offer the option of ringing the bells in the 1a2 phones.<br>
+    <br>
+    Note bell ringing is not required: phones can still be "rung" using the "BUZZ CALL" option, <br>
+    which if configured will "ring" the phones using the 1a2 phone's built in buzzers.<br>
+    <br>
+    Since this board uses a 12VDC supply, the "PowerDSINE" PCR-SIN03V12F20-C 12 volt ring generator works well.<br>
+    While no longer manufactured, they're still only about $15 ~ $20.00 on Amazon/Ebay.<br>
+    <br>
+    During ringing of 4 lines, it seems to use about 500mA (0.5A), so make sure your 12vdc power supply can supply<br>
+    at least 1.5A, as the rest of the card uses less than 1 amp under full load of 4 extensions + 2 lines.<br>
+    <br>
+    Another manufacturer is Cambridge Electronics, which sells a similar 12volt ring generator called the "Black Magic".<br>
+    <br>
+    Or, you can use any of the old telco ring generators that provide ~70-105 VAC, 20-30Hz ring voltage like the 118A.<br>
+</ul>
+
+<a name="Interlink"></a>
+<span class=man_heading>4.0 - Interlinking Two Boards - Four Lines / 8 Extensions</span>
+<UL>
+  If you have two REVISION F1 boards, you can connect them together with a 30 pin ribbon cable to create<br>
+  a single phone system with 4 Telco lines and up to 8 extensions that all can be individually buzzed on<br>
+  the intercom line (by dialing 1 through 8).<br>
+  <br>
+  For info on how to configure two boards with the INTERLINK connector, refer to this page which includes<br>
+  diagrams and descriptions: <a href="http://seriss.com/1a2-ksu/rev-g1/data/1a2-REV-G-0015.png"
+                                     >http://seriss.com/1a2-ksu/rev-g1/data/1a2-REV-G-0015.png</a><br>
+  <br>
+  In short, connect the two boards together by their INTERLINK connector using a 30 pin ribbon cable, and power<br>
+  the two boards either with separate power adapters, or a single adapter of suitable amperage wired in parallel.<br>
+  <br>
+  The recommended cable configuration is shown on the left-hand side of in this diagram:<br>
+  <ul><br>
+  <a href="images/good-vs-bad-interlink-cabling.jpg"><img src="images/good-vs-bad-interlink-cabling.jpg" width="800" title="Click for larger version of this image"></a><br>
+  </ul><br>
+  <br>
+  This prevents the cable obscuring the boards so one can easily inspect and configure DIP switches and primary/secondary jumpers.<br>
+  Note how the left ("correct") diagram, the cable does a full 360 degree flip over itself to remain in the same plug orientation.<br>
+  <br>
+  Here's a <u><b>side view</b></u> of the preferred cable orientation, just to make it clear:<br>
+  <ul><br>
+      <a href="images/interlink-cable-side-view.png"><img src="images/interlink-cable-side-view.png" width="800"></a>
+  </ul><br>
+  <br>
+  One can also trivially route the cable straight across the top of the two boards as shown below <I>without a twist</I>,<br>
+  useful for simple tests: <br>
+  <ul><br>
+      <a href="images/interlink-cable-side-view2.png"><img src="images/interlink-cable-side-view2.png" width="800"></a>
+  </ul><br>
+  <br>
+  ..but that blocks access to the jumper/DIP switches, so the <u><b>previous</b></u> diagram is preferred.<br>
+  <br>
+  Configure one board as the "PRIMARY"; that board's telco inputs will appear as LINE 1 and LINE 2 on the extensions.<br>
+  Configure the other board as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and LINE 4 on the extensions.<br>
+  The PRIMARY board's intercom circuit will manage the intercom line for all 8 possible extensions.<br>
+  <br>
+  To configure the PRIMARY board, make sure all the jumper blocks are all installed on the PRIMARY jumper (JP3), <br>
+  and none on the SECONDARY (JP4). Plug the Telco lines that should be LINE 1 + 2 into this board.<br>
+  <br>
+  To configure the SECONDARY board, make sure all jumper blocks are installed on the SECONDARY jumper (JP4),<br>
+  and none on the PRIMARY jumper (JP3).  Plug the Telco lines that should appear as LINE 3 + 4 into this board.<br>
+  <br>
+  Plug up to 8 extensions into the two board's EXT# connectors.<br>
+  <br>
+  When someone picks up the intercom line, dialing 1-4 will buzz the extensions on the PRIMARY board, EXT 1-4 respectively.<br>
+  And dialing 5-8 will buzz the extensions on the SECONDARY board, EXT 1-4 respectively.<br>
+  <br>
+  Note that connectors EXT 1/2/3/4 on the SECONDARY board will really be EXT 5/6/7/8, so you may want to relabel<br>
+  the connectors on the SECONDARY board.<br>
+  <br>
+</ul>
+<p>
+<a name="Troubleshooting"></a>
+<span class=man_heading>5.0 - Troubleshooting</span>
+<UL>
+  This section should help you solve the various problems you can have during setup, or when things go wrong.<br>
+  Email erco@seriss.com if you encounter problems not defined here, esp.  if you've found a solution and think others<br>
+  would benefit from it.<br>
+  <br>
+  <a name="NoTouchTone"></a>
+  <span class=man_subheading>5.1 - PROBLEM: Can't dial with Touch-Tone.</span><br>
+  <UL><BR>
+    A common problem is TouchTone dialing won't work to dial out on Line #1 or Line #2; pushing buttons generates no tones,<br>
+    or very low volume tones, but dialing on the intercom works fine.<br>
+    <br>
+    Things to check:<br>
+    <UL><br>
+      <LI> Check the telco line polarity.<br>
+           <br>
+           Many of the old Touch-Tone dial pads are sensitive to line polarity, so be sure it's right.<br>
+           If necessary, flop the wires at your jack.<br>
+           <br>
+           Beware some female/female RJ-11 adapters and/or RJ-11 cables are wired to swap Tip/Ring.<br>
+           So even though the jack may be wired correctly, the wire or adapters between the jack and KSU<br>
+           might be causing the swap problem.<br>
+           <br>
+           If Tip/Ring are swapped, these TouchTone pads either won't dial at all, or will put out very low<br>
+           volume tones.</li><br>
+    </UL>
+  </UL>
+  <P>
+  <a name="NoRotary"></a>
+  <span class=man_subheading>5.2 - PROBLEM: Can't use Rotary to dial extensions on the intercom line</span><br>
+  <UL><BR>
+    To buzz extensions with the intercom rotary dialing, only the dialing phone can be offhook. Rotary dialing doesn't<br>
+    work if other extensions are offhook during dialing.<br>
+    <br>
+    Rotary on the intercom line is supported by REV F boards (and higher) only.  Older boards (REV-E, REV-B..)<br>
+    do not support it.<br>
+    <br>
+    Rotary on the regular telco lines should work regardless of board versions IF the telco equipment supports it.<br>
+    Not all modern telco equipment supports rotary.<br>
+  </UL>
+  <P>
+  <a name="NoLine2"></a>
+  <span class=man_subheading>5.3 - PROBLEM: Line #1 works, but Line #2 does not</span><br>
+  <UL><BR>
+    You've confirmed your jack has an active Line #1 and Line #2, but Line #2 doesn't work when connected to the KSU.<br>
+    <br>
+    Things to check:<br>
+    <UL><br>
+      <LI> Check the telephone cable you have connected between the jack and the KSU, and verify<br>
+           it's a 4 conductor wire, and not just 2.<br>
+           <br>
+           Some phone cables only have 2 conductors, the RED/GRN pair (line #1), and omit the YEL/BLK pair (line #2),<br>
+           which would cause this problem.<br>
+           <br>
+           Closely look at the RJ-11 connectors on your cable; if you only see RED/GRN and don't see YEL/BLK,<br>
+           replace the cable with a 4 conductor cable instead.</li><br>
+    </UL>
+  </UL>
+  <P>
+  <a name="NoDialtone"></a>
+  <span class=man_subheading>5.4 - PROBLEM: Picking up a line lights lamps but gives no dial tone</span><br>
+  <UL><BR>
+    Things to check:<br>
+    <UL><br>
+      <LI> Make sure the 50 pin connectors between the KSU board and the extensions are fully seated,<br>
+             and not partially connected.  It's often easy to have one side of the connector or the other popped up,<br>
+             not making a full connection.</LI><br>
+    </UL>
+  </UL>
+  <P>
+  <a name="NoLamps"></a>
+  <span class=man_subheading>5.5 - PROBLEM: Lamps don't light when picking up a line</span><br>
+  <UL>
+    Things to check:<br>
+    <UL><br>
+       <LI> Verify the telephone line connection.<br>
+            If there's no voltage on the telco connection, the line sensing won't activate and thus the lamps won't light.</LI><br>
+
+       <LI> Make sure the 50 pin connectors between the KSU board and the extensions are fully seated,<br>
+            and not partially connected.</LI><br>
+
+       <LI> Verify the CPU STATUS light is blinking. If it's not, then try "rebooting" the card by turning it on and off again::<br>
+       <OL TYPE=1><BR>
+         <LI> Pull the power connector from the board, wait a few seconds, and plug it back in again.</LI><br>
+
+         <LI> The CPU STATUS light should be blinking. If it's not, the board may need servicing.</LI>
+      </OL></LI><br>
+    </UL>
+  </UL>
+  <P>
+  <a name="NoRinging"></a>
+  <span class=man_subheading>5.6 - PROBLEM: No ringing</span><br>
+  <UL>
+    One or all extensions aren't ringing with their bells during incoming calls, or when using the<br>
+    RING TRIGGER CONNECTOR (as described in the "CALL TEST" section above).<br>
+    <br>
+    Things to check:<br>
+    <UL><br>
+      <LI> Verify bells of EACH 1A2 extension phone are attached to the Yellow-Slate wire pair (pins 20/45).</LI><BR>
+      <LI> Make sure the 1A2 connectors are all pressed down and seated fully.  A half-seated connector can cause lack of ringing.</LI><BR>
+      <LI> Make sure the "BELL CALL" DIP switches (SW2) are set to "on" for the lines/extensions you want to ring during incoming calls.</LI><BR>
+      <LI> Make sure the external ring generator is attached correctly and verify AC ring voltage is present during the ring cycle.<br>
+           <br>
+           An external ring generator must be attached to the card for the extensions to ring by their bells.<br>
+
+           If a PowerDSINE is attached to JP5, verify it's not partially seated on the pins, and is not plugged in reverse.<br>
+           When positioned correctly, the YELLOW wire will be at the LEFT:<br>
+           <UL><BR><span class=ascii_art_small_border>
+             POWERDSINE RING GEN          <!-- RIGHT MARGIN SPACE -->
+
+         ┌────────────────────────┐
+   JP5   │ ◯   ◯   ◯   ◯   ◯   ◯  │
+         └────────────────────────┘
+          YEL  x  BLK RED WHT BLU
+               
+           </span></UL><BR>
+           Refer to <A HREF="#Figure_C">"Figure C"</A> and <A HREF="#Figure_D">"Figure D"</A> near the top of this document for more info.</LI><br>
+
+      <LI> For bell ringing to work properly with the diode oriented ring circuit for this board, verify all the 1A2 phones<br>
+           have the following one wire modification.  Paraphrasing Ed, from Sundance Communications:<br>
+           <UL><BR><I>
+             "For any kind of diode ringing to work, the capacitor between network terminals A and K<br>
+             (inside phone) have to be bypassed. Move the wire on terminal 'K' over to terminal 'A'<br>
+             along with the existing wire."</I>
+           </UL></LI><br>
+           The wire he's referring to is usually the actual bell's red wire.</LI><br>
+           <br>
+
+      <LI> 1A2 phones typically have ringers with a single bell + clapper.  These ringers are sensitive to polarity<br>
+           when mixed with a diode ring circuit. If the ringer is not ringing or barely ringing/humming, inside the phone<br>
+           try switching the two wires from the bell and the network hybrid to see if the bell's polarity is the problem.</LI><br>
+
+      <LI> Note that the 12V output on the "RING GEN POWER" connector only outputs 12V during actual ringing.<br>
+           This keeps the power off for the ring generator when the phones aren't ringing.<br>
+           <br>
+           To test ringing without a PTSN network, see <A HREF="#CallTest">"Call Test"</A> above, using the RING TRIGGER CONNECTOR<br>
+           to easily trigger ringing.</LI><br>
+    </UL>
+  </UL>
+  <P>
+  <a name="NoBuzzRing"></a>
+  <span class=man_subheading>5.7 - PROBLEM: Buzz-ringing not working.</span><br>
+  <UL>
+    This card features "buzz ringing", where the buzzers buzz in place of bell ringing during incoming calls.<br>
+    This is useful if you don't have a ring generator.<br>
+    <br>
+    Things to check:<br>
+    <UL><br>
+      <LI> Make sure the buzzers are all wired to pins 17/42 (Y-O pair).</LI><br>
+
+      <LI> Make sure the 1A2 connectors are all pressed down and seated fully.  A half-seated connector can prevent<br>
+           the buzzers from working, while other features work fine.</LI><br>
+
+      <LI> Make sure the "BUZZ CALL" DIP switches (SW1) are set to "on" for the lines/extensions you want to buzz<br>
+           during incoming calls.</LI><br>
+    </UL>
+  </UL>
+  <a name="NoLed"></a>
+  <span class=man_subheading>5.8 - PROBLEM: Cpu Led Not Flashing</span><br>
+  <UL><br>
+      Things to check:<br>
+      <UL><br>
+        <LI> Verify the power supply voltage being fed to the board: Put a meter across the two "12V INPUT" terminal screws<br>
+             and verify +12 volts DC is being fed to the board, positive on the left screw, negative on the right.<br>
+             Voltage can range 11.5V to 12.75v, but closer to 12 is best.</LI><br>
+
+        <LI> Ensure the power is true DC, and not "lumpy DC"; put a scope on the terminal screws to verify<br>
+             DC and not AC voltage.</LI><br>
+
+        <LI> If 12V is coming into the board, check the 7805 (Q3) near the power connector, and verify 5V<br>
+             is between pins 2 and 3:<br>
+             <br>
+             <UL>
+               <span class=ascii_art_small_border>
+
+             -----_-----
+            |    (_)    |                <!-- RIGHT MARGIN SPACE -->
+            |-----------|
+            |           |
+            |   7805    |
+            |           |
+            |           |
+            |___________|
+               |  |  |     Q3
+               |  |  |
+               |  |  |
+               1  2  3
+
+         1: +12VDC input
+         2: Ground
+         3: +5VDC output
+              </span><br>
+            </UL>
+            <br>
+            Using a volt meter, keep the black (negative) lead on pin 2 during the following: touch the red lead<br>
+            to pin 1 should show +12VDC.  Moving the red lead to pin 3 should show +5VDC.</LI><br>
+
+        <LI> Check the temperature of Q3 (the 7805 at the lower left of the board, near power connector). If it gets<br>
+             warm or hot quickly after power is connected, SOMETHING MIGHT BE SHORTED OUT - REMOVE POWER QUICKLY.
+             <br>
+             First let it cool, then unplug all connectors, and then plug in JUST the power connector. If that corrects<br>
+             the problem, plug things back in one at a time until the culprit is determined.<br>
+             <br>
+             Also: check for any stray metal parts touching either the back of the board (stray screws, metal dust),<br>
+             or metal bits lying across any of the components on the board that might cause a short.<br>
+             <br>
+             Keep in mind stray metal/liquids lying across components may have permanently damaged the board to the point<br>
+             where components are blown, and may need to be swapped out to properly repair the board.</LI><br>
+    </UL>
+  </UL>
+</UL>
+<a name="WireColors"></a>
+<span class=man_heading>6.0 - Wire Colors</span><br>
+<UL>
+  Bell System Practices wire color codes are used throughout this document,<br>
+  e.g. Y-S and Y-O. The color codes are:<br>
+  <span class=ascii_art>
+       R - Red        G - Green    BR - Brown     W - White
+       O - Orange    BL - Blue     BK - Black
+       Y - Yellow     V - Violet    S - Slate
+  </span>
+  Mostly single letters are used, but where confusion might arise, two letters are used (like BR for brown,<br>
+  BK for black, BL for blue).  To avoid confusion with green (G), gray wires are always referred to as "slate" (S).<br>
+  <br>
+  In telephone wiring, CAT-3 UTP cable (Category 3, "Unshielded Twisted Pair") is used to ensure long runs of signals<br>
+  have the best noise cancellation, such that each voice circuit is on its own pair of wires that are physically<br>
+  twisted together. Most 1A2 phones have 25 pair (50 conductor) CAT-3 UTP cables.<br>
+  <br>
+  Each pair of wires twisted together share the same two colors, just swapping which is the "main" or "primary" color;<br>
+  The "Y-S pair" (yellow-slate) consists of two wires:<br>
+  <br>
+  <span class=ascii_art>
         Y-S -- A mainly yellow wire with a slate (gray) stripe
-       <font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font><font color=#888>▄</font><font color=#ff0>▄▄▄▄▄▄▄</font>
+       <font color="#e9dc68">▄▄▄▄▄▄▄</font><font color="#888888">▄</font><font color="#e9dc68">▄▄▄▄▄▄▄</font><font color="#888888">▄</font><font color="#e9dc68">▄▄▄▄▄▄▄</font><font color="#888888">▄</font><font color="#e9dc68">▄▄▄▄▄▄▄</font><font color="#888888">▄</font><font color="#e9dc68">▄▄▄▄▄▄▄</font><font color="#888888">▄</font><font color="#e9dc68">▄▄▄▄▄▄▄</font><font color="#888888">▄</font><font color="#e9dc68">▄▄▄▄▄▄▄</font>
 
         S-Y -- A mainly slate (gray) wire with a yellow stripe
-       <font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font><font color=#ff0>▄</font><font color=#888>▄▄▄▄▄▄▄</font>
+       <font color="#888888">▄▄▄▄▄▄▄</font><font color="#e9dc68">▄</font><font color="#888888">▄▄▄▄▄▄▄</font><font color="#e9dc68">▄</font><font color="#888888">▄▄▄▄▄▄▄</font><font color="#e9dc68">▄</font><font color="#888888">▄▄▄▄▄▄▄</font><font color="#e9dc68">▄</font><font color="#888888">▄▄▄▄▄▄▄</font><font color="#e9dc68">▄</font><font color="#888888">▄▄▄▄▄▄▄</font><font color="#e9dc68">▄</font><font color="#888888">▄▄▄▄▄▄▄</font>
+  </span>
+  So it matters which color appears first; When referring to a *single wire*, the first of the two colors is always<br>
+  the "main" (or "primary") color, and the second color is the stripe's color. So in Y-S, Y is the primary color,<br>
+  and S is the stripe.<br>
+  <br>
+  When referring to *wire pairs*, the first letter is the main (or "primary") color GROUP.  In a 25 pair CAT3 UTP cable,<br>
+  wire pairs are broken into 5 color groups of 5 pairs each:<br>
+  <br>
+  <span class=ascii_art_small_border>
 
-    So it matters which color appears first; When referring to a *single wire*, the first
-    of the two colors is always the "main" (or "primary") color, and the second color
-    is the stripe's color. So in Y-S, Y is the primary color, and S is the stripe.
+                                                    <font size="5"><b>25 Pairs / 5 "Color Groups"</b></font>
+  <small>
+  <div class="divTable">
+    <div class="divTableBody">
+      <div class="divTableRow">
+        <div class="divTableCell"><center><font size="5"><b>WHITE GROUP</b></font></center>
+    W-BL   <font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤ W-BL
+    BL-W   <font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦ Pair
 
-    When referring to *wire pairs*, the first letter is the main (or "primary") color GROUP.
-    In a 25 pair CAT3 UTP cable, wire pairs are broken into 5 color groups of 5 pairs each:
+     W-O   <font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-O
+     O-W   <font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
+     W-G   <font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-G
+     G-W   <font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-                                                    <FONT SIZE=5><B>25 Pairs / 5 "Color Groups"</B></FONT>
-<small>
-<div class="divTable">
-  <div class="divTableBody">
-    <div class="divTableRow">
-        <div class="divTableCell"><CENTER><FONT SIZE=5><B>WHITE GROUP</B></FONT></CENTER>
-    W-BL   <font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤ W-BL
-    BL-W   <font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦ Pair
+    W-BR   <font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-BR
+    BR-W   <font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     W-O   <font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-O
-     O-W   <font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-     W-G   <font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-G
-     G-W   <font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-    W-BR   <font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-BR
-    BR-W   <font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-     W-S   <font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-S
-     S-W   <font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#dddddd>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+     W-S   <font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  W-S
+     S-W   <font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#dddddd">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
         </div>
-        <div class="divTableCell"><CENTER><FONT SIZE=5><B>RED GROUP</B></FONT></CENTER>
-    R-BL   <font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-BL
-    BL-R   <font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+        <div class="divTableCell"><center><font size="5"><b>RED GROUP</b></font></center>
+    R-BL   <font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-BL
+    BL-R   <font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     R-O   <font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-O
-     O-R   <font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+     R-O   <font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-O
+     O-R   <font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     R-G   <font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-G
-     G-R   <font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+     R-G   <font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-G
+     G-R   <font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-    R-BR   <font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-BR
-    BR-R   <font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+    R-BR   <font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-BR
+    BR-R   <font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     R-S   <font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-S
-     S-R   <font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#cc2444>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-        </div>
-      </div><div class="divTableRow">
-        <div class="divTableCell"><CENTER><FONT SIZE=5><B>BLACK GROUP</B></FONT></CENTER>
-   BK-BL   <font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-BL
-   BL-BK   <font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-    BK-O   <font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-O
-    O-BK   <font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-    BK-G   <font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-G
-    G-BK   <font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-   BK-BR   <font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-BR
-   BR-BK   <font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-    BK-S   <font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-S
-    S-BK   <font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#111>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-        </div>
-        <div class="divTableCell"><CENTER><FONT SIZE=5><B>YELLOW GROUP</B></FONT></CENTER>
-    Y-BL   <font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-BL
-    BL-Y   <font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-     Y-O   <font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-O
-     O-Y   <font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-     Y-G   <font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-G
-     G-Y   <font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-    Y-BR   <font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-BR
-    BR-Y   <font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
-
-     Y-S   <font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-S
-     S-Y   <font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#e9dc68>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+     R-S   <font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  R-S
+     S-R   <font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#cc2444">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
         </div>
       </div><div class="divTableRow">
-        <div class="divTableCell"><CENTER><FONT SIZE=5><B>VIOLET GROUP</B></FONT></CENTER>
-    V-BL   <font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-BL
-    BL-V   <font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#56a5d7>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+        <div class="divTableCell"><center><font size="5"><b>BLACK GROUP</b></font></center>
+   BK-BL   <font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-BL
+   BL-BK   <font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     V-O   <font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-O
-     O-V   <font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#eb8855>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+    BK-O   <font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-O
+    O-BK   <font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     V-G   <font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-G
-     G-V   <font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#15815c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+    BK-G   <font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-G
+    G-BK   <font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-    V-BR   <font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-BR
-    BR-V   <font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#6e4a44>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+   BK-BR   <font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-BR
+   BR-BK   <font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
 
-     V-S   <font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-S
-     S-V   <font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color=#73629c>▄▄▄▄▄▄</font><font color=#888888>▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+    BK-S   <font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  BK-S
+    S-BK   <font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#111111">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
         </div>
+        <div class="divTableCell"><center><font size="5"><b>YELLOW GROUP</b></font></center>
+    Y-BL   <font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-BL
+    BL-Y   <font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+     Y-O   <font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-O
+     O-Y   <font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+     Y-G   <font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-G
+     G-Y   <font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+    Y-BR   <font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-BR
+    BR-Y   <font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+     Y-S   <font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  Y-S
+     S-Y   <font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#e9dc68">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+        </div>
+      </div><div class="divTableRow">
+        <div class="divTableCell"><center><font size="5"><b>VIOLET GROUP</b></font></center>
+    V-BL   <font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-BL
+    BL-V   <font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#56a5d7">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+     V-O   <font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-O
+     O-V   <font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#eb8855">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+     V-G   <font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-G
+     G-V   <font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#15815c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+    V-BR   <font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-BR
+    BR-V   <font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#6e4a44">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+
+     V-S   <font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎤  V-S
+     S-V   <font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font><font color="#73629c">▄▄▄▄▄▄</font><font color="#888888">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</font> ⎦  Pair
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</small>
-    So when referring to *wire pairs* in the "yellow group", the "Y" is always
-    specified first, e.g. the "Y-S pair" (not the S-Y pair), and the "Y-O pair"
-    (and not the O-Y pair).
+  </small>
+  </span><br>
+  <br>
+  So when referring to *wire pairs* in the "yellow group", the "Y" is always specified first, e.g.<br>
+  the "Y-S pair" (not the S-Y pair), and the "Y-O pair" (and not the O-Y pair).<br>
+  <br>
+  In this document, the Y-S and Y-O pairs in particular are referenced a lot, because they're used by the KSU<br>
+  for Bells and Buzzer respectively, as often the wiring for those needs to be checked and changed.<br>
+  <br>
+</ul>
+<span style="font-size:1.8em;">* * * EDITING: WORK IN PROGRESS * * *</span>
 
-    In this document, the Y-S and Y-O pairs in particular are referenced a lot,
-    because they're used by the KSU for Bells and Buzzer respectively, as often
-    the wiring for those needs to be checked and changed.
-
-* * * EDITING: WORK IN PROGRESS * * *
 <script> AddTitles(); </script>
+</body>
+</html>
