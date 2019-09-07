@@ -253,9 +253,9 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
                         │       ▕╰▒▒────░░░░░░░
                         └─────▶ ▕╭▒▒────░░░░░░░
                                   ▒▒ ╱  ░░░░░░░
-                                 ╱  ╱   ░░░░░░░╲       
+                                 ╱  ╱   ░░░░░░░╲   
                      KSU Board ▁╱  ╱    ░░░░░░░ ╲▁ Backboard
-                                  ╱     ░░░░░░░
+                                  ╱     ░░░░░░░    (fire retardant)
                       Standoffs ▁╱      ░░░░░░░
 
 
@@ -272,8 +272,8 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
                <a href="images/1a2-board-sideview-standoffs.jpg" title="Click for larger image"
                ><img src="images/1a2-board-sideview-standoffs.jpg" noshade 
                style="height: 700px; border: 1px solid black;"></a><br>
-       <b>Figure A2.</b> Side view of actual installation on fire retardant plywood backboard 
-       with yellow rubber standoffs made from an outdoor extension cord.
+       <b>Figure A2.</b> Side view of actual installation on fire retardant plywood
+       backboard with yellow rubber standoffs made from an outdoor extension cord.
    </span>
    NOTE: Use screws in <u>all 7</u> screw mounting hole positions provided. Not just around the corners,<br>
    but the ones in the center as well. Center screws prevent boards from bending when plugging/unplugging<br>
@@ -683,24 +683,40 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     ringing system (bell boxes, etc), then you can turn off /all/ the DIP switches for SW1 and SW2,<br>
     and leave any ring generator connection unconnected.<br>
     <br>
-    Note that for each switch turned on, that enables ringing for a particular line to a particular extension.<br>
-    The first two switches manage Ext 1, the second two switches manage Ext #2, etc. Here's a full breakdown:<br>
+    Note that for each switch turned ON, it enables ringing for a particular line on a particular extension.<br>
+    The first two switches manage the phone on EXT1, the second two manage EXT2, etc. Here's a full breakdown:<br>
     <br>
-    <span class=ascii_art>
-                  Switch #1: ON for ringing Line #1 on Extension #1
-                  Switch #2: ON for ringing Line #2 on Extension #1
+    <span class=ascii_art_small_border>
+                     BELL CALL
 
-                  Switch #1: ON for ringing Line #1 on Extension #2
-                  Switch #2: ON for ringing Line #2 on Extension #2
+                  ┏━━━━━━━━━━━━━┓
+                  ┃   off  on   ┃
+                  ┃  1 ────██   ┃  ◁── Rings EXT1 if call on Line #1           <!-- RIGHT MARGIN SPACE -->
+                  ┃             ┃
+                  ┃  2 ────██   ┃  ◁── Rings EXT1 if call on Line #2
+                  ┃             ┃
+                  ┃  3 ────██   ┃  ◁── Rings EXT2 if call on Line #1
+                  ┃             ┃
+                  ┃  4 ────██   ┃  ◁── Rings EXT2 if call on Line #2
+                  ┃             ┃
+                  ┃  5 ────██   ┃  ◁── Rings EXT3 if call on Line #1
+                  ┃             ┃
+                  ┃  6 ────██   ┃  ◁── Rings EXT3 if call on Line #2
+                  ┃             ┃
+                  ┃  7 ────██   ┃  ◁── Rings EXT4 if call on Line #1
+                  ┃             ┃
+                  ┃  8 ────██   ┃  ◁── Rings EXT4 if call on Line #2
+                  ┃             ┃
+                  ┗━━━━━━━━━━━━━┛
 
-                  Switch #1: ON for ringing Line #1 on Extension #3
-                  Switch #2: ON for ringing Line #2 on Extension #3
-
-                  Switch #1: ON for ringing Line #1 on Extension #4
-                  Switch #2: ON for ringing Line #2 on Extension #4
+                        <B>SW2</B>
     </span>
-    <br>
+    <P>
     This switch arrangement is the same for both SW1 (Buzz Call) and SW2 (Bell Call).<br>
+    Any switch that is "OFF" causes the line/extension combo to not ring.<br>
+    <P>
+    So if you only want Line #1 to ring all extensions, only turn on switches 1,3,5,7.
+    <br>
 </UL>
 <P>
 <a name="Testing"></a>
