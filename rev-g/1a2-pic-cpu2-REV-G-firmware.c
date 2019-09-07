@@ -103,7 +103,8 @@ const long  G_msecs_per_iter = (1000/ITERS_PER_SEC); // #msecs per iter (if ITER
 long        G_powerup_msecs  = 0;                    // counts up from 0 to 10,000 then stops
 long        G_msec           = 0;                    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar       G_porta, G_portb, G_portc;               // 8 bit input sample buffers (once per main loop iter)
-
+volatile char G_buzz_ext     = -1;                   // extension to buzz (-1 for none, 0 for all)
+                                                     // (used by isr() to run buzzer)
 // Initialize debounce struct for rotary input values
 //
 //     'value' range:
@@ -149,6 +150,26 @@ void FlashCpuStatusLED() {
     //      0     150   300   450          1000
     //
     CPU_STATUS_LED = (G_msec <= 150) || (G_msec >= 300 && G_msec <= 450) ? 1 : 0;
+}
+
+// See p.xx of PIC16F1709 data sheet for other values for PS (PreScaler) -erco
+#define PS_256  0b111
+#define PS_128  0b110
+#define PS_64   0b101
+#define PS_32   0b100
+#define PS_16   0b011
+#define PS_8    0b010
+#define PS_4    0b001
+#define PS_2    0b000
+//                 \\\_ PS0 \    Together these are
+//                  \\_ PS1  |-- the PS bits of the
+//                   \_ PS2 /    OPTION_REG.
+
+// Set the timer0 speed (timer0 prescaler value).
+//     'val' must be one of the PS_### macros defined above.
+//
+void SetTimerSpeed(int val) {
+    OPTION_REGbits.PS = val;                 // set PreScaler (PS) value hardware bits
 }
 
 // Initialize PIC chip I/O for REV E board.
@@ -211,6 +232,21 @@ void Init() {
     PORTA = 0x0;
     PORTB = 0x0;
     PORTC = 0x0;
+
+    // ENABLE TIMER0 INTERRUPT TO RUN BUZZER
+    {
+        INTCONbits.GIE        = 1;          // Global Interrupt Enable (GIE)
+        INTCONbits.PEIE       = 1;          // PEripheral Interrupt Enable (PEIE)
+        INTCONbits.TMR0IE     = 1;          // timer 0 Interrupt Enable (IE)
+        INTCONbits.TMR0IF     = 0;          // timer 0 Interrupt Flag (IF)
+        // Configure timer
+        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock
+        OPTION_REGbits.TMR0SE = 0;          // Select Edge (SE) to be rising (0=rising edge, 1=falling edge)
+        OPTION_REGbits.PSA    = 0;          // PreScaler Assignment (PSA) (0=assigned to timer0, 1=not assigned to timer0)
+        // Set timer0 prescaler speed
+        SetTimerSpeed(PS_32);               // Sets prescaler (divisor) to run timer0
+        ei();                               // enable ints last (sets up our isr() function to be called by timer interrupts)
+    }
 }
 
 // Buzz the specified extension number (1 thru 8) at 60Hz
@@ -219,7 +255,7 @@ void Init() {
 //
 void BuzzExtension(int num) {
     static uchar count = 0;
-    uchar bz_60hz = (++count & 2) ? 1 : 0;  // bz is 0|1 changing at ~60hz rate
+    uchar bz_60hz = (++count & 1);      // bz is 0|1 changing at ~60hz rate
 
     if ( num < 0 || num > 10 ) bz_60hz = 0;  // force bz off if ext# outside 1-8 range
 
@@ -234,10 +270,22 @@ void BuzzExtension(int num) {
     EXT8_BUZZ = ( num == 10 || num == 8 ) ? bz_60hz : 0;
 }
 
+// Interrupt service routine
+//     Handles oscillating selected buzzer at hardware controlled rate of speed
+//     This runs at approx 60Hz
+//
+void __interrupt() isr(void) {
+    static char count = 0;          // DEBUG
+    if ( INTCONbits.TMR0IF ) {      // int timer overflow?
+        INTCONbits.TMR0IF = 0;      // clear bit for next overflow
+        BuzzExtension(G_buzz_ext);  // run selected buzzer
+    }
+}
+
 // Reset the rotary counters and deenergize any buzzers
 void RotaryReset(Rotary *r) {
     RotaryInit(r);
-    BuzzExtension(-1);      // all coils off
+    G_buzz_ext = -1;        // all buzzer coils off
 }
 
 // HANDLE ROTARY DIALING ON INTERCOM LINE
@@ -390,11 +438,11 @@ void main(void) {
 
 ***/
         if ( (digit = GetDTMFDigit()) )
-            BuzzExtension(digit);                // DTMF dialed digit? Buzz that extension
+            G_buzz_ext = digit;                // DTMF dialed digit? Buzz that extension
         else if ( (digit = GetRotaryDigit(&rot, &rdeb)) != -1 )
-            BuzzExtension(digit);                // Rotary dialed digit? Buzz that extension
+            G_buzz_ext = digit;                // Rotary dialed digit? Buzz that extension
         else
-            BuzzExtension(-1);                   // ensure buzzer xstrs not left on
+            G_buzz_ext = -1;                   // ensure buzzer xstrs not left on
 
         // Loop delay
         __delay_ms(G_msecs_per_iter);

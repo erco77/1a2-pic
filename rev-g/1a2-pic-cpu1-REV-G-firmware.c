@@ -1,5 +1,6 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 //#define DEBUG 1     // **DISABLE THIS IN FINAL FIRMWARE!!!
+#define FIXED_RINGING   // set for fixed ringing (2sec ring/4sec pause)
 
 /*
  * File:   main.c
@@ -75,6 +76,35 @@
 // In/Out
 #define SYNC_ILINK_OUT LATBbits.LATB6               // RB6[OUT]: pull low when sending sync to "other" cpu
 #define SYNC_ILINK_IN  ((G_portb & 0b01000000)?0:1) // RB6[IN]: low when sync sent by "other" cpu
+// Ring timer
+//
+// FIXED RINGING
+//     This is the repeating pattern used for both lines and occurs
+//     within the L1_ringing_msecs timer countdown sequence.
+//     The pattern counter is reset only on a new ring (when no other ringing
+//     is happening), to keep the ring pattern consistent
+//
+// G_ring_sig_timer:
+//            4000ms 3000ms 2000ms 1000ms 0ms       <-- note this is a countDOWN timer
+//             |......|......|......|......|            so it starts at 4000 and counts down..
+//              ______
+//             |      |
+//             | RING |_____________________
+//
+// The ring result:
+//
+//               1sec   2sec   3sec   4sec   5sec   6sec   7sec
+//             |......|......|......|......|......|......|.....
+//              ______                      ______
+//             |      |                    |      |
+//             | RING |____________________| RING |_________..
+//
+//             :                           :
+//             :<--- RING_SIGNAL_MSECS --->:
+//             :                           :
+
+#define RING_CYCLE_MSECS     6000L                   // #msecs countdown for ring cycle (how long to keep lamps flashing)
+#define RING_SIGNAL_MSECS    4000L                   // #msecs countdown for ring cycle (used for fixed ring timing only)
 
 // This must be #defined before #includes
 #define _XTAL_FREQ 4000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
@@ -113,18 +143,56 @@
 #define ITERS_PER_SEC  250           // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
 // GLOBALS
-const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
+const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
 ulong G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar L1_hold           = 0;         // Line1 HOLD state: 1=call on hold, 0=not on hold
 uchar L2_hold           = 0;         // Line2 HOLD state: 1=call on hold, 0=not on hold
 uint  L1_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
 uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
-ulong L1_ringing_timer  = 0;         // countdown timer in msec
-ulong L2_ringing_timer  = 0;         // countdown timer in msec
+// Ringing Timers
+//     The following two countdown counters reset to 6sec on each ring from telco.
+//     While non-zero, lamps are blinking and RING_GEN_POW is set.
+//
+long  L1_ringing_timer  = 0;         // countdown timer in msec
+long  L2_ringing_timer  = 0;         // countdown timer in msec
+long  G_ring_sig_timer  = 0;         // ring signal timer
+uchar G_buzz_signal     = 0;         // 1 indicates isr() should toggle buzzer
 char  G_hold_flash      = 0;         // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
 char  G_ring_flash      = 0;         // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
 int   G_curr_line       = 0;         // "current line" being worked on. Used by HandleLine() and hardware funcs
 uchar G_porta, G_portb, G_portc;     // 8 bit input sample buffers (once per main loop iter)
+
+// See p.xx of PIC16F1709 data sheet for other values for PS (PreScaler) -erco
+#define PS_256  0b111
+#define PS_128  0b110
+#define PS_64   0b101
+#define PS_32   0b100
+#define PS_16   0b011
+#define PS_8    0b010
+#define PS_4    0b001
+#define PS_2    0b000
+//                 \\\_ PS0 \    Together these are
+//                  \\_ PS1  |-- the PS bits of the
+//                   \_ PS2 /    OPTION_REG.
+
+// Set the timer0 speed (timer0 prescaler value).
+//     'val' must be one of the PS_### macros defined above.
+//
+void SetTimerSpeed(int val) {
+    OPTION_REGbits.PS = val;                 // set PreScaler (PS) value hardware bits
+}
+
+// Interrupt service routine
+//     Handles oscillating BUZZ_RING at hardware controlled rate of speed
+//
+void __interrupt() isr(void) {
+    static char count = 0;
+    if ( INTCONbits.TMR0IF ) {                  // int timer overflow?
+        INTCONbits.TMR0IF = 0;                  // clear bit for next overflow
+        BUZZ_RING = ((++count & 1) && G_buzz_signal) ? 1 : 0;
+                                                // flip oscillator on + off
+    }
+}
 
 // Initialize PIC chip I/O
 void Init() {
@@ -185,6 +253,21 @@ void Init() {
     SLRCONA = 0x0;
     SLRCONB = 0x0;
     SLRCONC = 0x0;
+
+    // ENABLE TIMER0 INTERRUPT TO RUN BUZZER
+    {
+        INTCONbits.GIE        = 1;          // Global Interrupt Enable (GIE)
+        INTCONbits.PEIE       = 1;          // PEripheral Interrupt Enable (PEIE)
+        INTCONbits.TMR0IE     = 1;          // timer 0 Interrupt Enable (IE)
+        INTCONbits.TMR0IF     = 0;          // timer 0 Interrupt Flag (IF)
+        // Configure timer
+        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock
+        OPTION_REGbits.TMR0SE = 0;          // Select Edge (SE) to be rising (0=rising edge, 1=falling edge)
+        OPTION_REGbits.PSA    = 0;          // PreScaler Assignment (PSA) (0=assigned to timer0, 1=not assigned to timer0)
+        // Set timer0 prescaler speed
+        SetTimerSpeed(PS_16);               // Sets prescaler (divisor) to run timer0
+        ei();                               // enable ints last (sets up our isr() function to be called by timer interrupts)
+    }
 }
 
 // Manage the global G_hold_flash variable
@@ -316,14 +399,34 @@ void HandleHoldTimer() {
     }
 }
 
-// Start the 6sec (6000msec) software ringing timer value for current line
+// See if software 6sec ringing timer is running for current line
+int IsRingingTimer() {
+    switch ( G_curr_line ) {
+        case 1: return(L1_ringing_timer ? 1 : 0);
+        case 2: return(L2_ringing_timer ? 1 : 0);
+        default: return 0;    // shouldn't happen
+    }
+}
+
+// See if either line is ringing
+int IsAnyRingingTimer() {
+    return((L1_ringing_timer | L2_ringing_timer) ? 1 : 0);
+}
+
+// Start the 4sec (4000msec) software ringing timer value for current line
 //      This timer keeps lamp flashing between CO rings.
 //      This counts in msec.
 //
 void StartRingingTimer() {
+    // First ring? Reset the fixed ring signal timer.
+    //     We don't want to change the ring cadence /during/ any ringing.
+    //
+    if ( (L1_ringing_timer == 0) && (L2_ringing_timer == 0) ) {
+        G_ring_sig_timer = 0;
+    }
     switch ( G_curr_line ) {
-        case 1: L1_ringing_timer = 6000; return;  // 6000msec == 6sec
-        case 2: L2_ringing_timer = 6000; return;  // 6000msec == 6sec
+        case 1: L1_ringing_timer = RING_CYCLE_MSECS; return;
+        case 2: L2_ringing_timer = RING_CYCLE_MSECS; return;
     }
 }
 
@@ -335,24 +438,39 @@ void StopRingingTimer() {
     }
 }
 
-// See if software 6sec ringing timer is running for current line
-int IsRingingTimer() {
-    switch ( G_curr_line ) {
-        case 1: return(L1_ringing_timer ? 1 : 0);
-        case 2: return(L2_ringing_timer ? 1 : 0);
-        default: return 0;    // shouldn't happen
-    }
-}
-
-// Countdown the 6sec L1/L2 ringing timers if enabled
+// Countdown the ringing timers
+//     Check for underflow and force to 0
+//
 void HandleRingingTimers() {
-    if ( L1_ringing_timer > 0 ) L1_ringing_timer -= G_msecs_per_iter;
-    if ( L2_ringing_timer > 0 ) L2_ringing_timer -= G_msecs_per_iter;
+    if ( L1_ringing_timer ) {
+        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer  = 0;
+        else                                       L1_ringing_timer -= G_msecs_per_iter;
+    } else {
+        // Keep timing the same when not ringing
+        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer = 0;    // nop
+        else                                       L1_ringing_timer = 0;    // nop
+    }
+    if ( L2_ringing_timer ) {
+        if ( L2_ringing_timer < G_msecs_per_iter ) L2_ringing_timer  = 0;
+        else                                       L2_ringing_timer -= G_msecs_per_iter;
+    } else {
+        // Keep timing the same when not ringing
+        if ( L2_ringing_timer < G_msecs_per_iter ) L2_ringing_timer  = 0;   // nop
+        else                                       L2_ringing_timer -= 0;   // nop
+    }
+    G_ring_sig_timer -= G_msecs_per_iter;
+    if ( G_ring_sig_timer < 0 ) G_ring_sig_timer = RING_SIGNAL_MSECS;
 }
 
 // Return the state of the RING_DET optocoupler with noise removed
-int IsRinging(Debounce *d) {
+int IsTelcoRinging(Debounce *d) {
     return (d->value > d->thresh) ? 1 : 0;
+}
+
+// Return 1 if bell/buzzer should be ringing or not based on fixed ringing cadence.
+int IsFixedRinging() {
+    long ringing_mod = (G_ring_sig_timer % (RING_SIGNAL_MSECS+1));
+    return (ringing_mod > (RING_SIGNAL_MSECS-1000)) ? 1 : 0;   // 1 second ring
 }
 
 // Initialize debounce struct for ring detect input
@@ -396,8 +514,8 @@ void RingDetectDebounceInit(Debounce *d) {
 //                                  :                                 :
 //                                  :<-- hits "on" threshold          :<-- hits "off" threshold
 //                                  :                                 :
-//  IsRinging()                      _________________________________
-//      Output:                     |                                 |
+//  IsTelcoRinging():                _________________________________
+//                                  |                                 |
 //             _____________________|                                 |_________
 //
 void HandleRingDetTimers(Debounce *d1, Debounce *d2) {
@@ -533,7 +651,7 @@ void HandleLine(Debounce *rd, Debounce *ad) {
         }
     } else {
         // I: Idle (no line detect)
-        if ( IsRinging(rd) ) {
+        if ( IsTelcoRinging(rd) ) {
             // CO is currently ringing the line?
             // Restart 'line ringing' timer whenever a ring is detected.
             //
@@ -549,10 +667,13 @@ void HandleLine(Debounce *rd, Debounce *ad) {
             //    and let ring relay follow the CO's ringing signal for same cadence.
             //
             StopHoldTimer();
-            //HandleRingingTimer();    // 6sec ringing timer countdown managed in main())
             SetHold(0);
-            SetRing(IsRinging(rd));    // have 1A2 ringing follow debounced CO ringing
-            SetLamp(G_ring_flash);     // flash line lamp at RING rate
+#ifdef FIXED_RINGING
+            SetRing(IsFixedRinging());   // manage ring relay
+#else
+            SetRing(IsTelcoRinging(rd)); // ring follows telco's debounced ringing
+#endif
+            SetLamp(G_ring_flash);       // flash line lamp at RING rate
             return;
         } else {
             // K: Line idle
@@ -580,16 +701,13 @@ void SampleInputs() {
     G_portc = PORTC;
 }
 
-// Run the BUZZ_RING output used to buzz extensions when there's an incoming call
-void HandleBuzzRing(Debounce *d1, Debounce *d2) {
-    static uchar bz_count = 0;
-    // Oscillate BUZZ_RING output if Line#1 or Line#2 ringing
-    if ( IsRinging(d1) || IsRinging(d2) ) {
-        BUZZ_RING = (bz_count & 2) ? 1 : 0;         // run buzzer at a lower freq (~30Hz) for "ringing"
-        ++bz_count;                                 // run our "oscillator" counter
-    } else {
-        BUZZ_RING = 0;                              // don't oscillate if no line ringing
-    }
+// Handle flagging isr() to: toggle BUZZ_RING during ringing (or not)
+void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
+#ifdef FIXED_RINGING
+    G_buzz_signal = IsFixedRinging() ? 1 : 0;
+#else
+    G_buzz_signal = IsTelcoRinging(rd1) || IsTelcoRinging(rd2);
+#endif
 }
 
 //
@@ -629,6 +747,7 @@ void HandleInterlinkSync(char send_sync) {
         char sync = SYNC_ILINK_IN; // Read hardware input: see if "other" cpu sending sync to us
         if ( sending ) {           // Are we still sending output since last iter?
             sending = 0;           // Turn off send flag; no longer sending sync
+//          SYNC_ILINK_OUT = 1;    // Set output hi for signal off      // XXX: when tested, add this
             TRISB = 0b11000000;    // Set RB6 back to INPUT
             WPUB  = 0b11000000;    // Enable 'weak pullup resistors' for all inputs
         } else {
@@ -688,8 +807,8 @@ void main(void) {
         // to verify no false triggers and consistent detection throughout ring bursts.
         // To compare, put scope into dual trace mode, and compare PIC pin #2 <-> #19.
         //
-        HandleRingDetTimers(&ringdet_d1, &ringdet_d2);      // 1
-        G_curr_line = 1; L1_LAMP = IsRinging(&ringdet_d1);  // 2
+        HandleRingDetTimers(&ringdet_d1, &ringdet_d2);           // 1
+        G_curr_line = 1; L1_LAMP = IsTelcoRinging(&ringdet_d1);  // 2
 
         // ENSURE ALL OTHER OUTPUTS REMAIN OFF
         // But send a special flash pattern to L2_LAMP to indicate debug mode
@@ -722,7 +841,7 @@ void main(void) {
         // Manage counting down the 6sec L1/L2 ringing timer
         HandleRingingTimers();
 
-        // Oscillate the BUZZ_RING output
+        // Manage buzz ringing
         HandleBuzzRing(&ringdet_d1, &ringdet_d2);
 
         // Handle logic signals for Line #1 and Line #2
@@ -733,7 +852,7 @@ void main(void) {
         //     This should be 'on' during and between all ringing on L1 or L2,
         //     so we combine the 6sec ringing timers for both lines..
         //
-        RING_GEN_POW = (L1_ringing_timer | L2_ringing_timer) ? 1 : 0;
+        RING_GEN_POW = IsAnyRingingTimer();
 
         // Loop delay
         __delay_ms(G_msecs_per_iter);
