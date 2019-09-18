@@ -85,7 +85,18 @@
 #define SYNC_ILINK_OUT LATBbits.LATB6               // RB6[OUT]: pull low when sending sync to "other" cpu
 #define SYNC_ILINK_IN  ((G_portb & 0b01000000)?0:1) // RB6[IN]: low when sync sent by "other" cpu
 
-// Ring timer
+// Ring timers
+//
+// Terminology:
+//
+//     Ring Cycle: The 6 second timer since last CO ring; while running, line is ringing;
+//                 keeps line lamps flashing and keeps the 1a2 "Ring Sequence" running,
+//                 and keeps the 12V "ring generator power" turned on. There is one per line.
+//
+//     Ring Sequence: The 4 second 1A2 ring sequence; 1 second ring, 3 second pause.
+//                    With fixed cadence ringing, there is one ring sequence timer for all lines,
+//                    so that when more than one line is ringing, they all ring together.
+//
 //
 // FIXED RINGING
 //     This is the repeating pattern used for both lines and occurs
@@ -93,9 +104,9 @@
 //     The pattern counter is reset only on a new ring (when no other ringing
 //     is happening), to keep the ring pattern consistent
 //
-// G_ring_sig_timer:
-//            4000ms 3000ms 2000ms 1000ms 0ms       <-- note this is a countDOWN timer
-//             |......|......|......|......|            so it starts at 4000 and counts down..
+// G_ring_seq_tmr:
+//             0ms    1000ms 2000ms 3000ms 4000ms   <-- note this is a countUP timer..
+//             |......|......|......|......|            ..starts at 0 and counts up.
 //              ______
 //             |      |
 //             | RING |_____________________
@@ -109,11 +120,11 @@
 //             | RING |____________________| RING |_________..
 //
 //             :                           :
-//             :<--- RING_SIGNAL_MSECS --->:
+//             :<---- RING_SEQ_MSECS ----->:
 //             :                           :
 
 #define RING_CYCLE_MSECS     6000L                   // #msecs countdown for ring cycle (how long to keep lamps flashing)
-#define RING_SIGNAL_MSECS    4000L                   // #msecs countdown for ring cycle (used for fixed ring timing only)
+#define RING_SEQ_MSECS       4000L                   // #msecs countdown for ring cycle (used for fixed ring timing only)
 
 // This must be #defined before #includes
 #define _XTAL_FREQ 4000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
@@ -165,7 +176,7 @@ uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer
 //
 TimerMsecs L1_ringing_tmr;             // 6sec ring timer reset by each CO ring. Keeps lamps flashing,
 TimerMsecs L2_ringing_tmr;             // and RING_GEN_POWER activated during ringing.
-long       G_ring_sig_timer  = 0;      // ring signal timer
+TimerMsecs G_ring_seq_tmr;             // 4sec ring sequence timer
 uchar      G_buzz_signal     = 0;      // 1 indicates isr() should toggle buzzer
 char       G_hold_flash      = 0;      // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
 char       G_ring_flash      = 0;      // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
@@ -409,8 +420,8 @@ void HandleHoldTimer() {
     }
 }
 
-// See if software 6sec ringing timer is running for current line
-int IsRingingTimer() {
+// See if current line's 6sec ring cycle timer is running
+int IsRingCycle() {
     switch ( G_curr_line ) {
         case 1: return IsRunning_TimerMsecs(&L1_ringing_tmr);
         case 2: return IsRunning_TimerMsecs(&L2_ringing_tmr);
@@ -419,7 +430,7 @@ int IsRingingTimer() {
 }
 
 // See if either line is ringing
-int IsAnyRingingTimer() {
+int IsAnyLineRinging() {
     return( IsRunning_TimerMsecs(&L1_ringing_tmr) |
             IsRunning_TimerMsecs(&L2_ringing_tmr) );
 }
@@ -434,7 +445,7 @@ void StartRingingTimer() {
     //
     if ( IsStopped_TimerMsecs(&L1_ringing_tmr) &&
          IsStopped_TimerMsecs(&L2_ringing_tmr) ) {
-        G_ring_sig_timer = 0;
+        Set_TimerMsecs(&G_ring_seq_tmr, RING_SEQ_MSECS);
     }
     // Start timer running
     switch ( G_curr_line ) {
@@ -444,10 +455,16 @@ void StartRingingTimer() {
 }
 
 // Stop the 6sec software ringing timer value for current line
+//     Also stops the ring sequence timer if no lines are ringing.
+//
 void StopRingingTimer() {
     switch ( G_curr_line ) {
-        case 1: Stop_TimerMsecs(&L1_ringing_tmr); return;
-        case 2: Stop_TimerMsecs(&L2_ringing_tmr); return;
+        case 1: Stop_TimerMsecs(&L1_ringing_tmr); break;
+        case 2: Stop_TimerMsecs(&L2_ringing_tmr); break;
+    }
+    // Stop 4sec ring sequence timer if no lines are ringing
+    if ( ! IsAnyLineRinging() ) {
+        Stop_TimerMsecs(&G_ring_seq_tmr);
     }
 }
 
@@ -463,8 +480,8 @@ void HandleRingingTimers() {
     if ( Advance_TimerMsecs(&L2_ringing_tmr, G_msecs_per_iter) ) {
         Stop_TimerMsecs(&L2_ringing_tmr);
     }
-    G_ring_sig_timer -= G_msecs_per_iter;
-    if ( G_ring_sig_timer < 0 ) G_ring_sig_timer = RING_SIGNAL_MSECS;
+    // Advance ring sequence timer, auto-restarts to keep looping
+    Advance_TimerMsecs(&G_ring_seq_tmr, G_msecs_per_iter);
 }
 
 // Return the state of the RING_DET optocoupler with noise removed
@@ -474,8 +491,7 @@ int IsTelcoRinging(Debounce *d) {
 
 // Return 1 if bell/buzzer should be ringing or not based on fixed ringing cadence.
 int IsFixedRinging() {
-    long ringing_mod = (G_ring_sig_timer % (RING_SIGNAL_MSECS+1));
-    return (ringing_mod > (RING_SIGNAL_MSECS-1000)) ? 1 : 0;   // 1 second ring
+    return (Get_TimerMsecs(&G_ring_seq_tmr) < 1000) ? 1 : 0;
 }
 
 // Initialize debounce struct for ring detect input
@@ -666,7 +682,7 @@ void HandleLine(Debounce *rd, Debounce *ad) {
         // Keep lamp blinking between rings, have 1A2 ring relay
         // follow the CO's ring cadence.
         //
-        if ( IsRingingTimer() ) {
+        if ( IsRingCycle() ) {
             // J: Line is ringing
             //    Let 6sec ringing counter count down to keep lamp flashing between rings,
             //    and let ring relay follow the CO's ringing signal for same cadence.
@@ -780,6 +796,7 @@ void main(void) {
     // Initialize L1/L2 ring timers
     Init_TimerMsecs(&L1_ringing_tmr);
     Init_TimerMsecs(&L2_ringing_tmr);
+    Init_TimerMsecs(&G_ring_seq_tmr);
 
     RingDetectDebounceInit(&ringdet_d1);
     RingDetectDebounceInit(&ringdet_d2);
@@ -861,7 +878,7 @@ void main(void) {
         //     This should be 'on' during and between all ringing on L1 or L2,
         //     so we combine the 6sec ringing timers for both lines..
         //
-        RING_GEN_POW = IsAnyRingingTimer();
+        RING_GEN_POW = IsAnyLineRinging();
 
         // Loop delay
         __delay_ms(G_msecs_per_iter);
