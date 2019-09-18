@@ -163,8 +163,6 @@ uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer
 //     The following two countdown counters reset to 6sec on each ring from telco.
 //     While non-zero, lamps are blinking and RING_GEN_POW is set.
 //
-//TIMER long  L1_ringing_timer  = 0;          // countdown timer in msec
-//TIMER long  L2_ringing_timer  = 0;          // countdown timer in msec
 TimerMsecs L1_ringing_tmr;             // 6sec ring timer reset by each CO ring. Keeps lamps flashing,
 TimerMsecs L2_ringing_tmr;             // and RING_GEN_POWER activated during ringing.
 long       G_ring_sig_timer  = 0;      // ring signal timer
@@ -414,8 +412,6 @@ void HandleHoldTimer() {
 // See if software 6sec ringing timer is running for current line
 int IsRingingTimer() {
     switch ( G_curr_line ) {
-//TIMER        case 1: return(L1_ringing_timer ? 1 : 0);
-//TIMER        case 2: return(L2_ringing_timer ? 1 : 0);
         case 1: return IsRunning_TimerMsecs(&L1_ringing_tmr);
         case 2: return IsRunning_TimerMsecs(&L2_ringing_tmr);
         default: return 0;    // shouldn't happen
@@ -424,7 +420,6 @@ int IsRingingTimer() {
 
 // See if either line is ringing
 int IsAnyRingingTimer() {
-//TIMER    return((L1_ringing_timer | L2_ringing_timer) ? 1 : 0);
     return( IsRunning_TimerMsecs(&L1_ringing_tmr) |
             IsRunning_TimerMsecs(&L2_ringing_tmr) );
 }
@@ -437,15 +432,12 @@ void StartRingingTimer() {
     // First ring? Reset the fixed ring signal timer.
     //     We don't want to change the ring cadence /during/ any ringing.
     //
-//TIMER    if ( (L1_ringing_timer == 0) && (L2_ringing_timer == 0) ) {
     if ( IsStopped_TimerMsecs(&L1_ringing_tmr) &&
          IsStopped_TimerMsecs(&L2_ringing_tmr) ) {
         G_ring_sig_timer = 0;
     }
     // Start timer running
     switch ( G_curr_line ) {
-//TIMER        case 1: L1_ringing_timer = RING_CYCLE_MSECS; return;
-//TIMER        case 2: L2_ringing_timer = RING_CYCLE_MSECS; return;
         case 1: Set_TimerMsecs(&L1_ringing_tmr, RING_CYCLE_MSECS); return;
         case 2: Set_TimerMsecs(&L2_ringing_tmr, RING_CYCLE_MSECS); return;
     }
@@ -454,8 +446,6 @@ void StartRingingTimer() {
 // Stop the 6sec software ringing timer value for current line
 void StopRingingTimer() {
     switch ( G_curr_line ) {
-//TIMER        case 1: L1_ringing_timer = 0; return;
-//TIMER        case 2: L2_ringing_timer = 0; return;
         case 1: Stop_TimerMsecs(&L1_ringing_tmr); return;
         case 2: Stop_TimerMsecs(&L2_ringing_tmr); return;
     }
@@ -465,14 +455,6 @@ void StopRingingTimer() {
 //     Check for underflow and force to 0
 //
 void HandleRingingTimers() {
-//TIMER    if ( L1_ringing_timer ) {
-//TIMER        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer  = 0;
-//TIMER        else                                       L1_ringing_timer -= G_msecs_per_iter;
-//TIMER    } else {
-//TIMER        // Keep timing the same when not ringing
-//TIMER        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer = 0;    // nop
-//TIMER        else                                       L1_ringing_timer = 0;    // nop
-//TIMER    }
     // Advance L1 timer if running, and stop if timer expired
     if ( Advance_TimerMsecs(&L1_ringing_tmr, G_msecs_per_iter) ) {
         Stop_TimerMsecs(&L1_ringing_tmr);
