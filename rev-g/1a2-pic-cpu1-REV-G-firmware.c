@@ -17,13 +17,18 @@
  *        (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) RING_GEN_POW
  *      L1_A_SENSE (IN) -- RC5  |      | RC0 -- (OUT) L2 HOLD_RLY
  *      L2_A_SENSE (IN) -- RC4  |      | RC1 -- (OUT) BUZZ_RING
- *                    x -- RC3  |      | RC2 -- (OUT) L1_RING_RLY
+ *   SECONDARY_DET (IN) -- RC3  |      | RC2 -- (OUT) L1_RING_RLY
  *     L2_LINE_DET (IN) -- RC6  |      | RB4 -- (OUT) L2_RING_RLY
  * CPU_STATUS_LED (OUT) -- RC7  |      | RB5 -- (OUT) L2_LAMP
  *     L2_RING_DET (IN) -- RB7  |______| RB6 -- (IN/OUT) SYNC_ILINK
  *
  *                         PIC16F1709 / CPU1
- *                               REV G
+ *                           REV G, G1, H
+ *
+ * "REV H" differs from "REV G1" in the following ways:
+ *    > New input SECONDARY_DET on Cpu1/RC3 (currently unused)
+ *    > New input SECONDARY_DET on Cpu2/RA5 (currently unused)
+ *    > New onboard fuse
  *
  * "REV G1" differs from "REV G" in the following ways:
  *    > No impact on software at all
@@ -54,7 +59,7 @@
  *    > HandleDTMF() function removed from CPU1 firmware, moved to CPU2
  */
 
-// REVISION G / CPU1                                    Port(ABC)
+//                                                      Port(ABC)
 //                                   76543210           |Bit# in port
 // Inputs                            ||||||||           ||
 #define L1_A_SENSE     ((G_portc & 0b00100000)?0:1) // RC5: low when A lead engaged (0:1 instead of 1:0 to undo negative logic)
@@ -63,6 +68,8 @@
 #define L2_RING_DET    ((G_portb & 0b10000000)?0:1) // RB7: low on ring detect (0:1 instead of 1:0 to undo negative logic)
 #define L1_LINE_DET    ((G_porta & 0b00010000)?0:1) // RA4: low on line detect (0:1 instead of 1:0 to undo negative logic)
 #define L2_LINE_DET    ((G_portc & 0b01000000)?0:1) // RC6: low on line detect (0:1 instead of 1:0 to undo negative logic)
+#define SECONDARY_DET  ((G_portc & 0b00001000)?0:1) // RC3: detects if card configured as SECONDARY (JP4) [currently unused]
+
 // Outputs
 #define L1_HOLD_RLY    LATAbits.LATA1               // hi puts L1 on hold
 #define L2_HOLD_RLY    LATCbits.LATC0               // hi puts L2 on hold
@@ -73,9 +80,11 @@
 #define L2_LAMP        LATBbits.LATB5               // hi turns on L2's lamp on all extensions
 #define CPU_STATUS_LED LATCbits.LATC7               // hi turns on CPU STATUS led
 #define BUZZ_RING      LATCbits.LATC1               // hi/lo output to buzz phones during incoming calls
+
 // In/Out
 #define SYNC_ILINK_OUT LATBbits.LATB6               // RB6[OUT]: pull low when sending sync to "other" cpu
 #define SYNC_ILINK_IN  ((G_portb & 0b01000000)?0:1) // RB6[IN]: low when sync sent by "other" cpu
+
 // Ring timer
 //
 // FIXED RINGING
@@ -135,6 +144,7 @@
 // PIC hardware includes
 #include <xc.h>                     // our Microchip C compiler (XC8)
 #include "Debounce.h"               // our signal debouncer module
+#include "TimerMsecs.h"             // our TimerMsecs module
 
 // DEFINES
 #define uchar unsigned char
@@ -153,14 +163,16 @@ uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer
 //     The following two countdown counters reset to 6sec on each ring from telco.
 //     While non-zero, lamps are blinking and RING_GEN_POW is set.
 //
-long  L1_ringing_timer  = 0;         // countdown timer in msec
-long  L2_ringing_timer  = 0;         // countdown timer in msec
-long  G_ring_sig_timer  = 0;         // ring signal timer
-uchar G_buzz_signal     = 0;         // 1 indicates isr() should toggle buzzer
-char  G_hold_flash      = 0;         // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
-char  G_ring_flash      = 0;         // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
-int   G_curr_line       = 0;         // "current line" being worked on. Used by HandleLine() and hardware funcs
-uchar G_porta, G_portb, G_portc;     // 8 bit input sample buffers (once per main loop iter)
+//TIMER long  L1_ringing_timer  = 0;          // countdown timer in msec
+//TIMER long  L2_ringing_timer  = 0;          // countdown timer in msec
+TimerMsecs L1_ringing_tmr;             // 6sec ring timer reset by each CO ring. Keeps lamps flashing,
+TimerMsecs L2_ringing_tmr;             // and RING_GEN_POWER activated during ringing.
+long       G_ring_sig_timer  = 0;      // ring signal timer
+uchar      G_buzz_signal     = 0;      // 1 indicates isr() should toggle buzzer
+char       G_hold_flash      = 0;      // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
+char       G_ring_flash      = 0;      // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
+int        G_curr_line       = 0;      // "current line" being worked on. Used by HandleLine() and hardware funcs
+uchar      G_porta, G_portb, G_portc;  // 8 bit input sample buffers (once per main loop iter)
 
 // See p.xx of PIC16F1709 data sheet for other values for PS (PreScaler) -erco
 #define PS_256  0b111
@@ -402,15 +414,19 @@ void HandleHoldTimer() {
 // See if software 6sec ringing timer is running for current line
 int IsRingingTimer() {
     switch ( G_curr_line ) {
-        case 1: return(L1_ringing_timer ? 1 : 0);
-        case 2: return(L2_ringing_timer ? 1 : 0);
+//TIMER        case 1: return(L1_ringing_timer ? 1 : 0);
+//TIMER        case 2: return(L2_ringing_timer ? 1 : 0);
+        case 1: return IsRunning_TimerMsecs(&L1_ringing_tmr);
+        case 2: return IsRunning_TimerMsecs(&L2_ringing_tmr);
         default: return 0;    // shouldn't happen
     }
 }
 
 // See if either line is ringing
 int IsAnyRingingTimer() {
-    return((L1_ringing_timer | L2_ringing_timer) ? 1 : 0);
+//TIMER    return((L1_ringing_timer | L2_ringing_timer) ? 1 : 0);
+    return( IsRunning_TimerMsecs(&L1_ringing_tmr) |
+            IsRunning_TimerMsecs(&L2_ringing_tmr) );
 }
 
 // Start the 4sec (4000msec) software ringing timer value for current line
@@ -421,20 +437,27 @@ void StartRingingTimer() {
     // First ring? Reset the fixed ring signal timer.
     //     We don't want to change the ring cadence /during/ any ringing.
     //
-    if ( (L1_ringing_timer == 0) && (L2_ringing_timer == 0) ) {
+//TIMER    if ( (L1_ringing_timer == 0) && (L2_ringing_timer == 0) ) {
+    if ( IsStopped_TimerMsecs(&L1_ringing_tmr) &&
+         IsStopped_TimerMsecs(&L2_ringing_tmr) ) {
         G_ring_sig_timer = 0;
     }
+    // Start timer running
     switch ( G_curr_line ) {
-        case 1: L1_ringing_timer = RING_CYCLE_MSECS; return;
-        case 2: L2_ringing_timer = RING_CYCLE_MSECS; return;
+//TIMER        case 1: L1_ringing_timer = RING_CYCLE_MSECS; return;
+//TIMER        case 2: L2_ringing_timer = RING_CYCLE_MSECS; return;
+        case 1: Set_TimerMsecs(&L1_ringing_tmr, RING_CYCLE_MSECS); return;
+        case 2: Set_TimerMsecs(&L2_ringing_tmr, RING_CYCLE_MSECS); return;
     }
 }
 
 // Stop the 6sec software ringing timer value for current line
 void StopRingingTimer() {
     switch ( G_curr_line ) {
-        case 1: L1_ringing_timer = 0; return;
-        case 2: L2_ringing_timer = 0; return;
+//TIMER        case 1: L1_ringing_timer = 0; return;
+//TIMER        case 2: L2_ringing_timer = 0; return;
+        case 1: Stop_TimerMsecs(&L1_ringing_tmr); return;
+        case 2: Stop_TimerMsecs(&L2_ringing_tmr); return;
     }
 }
 
@@ -442,21 +465,21 @@ void StopRingingTimer() {
 //     Check for underflow and force to 0
 //
 void HandleRingingTimers() {
-    if ( L1_ringing_timer ) {
-        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer  = 0;
-        else                                       L1_ringing_timer -= G_msecs_per_iter;
-    } else {
-        // Keep timing the same when not ringing
-        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer = 0;    // nop
-        else                                       L1_ringing_timer = 0;    // nop
+//TIMER    if ( L1_ringing_timer ) {
+//TIMER        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer  = 0;
+//TIMER        else                                       L1_ringing_timer -= G_msecs_per_iter;
+//TIMER    } else {
+//TIMER        // Keep timing the same when not ringing
+//TIMER        if ( L1_ringing_timer < G_msecs_per_iter ) L1_ringing_timer = 0;    // nop
+//TIMER        else                                       L1_ringing_timer = 0;    // nop
+//TIMER    }
+    // Advance L1 timer if running, and stop if timer expired
+    if ( Advance_TimerMsecs(&L1_ringing_tmr, G_msecs_per_iter) ) {
+        Stop_TimerMsecs(&L1_ringing_tmr);
     }
-    if ( L2_ringing_timer ) {
-        if ( L2_ringing_timer < G_msecs_per_iter ) L2_ringing_timer  = 0;
-        else                                       L2_ringing_timer -= G_msecs_per_iter;
-    } else {
-        // Keep timing the same when not ringing
-        if ( L2_ringing_timer < G_msecs_per_iter ) L2_ringing_timer  = 0;   // nop
-        else                                       L2_ringing_timer -= 0;   // nop
+    // Advance L2 timer if running, and stop if timer expired
+    if ( Advance_TimerMsecs(&L2_ringing_tmr, G_msecs_per_iter) ) {
+        Stop_TimerMsecs(&L2_ringing_tmr);
     }
     G_ring_sig_timer -= G_msecs_per_iter;
     if ( G_ring_sig_timer < 0 ) G_ring_sig_timer = RING_SIGNAL_MSECS;
@@ -771,6 +794,10 @@ void main(void) {
 
     // Initialize PIC chip
     Init();
+
+    // Initialize L1/L2 ring timers
+    Init_TimerMsecs(&L1_ringing_tmr);
+    Init_TimerMsecs(&L2_ringing_tmr);
 
     RingDetectDebounceInit(&ringdet_d1);
     RingDetectDebounceInit(&ringdet_d2);
