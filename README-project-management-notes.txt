@@ -25,15 +25,38 @@ SAVING GERBERS / ORDERING NEW BOARDS
     * Export the Gerbers:
       File -> Export -> Gerber Export
 
-	    Enable all that aren't grayed out, INCLUDING the "Outline":
+      1) Turn on all layers that are not grayed out.
+      2) Be sure "solder mask offset" for "Pads" is 5.0 mils
 
-		    * top/bot copper      ( #1 + #2 )
-		    * top/bot silk        ( #3 + #4 )
-		    * top/bot solder mask ( #5 + #6 )
-		    * outline             ( #7 )
+      Change all the input fields marked with "***":
 
-	    Set checkbox: "Include frame (board size)". This always seems to clear itself
-	    each time you save, so be sure to set it each time!
+            Layer  (X) C1 Copper Top                                              Options
+                   ***                                                              ( ) Mirror
+                   (X) C2 Copper Bottom                                             ( ) Punch drill holes
+                   ***
+                   (X) S1 Silkscreen Top                                          Offset of solder mask
+                   ***                                                              (X) Pads:      5.0 mil   <--- *** Change this! (Default is 10)
+                   (X) S2 Silkscreen Bottom                                                        ***      
+                   ***                                                              (X) SMD-Pads   3.9 mil
+
+                    :                                                               (X) Others     3.9 mil
+                     
+                   (X) C1 - Solder mask
+                   ***
+                   (X) C2 - Solder mask
+                   ***
+                    :
+
+                   (X) O - Outline
+                   ***
+                   (X) Include frame (board size)      <--- *** Don't miss this one - It keeps turning off by default!
+                   ***
+
+	    > Be sure to set checkbox: "Include frame (board size)". This always seems to clear itself
+	    > each time you save, so be sure to set it each time!
+
+            > 5 mils seems a better solder mask offset than 10. Prevents nearby traces from becoming
+            > soldered to pads, and keeps some mask between all Amphenol connector pads.
 
 	    FOR SURFACE MOUNT RESISTORS: You can leave the "smdmask" turned OFF, as that's only
 	    for generating the metal mask used for solder paste. The few surface mount
@@ -96,7 +119,7 @@ SAVING GERBERS / ORDERING NEW BOARDS
         V. 1a2-REV-XX-bom.txt
         ---------------------
         1) Options -> Component Panel
-        2) For "Show:", enable Number, Layer, Package, Comment
+        2) For "Show:", enable Number, ID, Value, Package, Comment
         3) Click "Export" button
         4) In dialog:
 
