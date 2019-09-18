@@ -1,6 +1,6 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
 //#define DEBUG 1     // **DISABLE THIS IN FINAL FIRMWARE!!!
-#define FIXED_RINGING   // set for fixed ringing (2sec ring/4sec pause)
+#define FIXED_RINGING   // set for fixed ringing (1sec ring/3sec pause)
 
 /*
  * File:   main.c
@@ -99,10 +99,8 @@
 //
 //
 // FIXED RINGING
-//     This is the repeating pattern used for both lines and occurs
-//     within the L1_ringing_msecs timer countdown sequence.
-//     The pattern counter is reset only on a new ring (when no other ringing
-//     is happening), to keep the ring pattern consistent
+//     A constant regenerated ring pattern is used for the 1A2 extension's bells
+//     to ensure a consistent pattern of ringing when more than one line rings at once.
 //
 // G_ring_seq_tmr:
 //             0ms    1000ms 2000ms 3000ms 4000ms   <-- note this is a countUP timer..
@@ -123,8 +121,8 @@
 //             :<---- RING_SEQ_MSECS ----->:
 //             :                           :
 
-#define RING_CYCLE_MSECS     6000L                   // #msecs countdown for ring cycle (how long to keep lamps flashing)
-#define RING_SEQ_MSECS       4000L                   // #msecs countdown for ring cycle (used for fixed ring timing only)
+#define RING_CYCLE_MSECS     6000L                   // #msecs count for ring cycle (how long to keep lamps flashing)
+#define RING_SEQ_MSECS       4000L                   // #msecs count for ring sequence (used for FIXED_RINGING)
 
 // This must be #defined before #includes
 #define _XTAL_FREQ 4000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
@@ -168,11 +166,10 @@ const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITER
 ulong G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar L1_hold           = 0;         // Line1 HOLD state: 1=call on hold, 0=not on hold
 uchar L2_hold           = 0;         // Line2 HOLD state: 1=call on hold, 0=not on hold
-uint  L1_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
-uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
+uint  L1_hold_timer     = 0;         // count timer for hold sense. 0: timer disabled, >=1 timer running
+uint  L2_hold_timer     = 0;         // count timer for hold sense. 0: timer disabled, >=1 timer running
 // Ringing Timers
-//     The following two countdown counters reset to 6sec on each ring from telco.
-//     While non-zero, lamps are blinking and RING_GEN_POW is set.
+//     These keep lamps flashing, bells ringing, and RING_GEN_POW enabled during entire ring cycle.
 //
 TimerMsecs L1_ringing_tmr;             // 6sec ring timer reset by each CO ring. Keeps lamps flashing,
 TimerMsecs L2_ringing_tmr;             // and RING_GEN_POWER activated during ringing.
@@ -402,7 +399,7 @@ int IsHoldTimer() {
     }
 }
 
-// Manage counting down software hold timers (if enabled) for current line.
+// Manage counting hold timers (if enabled) for current line.
 //     Since we count down in msecs, make sure we reach exactly zero.
 //
 void HandleHoldTimer() {
@@ -440,8 +437,8 @@ int IsAnyLineRinging() {
 //      This counts in msec.
 //
 void StartRingingTimer() {
-    // First ring? Reset the fixed ring signal timer.
-    //     We don't want to change the ring cadence /during/ any ringing.
+    // First ring? Reset the ring sequence timer.
+    //     Don't reset if another line already ringing.
     //
     if ( IsStopped_TimerMsecs(&L1_ringing_tmr) &&
          IsStopped_TimerMsecs(&L2_ringing_tmr) ) {
@@ -468,8 +465,8 @@ void StopRingingTimer() {
     }
 }
 
-// Countdown the ringing timers
-//     Check for underflow and force to 0
+// Advance ringing timers
+//     Check for expirations and stop.
 //
 void HandleRingingTimers() {
     // Advance L1 timer if running, and stop if timer expired
@@ -649,12 +646,12 @@ void HandleLine(Debounce *rd, Debounce *ad) {
                     return;
                 }
 
-                // Count down hold timer
+                // Count hold timer
                 HandleHoldTimer();
 
                 // Watch for hold condition when timer expires
                 if ( IsHoldTimer() ) {     // HOLD timer still running?
-                    //HandleHoldTimer();   // timer countdown handled in main()
+                    //HandleHoldTimer();   // timer handled in main()
                     StopRingingTimer();
                     SetHold(0);            // no HOLD relay yet until verified
                     SetRing(0);            // not ringing
@@ -684,7 +681,7 @@ void HandleLine(Debounce *rd, Debounce *ad) {
         //
         if ( IsRingCycle() ) {
             // J: Line is ringing
-            //    Let 6sec ringing counter count down to keep lamp flashing between rings,
+            //    Let 6sec ringing counter count to keep lamp flashing between rings,
             //    and let ring relay follow the CO's ringing signal for same cadence.
             //
             StopHoldTimer();
@@ -861,10 +858,10 @@ void main(void) {
         // Manage the A lead inputs
         HandleALeadDebounce(&a_lead_d1, &a_lead_d2);
 
-        // Manage counting down the 1/10sec L1/L2_ringdet_timer each iter.
+        // Manage counting the 1/10sec L1/L2_ringdet_timer each iter.
         HandleRingDetTimers(&ringdet_d1, &ringdet_d2);
 
-        // Manage counting down the 6sec L1/L2 ringing timer
+        // Manage counting the ring related counters
         HandleRingingTimers();
 
         // Manage buzz ringing
