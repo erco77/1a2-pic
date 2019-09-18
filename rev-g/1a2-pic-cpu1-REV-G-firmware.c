@@ -163,11 +163,11 @@
 
 // GLOBALS
 const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
-ulong G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
-uchar L1_hold           = 0;         // Line1 HOLD state: 1=call on hold, 0=not on hold
-uchar L2_hold           = 0;         // Line2 HOLD state: 1=call on hold, 0=not on hold
-uint  L1_hold_timer     = 0;         // count timer for hold sense. 0: timer disabled, >=1 timer running
-uint  L2_hold_timer     = 0;         // count timer for hold sense. 0: timer disabled, >=1 timer running
+ulong      G_msec            = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+TimerMsecs L1_hold_tmr;                // timer for hold sense
+TimerMsecs L2_hold_tmr;                // timer for hold sense
+uchar      L1_hold           = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
+uchar      L2_hold           = 0;      // Line2 HOLD state: 1=call on hold, 0=not on hold
 // Ringing Timers
 //     These keep lamps flashing, bells ringing, and RING_GEN_POW enabled during entire ring cycle.
 //
@@ -376,15 +376,15 @@ void SetLamp(char val) {
 // Start the 1/20sec (50msecs) software hold timer value for current line.
 void StartHoldTimer() {
     switch ( G_curr_line ) {
-        case 1: L1_hold_timer = 50; return;
-        case 2: L2_hold_timer = 50; return;
+        case 1: Set_TimerMsecs(&L1_hold_tmr, 50); return;
+        case 2: Set_TimerMsecs(&L2_hold_tmr, 50); return;
     }
 }
 
 void StopHoldTimer() {
     switch ( G_curr_line ) {
-        case 1: L1_hold_timer = 0; return;
-        case 2: L2_hold_timer = 0; return;
+        case 1: Stop_TimerMsecs(&L1_hold_tmr); return;
+        case 2: Stop_TimerMsecs(&L2_hold_tmr); return;
     }
 }
 
@@ -393,27 +393,27 @@ void StopHoldTimer() {
 //
 int IsHoldTimer() {
     switch ( G_curr_line ) {
-        case 1: return(L1_hold_timer ? 1 : 0);
-        case 2: return(L2_hold_timer ? 1 : 0);
+        case 1: return IsRunning_TimerMsecs(&L1_hold_tmr);
+        case 2: return IsRunning_TimerMsecs(&L2_hold_tmr);
         default: return 0;   // shouldn't happen
     }
 }
 
-// Manage counting hold timers (if enabled) for current line.
-//     Since we count down in msecs, make sure we reach exactly zero.
+// Manage counting one-shot hold timers (if enabled) for current line.
+//     Stop timer when it expires.
 //
 void HandleHoldTimer() {
     switch ( G_curr_line ) {
         case 1:
-            L1_hold_timer = ( L1_hold_timer > G_msecs_per_iter)
-                                ? (L1_hold_timer - G_msecs_per_iter)
-                                : 0;
-            return;
+            if ( Advance_TimerMsecs(&L1_hold_tmr, G_msecs_per_iter) ) {
+                Stop_TimerMsecs(&L1_hold_tmr);
+            }
+            break;
         case 2:
-            L2_hold_timer = ( L2_hold_timer > G_msecs_per_iter)
-                                ? (L2_hold_timer - G_msecs_per_iter)
-                                : 0;
-            return;
+            if ( Advance_TimerMsecs(&L2_hold_tmr, G_msecs_per_iter) ) {
+                Stop_TimerMsecs(&L2_hold_tmr);
+            }
+            break;
     }
 }
 
