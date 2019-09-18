@@ -21,7 +21,7 @@
  *      EXT1 BUZZ (OUT) -- RB7  |______| RB6 -- (IN) DTMF 'a'
  *
  *                         PIC16F1709 / CPU2
- *                               REV-G
+ *                           REV G, G1, H
  *
  */
 
@@ -34,19 +34,19 @@
 #define DTMF_c         ((G_portb & 0b00010000)?1:0) // RB4: data bit 'c' from MT8870 of which dial button pressed
 #define DTMF_d         ((G_portc & 0b00000100)?1:0) // RC2: data bit 'd' from MT8870 of which dial button pressed
 #define ROTARY_PULSE   ((G_portc & 0b00000010)?1:0) // RC1: rotary pulse
+#define SECONDARY_DET  ((G_porta & 0b00100000)?1:0) // RA5: detects if card configured as SECONDARY (JP4) [currently unused]
 
 // Outputs
-#define CPU_STATUS_LED LATCbits.LATC4               // RC4: hi to turn LED on
-
-#define EXT1_BUZZ      LATBbits.LATB7               // hi to turn EXT1 buzzer on
-#define EXT2_BUZZ      LATCbits.LATC7               // hi to turn EXT2 buzzer on
-#define EXT3_BUZZ      LATCbits.LATC6               // hi to turn EXT3 buzzer on
-#define EXT4_BUZZ      LATCbits.LATC3               // hi to turn EXT4 buzzer on
-
-#define EXT5_BUZZ      LATCbits.LATC0               // hi to turn EXT5 buzzer on
-#define EXT6_BUZZ      LATAbits.LATA2               // hi to turn EXT6 buzzer on
-#define EXT7_BUZZ      LATAbits.LATA1               // hi to turn EXT7 buzzer on
-#define EXT8_BUZZ      LATAbits.LATA0               // hi to turn EXT8 buzzer on
+#define CPU_STATUS_LED LATCbits.LATC4               // RC4: hi to turn LED on     __
+#define EXT1_BUZZ      LATBbits.LATB7               // hi to turn EXT1 buzzer on    |
+#define EXT2_BUZZ      LATCbits.LATC7               // hi to turn EXT2 buzzer on    |__ EXT 1-4
+#define EXT3_BUZZ      LATCbits.LATC6               // hi to turn EXT3 buzzer on    |   PRIMARY
+#define EXT4_BUZZ      LATCbits.LATC3               // hi to turn EXT4 buzzer on  __|
+                                                    //                            __
+#define EXT5_BUZZ      LATCbits.LATC0               // hi to turn EXT5 buzzer on    |
+#define EXT6_BUZZ      LATAbits.LATA2               // hi to turn EXT6 buzzer on    |__ EXT 5-8
+#define EXT7_BUZZ      LATAbits.LATA1               // hi to turn EXT7 buzzer on    |   SECONDARY
+#define EXT8_BUZZ      LATAbits.LATA0               // hi to turn EXT8 buzzer on  __|
 
 // This must be #defined before #includes
 #define _XTAL_FREQ 8000000UL        // system oscillator speed in HZ (__delay_ms() needs this)

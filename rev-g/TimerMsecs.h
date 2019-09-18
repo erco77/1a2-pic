@@ -4,6 +4,9 @@
 //
 // TimerMsecs -- A generic count-up auto-resetting timer
 //
+//     VERS DATE       AUTHOR
+//     1.00 09/17/2019 erco@seriss.com
+//
 
 // Struct to manage each counter
 typedef struct {
@@ -21,14 +24,14 @@ inline void Init_TimerMsecs(TimerMsecs *t) {
 
 // Start timer, set count
 inline void Set_TimerMsecs(TimerMsecs *t, long val) {
-    t->max   = val;     // set max
-    t->msecs = 0;       // zero counter
-    t->run   = 1;       // start running
+    t->max   = val; // set max
+    t->msecs = 0;   // zero counter
+    t->run   = 1;   // start running
 }
 
 // Stop timer, set count
 inline void Stop_TimerMsecs(TimerMsecs *t) {
-    t->run   = 0;       // stop
+    t->run   = 0;   // stop
     t->msecs = 0;
 }
 
