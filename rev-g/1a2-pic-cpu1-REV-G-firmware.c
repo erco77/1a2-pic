@@ -162,8 +162,8 @@
 #define ITERS_PER_SEC  250           // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
 // GLOBALS
-const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
-ulong      G_msec            = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+const int  G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
+uint       G_msec            = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 TimerMsecs L1_hold_tmr;                // timer for hold sense
 TimerMsecs L2_hold_tmr;                // timer for hold sense
 uchar      L1_hold           = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
@@ -765,7 +765,7 @@ void HandleInterlinkSync(char send_sync) {
         char sync = SYNC_ILINK_IN; // Read hardware input: see if "other" cpu sending sync to us
         if ( sending ) {           // Are we still sending output since last iter?
             sending = 0;           // Turn off send flag; no longer sending sync
-//          SYNC_ILINK_OUT = 1;    // Set output hi for signal off      // XXX: when tested, add this
+            SYNC_ILINK_OUT = 1;    // Set output hi for signal off      // XXX: when tested, add this
             TRISB = 0b11000000;    // Set RB6 back to INPUT
             WPUB  = 0b11000000;    // Enable 'weak pullup resistors' for all inputs
         } else {

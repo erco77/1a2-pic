@@ -96,13 +96,13 @@ typedef struct {
     uchar digit;       // rotary digit dialed
     int   on_msecs;    // #msecs debounced rotary detector was "on"
     int   off_msecs;   // #msecs debounced rotary detector was "off"
-    long  buzz_msecs;  // counts how long to run buzzer after rotary dialing an extension
+    int   buzz_msecs;  // counts how long to run buzzer after rotary dialing an extension
 } Rotary;
 
 // GLOBALS
-const long  G_msecs_per_iter = (1000/ITERS_PER_SEC); // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
-long        G_powerup_msecs  = 0;                    // counts up from 0 to 10,000 then stops
-long        G_msec           = 0;                    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+const int   G_msecs_per_iter = (1000/ITERS_PER_SEC); // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
+int         G_powerup_msecs  = 0;                    // counts up from 0 to 10,000 then stops
+int         G_msec           = 0;                    // counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar       G_porta, G_portb, G_portc;               // 8 bit input sample buffers (once per main loop iter)
 volatile char G_buzz_ext     = -1;                   // extension to buzz (-1 for none, 0 for all)
                                                      // (used by isr() to run buzzer)
@@ -429,7 +429,7 @@ void main(void) {
         //                   |  <---pulse--->  |      |                 |
         //        _-_-_-_-_-_|                 |-_-_-_|                 |-_-_-_-_-_-
         //
-        static long G_iters = 0;                 // number of main loop iters. wraps to zero every ITERS_PER_SEC.
+        static int  G_iters = 0;                 // number of main loop iters. wraps to zero every ITERS_PER_SEC.
         int is_rotary_pulse = DebounceNoisyInput(&rdeb, ROTARY_PULSE);
         LATBbits.LATB7      = is_rotary_pulse;   // B7(pin 10): clean version of ROTARY_PULSE
         LATAbits.LATA4      = G_iters & 1;       // A4(pin  3): on/off each iter

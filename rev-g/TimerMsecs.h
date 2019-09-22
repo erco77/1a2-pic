@@ -10,9 +10,9 @@
 
 // Struct to manage each counter
 typedef struct {
-    int run;        // 1:counter running, 0: counter stopped (won't Advance if run=0)
-    long max;       // value for timer to run out when reached
-    long msecs;     // running timer (in msecs)
+    char run;       // 1:counter running, 0: counter stopped (won't Advance if run=0)
+    int  max;       // value for timer to run out when reached
+    int  msecs;     // running timer (in msecs)
 } TimerMsecs;
 
 // Initialize timer to being stopped and zeroed
@@ -23,7 +23,7 @@ inline void Init_TimerMsecs(TimerMsecs *t) {
 }
 
 // Start timer, set count
-inline void Set_TimerMsecs(TimerMsecs *t, long val) {
+inline void Set_TimerMsecs(TimerMsecs *t, int val) {
     t->max   = val; // set max
     t->msecs = 0;   // zero counter
     t->run   = 1;   // start running
@@ -46,7 +46,7 @@ inline int IsRunning_TimerMsecs(TimerMsecs *t) {
 }
 
 // Return current timer value in msecs
-inline long Get_TimerMsecs(TimerMsecs *t) {
+inline int Get_TimerMsecs(TimerMsecs *t) {
     return t->msecs;
 }
 
@@ -56,7 +56,7 @@ inline long Get_TimerMsecs(TimerMsecs *t) {
 //     0 - max NOT reached (or timer stopped)
 //
 inline int Advance_TimerMsecs(TimerMsecs *t,            // timer to adjust
-                              long msecs) {             // #msecs to advance counter
+                              int msecs) {              // #msecs to advance counter
     if ( ! t->run ) return 0;
     if ( (t->msecs += msecs) < t->max ) {
         // not at max yet, return 0
