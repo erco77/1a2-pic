@@ -143,8 +143,8 @@
 #define ITERS_PER_SEC  250           // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
 // GLOBALS
-const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
-ulong G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+const int G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
+uint  G_msec            = 0;         // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 uchar L1_hold           = 0;         // Line1 HOLD state: 1=call on hold, 0=not on hold
 uchar L2_hold           = 0;         // Line2 HOLD state: 1=call on hold, 0=not on hold
 uint  L1_hold_timer     = 0;         // countdown timer for hold sense. 0: timer disabled, >=1 timer running
@@ -153,9 +153,9 @@ uint  L2_hold_timer     = 0;         // countdown timer for hold sense. 0: timer
 //     The following two countdown counters reset to 6sec on each ring from telco.
 //     While non-zero, lamps are blinking and RING_GEN_POW is set.
 //
-long  L1_ringing_timer  = 0;         // countdown timer in msec
-long  L2_ringing_timer  = 0;         // countdown timer in msec
-long  G_ring_sig_timer  = 0;         // ring signal timer
+int   L1_ringing_timer  = 0;         // countdown timer in msec
+int   L2_ringing_timer  = 0;         // countdown timer in msec
+int   G_ring_sig_timer  = 0;         // ring signal timer
 uchar G_buzz_signal     = 0;         // 1 indicates isr() should toggle buzzer
 char  G_hold_flash      = 0;         // changes at lamp hold flash rate of 2Hz, 80% duty cycle (1=lamp on, 0=off)
 char  G_ring_flash      = 0;         // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
@@ -469,7 +469,7 @@ int IsTelcoRinging(Debounce *d) {
 
 // Return 1 if bell/buzzer should be ringing or not based on fixed ringing cadence.
 int IsFixedRinging() {
-    long ringing_mod = (G_ring_sig_timer % (RING_SIGNAL_MSECS+1));
+    int ringing_mod = (G_ring_sig_timer % (RING_SIGNAL_MSECS+1));
     return (ringing_mod > (RING_SIGNAL_MSECS-1000)) ? 1 : 0;   // 1 second ring
 }
 
