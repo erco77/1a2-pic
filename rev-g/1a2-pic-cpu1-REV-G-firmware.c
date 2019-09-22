@@ -655,7 +655,7 @@ void HandleLine(Debounce *rd, Debounce *ad) {
             // CO is currently ringing the line?
             // Restart 'line ringing' timer whenever a ring is detected.
             //
-            StartRingingTimer();             // Start 6sec ring timer
+            StartRingingTimer();           // Start 6sec ring timer
         }
         // Line has incoming call, either ringing or between rings.
         // Keep lamp blinking between rings, have 1A2 ring relay
@@ -669,11 +669,11 @@ void HandleLine(Debounce *rd, Debounce *ad) {
             StopHoldTimer();
             SetHold(0);
 #ifdef FIXED_RINGING
-            SetRing(IsFixedRinging());   // manage ring relay
+            SetRing(IsFixedRinging());     // manage ring relay
 #else
-            SetRing(IsTelcoRinging(rd)); // ring follows telco's debounced ringing
+            SetRing(IsTelcoRinging(rd));   // ring follows telco's debounced ringing
 #endif
-            SetLamp(G_ring_flash);       // flash line lamp at RING rate
+            SetLamp(G_ring_flash);         // flash line lamp at RING rate
             return;
         } else {
             // K: Line idle
@@ -681,9 +681,9 @@ void HandleLine(Debounce *rd, Debounce *ad) {
             //
             StopHoldTimer();
             StopRingingTimer();
-            SetHold(0);          // disable HOLD relay
-            SetRing(0);          // disable ringing
-            SetLamp(0);          // lamp off
+            SetHold(0);                    // disable HOLD relay
+            SetRing(0);                    // disable ringing
+            SetLamp(IsALead(ad) ? 1 : 0);  // Keep lamp lit if A LEAD (prevent flash during rotary)
             return;
         }
     }
