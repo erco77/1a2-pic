@@ -162,8 +162,8 @@
 #define ITERS_PER_SEC  250           // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 
 // GLOBALS
-const long G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
-ulong      G_msec            = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
+const int  G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
+uint       G_msec            = 0;      // Millisec counter; counts up from 0 to 1000, steps by G_msecs_per_iter, wraps to zero.
 TimerMsecs L1_hold_tmr;                // timer for hold sense
 TimerMsecs L2_hold_tmr;                // timer for hold sense
 uchar      L1_hold           = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
