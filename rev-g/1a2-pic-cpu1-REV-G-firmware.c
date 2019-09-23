@@ -156,14 +156,17 @@
 
 // DEFINES
 #define uchar unsigned char
-#define ITERS_PER_SEC  250          // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
+#define uint  unsigned int
+#define ITERS_PER_SEC    250        // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
+#define TIMER1_ITER_WAIT (31250/ITERS_PER_SEC)
+                                    // What Timer1 counts up to every iteration
 
 // GLOBALS
 const int  G_msecs_per_iter = (1000/ITERS_PER_SEC);  // #msecs per iter (if ITERS_PER_SEC=125, this is 8. If 250, 4)
 TimerMsecs    L1_hold_tmr;             // timer for L1 hold sense
 TimerMsecs    L2_hold_tmr;             // timer for L2 hold sense
-uchar         L1_hold        = 0;      // Line1 HOLD state: 1=call on hold, 0=not on hold
-uchar         L2_hold        = 0;      // Line2 HOLD state: 1=call on hold, 0=not on hold
+uchar         L1_hold = 0;             // Line1 HOLD state: 1=call on hold, 0=not on hold
+uchar         L2_hold = 0;             // Line2 HOLD state: 1=call on hold, 0=not on hold
 // Ringing Timers
 //     These keep lamps flashing, bells ringing, and RING_GEN_POW enabled during entire ring cycle.
 //
@@ -189,13 +192,6 @@ uchar      G_porta, G_portb, G_portc;  // 8 bit input sample buffers (once per m
 //                 \\\_ PS0 \    Together these are
 //                  \\_ PS1  |-- the PS bits of the
 //                   \_ PS2 /    OPTION_REG.
-
-// Set the timer0 speed (timer0 prescaler value).
-//     'val' must be one of the PS_### macros defined above.
-//
-void SetTimerSpeed(int val) {
-    OPTION_REGbits.PS = val;                 // set PreScaler (PS) value hardware bits
-}
 
 // Interrupt service routine
 //     Handles oscillating BUZZ_RING at hardware controlled rate of speed
@@ -280,7 +276,7 @@ void Init() {
         OPTION_REGbits.TMR0SE = 0;          // Select Edge (SE) to be rising (0=rising edge, 1=falling edge)
         OPTION_REGbits.PSA    = 0;          // PreScaler Assignment (PSA) (0=assigned to timer0, 1=not assigned to timer0)
         // Set timer0 prescaler speed
-        SetTimerSpeed(PS_16);               // Sets prescaler (divisor) to run timer0
+        OPTION_REGbits.PS = PS_16;          // Sets prescaler (divisor) to run timer0
         ei();                               // enable ints last (sets up our isr() function to be called by timer interrupts)
     }
 
@@ -289,8 +285,48 @@ void Init() {
     //    of the main while() loop.
     //
     {
-        // I YAM HERE
+        PIE1bits.TMR1IE     = 0;            // timer1 Interrupt DISABLE (IE)
+        PIR1bits.TMR1IF     = 0;            // timer1 Interrupt Flag (IF)
+
+        // See pp.254 for "tmr1 control register"
+        // See pp.256 for "summary of regs associated with tmr1"
+        //
+        //         _________ TMR1CS<1>      // \__ Clock Source. LFINTOSC == "Low Freq Internal Oscillator"
+        //        | ________ TMR1CS<0>      // /   11=LFINTOSC(31kHz), 01=Fosc, 00=Fosc/4
+        //        || _______ T1CKPS<1>      // \__ Prescaler:
+        //        ||| ______ T1CKPS<0>      // /   11=1:8, 10=1:4, 01=1:2, 00=1:1
+        //        |||| _____ T1OSCEN        //  LP Oscillator: 1=enable, 0=disable
+        //        ||||| ____ T1SYNC         //  0:sync async clock in w/Fosc, 1=don't
+        //        |||||| ___ x              // unused
+        //        ||||||| __ TMR1ON         // 1=enable TMR1, 0=disable
+        //        ||||||||
+        T1CON = 0b11000101;
     }
+}
+
+// Reset the timer to zero
+inline void ResetTimer1() {
+    // Stop timer before writing to it
+    T1CONbits.TMR1ON = 0;
+
+    // Write new values to TMR1H/TMR1L
+    TMR1H = 0;
+    TMR1L = 0;
+
+    // Start timer again
+    T1CONbits.TMR1ON = 1;
+}
+
+// Return the upcounting TMR1 counter as a 16bit unsigned value
+//   (We use TMR1 as a free running timer to time the main loop delay)
+//
+inline uint GetTimer1() {
+    int hi, lo;
+    do {
+        hi = TMR1H;
+        lo = TMR1L;
+    } while(hi != TMR1H);     // read 2nd time to check timer for wrap
+    return (hi << 8) | lo;
 }
 
 // Manage the global G_hold_flash variable
@@ -752,7 +788,7 @@ void HandleInterlinkSync() {
     //      sync: ______________________________________________      ______________________________
     //                                                          ______
     //                                                           SYNC
-    //
+    //                                                           (once every 4 secs)
     static char sending  = 0;
     static char lastsync = 0;
 
@@ -815,6 +851,8 @@ void main(void) {
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
+        // Reset main loop timer
+        ResetTimer1();
 
         // Sample input ports all at once
         SampleInputs();
@@ -853,7 +891,9 @@ void main(void) {
         //
         RING_GEN_POW = IsAnyLineRinging();
 
-        // Loop delay
-        __delay_ms(G_msecs_per_iter);
+        // LOOP DELAY: Wait on hardware timer for iteration delay
+        //             This gives accurate main loop iters, no matter speed of code execution
+        //
+        while ( GetTimer1() < TIMER1_ITER_WAIT ) { }        // wait until timer reaches iter timer count
     }
 }
