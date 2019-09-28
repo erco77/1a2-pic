@@ -158,7 +158,8 @@
 #define uchar unsigned char
 #define uint  unsigned int
 #define ITERS_PER_SEC    250        // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
-#define TIMER1_ITER_WAIT (31250/ITERS_PER_SEC)
+#define TIMER1_FREQ      31250      // timer1 counts per second
+#define TIMER1_ITER_WAIT (TIMER1_FREQ/ITERS_PER_SEC)
                                     // What Timer1 counts up to every iteration
 
 // GLOBALS
@@ -179,6 +180,8 @@ char       G_hold_flash      = 0;      // changes at lamp hold flash rate of 2Hz
 char       G_ring_flash      = 0;      // changes at lamp ring flash rate of 1Hz, 50% duty cycle (1=lamp on, 0=off)
 int        G_curr_line       = 0;      // "current line" being worked on. Used by HandleLine() and hardware funcs
 uchar      G_porta, G_portb, G_portc;  // 8 bit input sample buffers (once per main loop iter)
+uint       G_timer1_cnt      = 0;      // running value of main loop Timer1
+uint       G_iter            = 1;      // iteration counter (1-250)
 
 // See p.xx of PIC16F1709 data sheet for other values for PS (PreScaler) -erco
 #define PS_256  0b111
@@ -291,30 +294,39 @@ void Init() {
         // See pp.254 for "tmr1 control register"
         // See pp.256 for "summary of regs associated with tmr1"
         //
-        //         _________ TMR1CS<1>      // \__ Clock Source. LFINTOSC == "Low Freq Internal Oscillator"
-        //        | ________ TMR1CS<0>      // /   11=LFINTOSC(31kHz), 01=Fosc, 00=Fosc/4
-        //        || _______ T1CKPS<1>      // \__ Prescaler:
-        //        ||| ______ T1CKPS<0>      // /   11=1:8, 10=1:4, 01=1:2, 00=1:1
-        //        |||| _____ T1OSCEN        //  LP Oscillator: 1=enable, 0=disable
-        //        ||||| ____ T1SYNC         //  0:sync async clock in w/Fosc, 1=don't
-        //        |||||| ___ x              // unused
-        //        ||||||| __ TMR1ON         // 1=enable TMR1, 0=disable
+        //         _________ TMR1CS<1>   \__ Clock Source. LFINTOSC == "Low Freq Internal Oscillator"
+        //        | ________ TMR1CS<0>   /   11=LFINTOSC(31kHz), 01=Fosc, 00=Fosc/4
+        //        || _______ T1CKPS<1>   \__ Prescaler:
+        //        ||| ______ T1CKPS<0>   /   11=1:8, 10=1:4, 01=1:2, 00=1:1
+        //        |||| _____ T1OSCEN     LP Oscillator: 1=enable, 0=disable
+        //        ||||| ____ T1SYNC      0:sync async clock in w/Fosc, 1=don't
+        //        |||||| ___ x           unused
+        //        ||||||| __ TMR1ON      1=enable TMR1, 0=disable
         //        ||||||||
         T1CON = 0b11000101;
     }
 }
 
-// Reset the timer to zero
-inline void ResetTimer1() {
+// Set main loop timer1 to specific value
+inline void SetTimer1(uint val) {
     // Stop timer before writing to it
     T1CONbits.TMR1ON = 0;
 
     // Write new values to TMR1H/TMR1L
-    TMR1H = 0;
-    TMR1L = 0;
+    TMR1H = (val >> 8);
+    TMR1L = val & 0xff;
 
     // Start timer again
     T1CONbits.TMR1ON = 1;
+}
+
+// Reset main loop timer1 to zero
+//    Also resets G_timer1_cnt and G_iter
+//
+inline void ResetTimer1() {
+    SetTimer1(0);
+    G_timer1_cnt = 0;     // adjust G_timer1_cnt
+    G_iter       = 1;     // adjust iter counter
 }
 
 // Return the upcounting TMR1 counter as a 16bit unsigned value
@@ -340,25 +352,27 @@ inline uint GetTimer1() {
 void HandleHoldFlash() {
     // HOLD WINK: 2Hz 80% DUTY CYCLE
     //
-    //      0msec               500msec          900ms 1000msec
-    //      :             400ms   :               :    :
-    //      :               :     :               :    :
-    //       _______________       _______________      _____ _ _ _ ON
-    //      |       A       |     |      B        |    |
-    // _____|               |_____|               |____|            OFF
-    //      :               :                          :
-    //      :<------------->:<--->:                    :
-    //      :      80%        20% :                    :
-    //      :                     :                    :
-    //      :<------------------->:                    :
-    //      :       1/2 sec                            :
-    //      :                                          :
-    //      :<---------------------------------------->:
+    //      0               12500 15625           28125 31250
+    //      :               :     :               :     :
+    //      0sec            400ms 500msec         900ms 1000msec
+    //      :               :     :               :     :
+    //       _______________       _______________       _____ _ _ _ ON
+    //      |      "A"      |     |      "B"      |     |
+    // _____|               |_____|               |_____|            OFF
+    //      :               :                           :
+    //      :<------------->:<--->:                     :
+    //      :      80%        20% :                     :
+    //      :                     :                     :
+    //      :<------------------->:                     :
+    //      :       1/2 sec                             :
+    //      :                                           :
+    //      :<----------------------------------------->:
     //                           1 sec
     //
-    int msec     = Get_TimerMsecs(&G_int_tmr) % 1000;    // 0..3999 -> 0..999
-    G_hold_flash = (msec <= 400 ) ||                     // A on time: 0-400
-                   (msec >= 500 && msec <= 900) ? 1 : 0; // B on time: 500-900
+    int count = G_timer1_cnt % TIMER1_FREQ;
+    G_hold_flash = (count <= 12500) ||                // "A"
+                   (count >= 15625 && count <= 28125) // "B"
+		   ? 1 : 0;
 }
 
 // Manage the global G_ring_flash variable.
@@ -372,6 +386,8 @@ void HandleHoldFlash() {
 void HandleRingFlash() {
     // RING FLASH: 1Hz 50% DUTY CYCLE
     //
+    //      0        15625    31250
+    //      :        :        :
     //      0ms      500ms    1000ms
     //      :        :        :
     //       ________          ________ 
@@ -383,14 +399,14 @@ void HandleRingFlash() {
     //      :<--------------->:
     //            1 sec
     //
-    int msec     = Get_TimerMsecs(&G_int_tmr) % 1000;   // 0..3999 -> 0..999
-    G_ring_flash = (msec <= 500) ? 1 : 0;
+    int count = G_timer1_cnt % TIMER1_FREQ;
+    G_ring_flash = (count <= 15625) ? 1 : 0;
 }
 
 // Flash the CPU STATUS led once per second
 void FlashCpuStatusLED() {
-    int msec     = Get_TimerMsecs(&G_int_tmr) % 1000;   // 0..3999 -> 0..999
-    CPU_STATUS_LED = (msec <= 500) ? 1 : 0;             // CPU1: Blinks LED at 1Hz, 50% duty
+    int count      = G_timer1_cnt % TIMER1_FREQ;
+    CPU_STATUS_LED = (count <= 15625) ? 1 : 0;
 }
 
 // Change the hardware state of current line's HOLD_RLY
@@ -481,6 +497,13 @@ int IsAnyLineRinging() {
 //      This counts in msec.
 //
 void StartRingingTimer() {
+    // See if first ring
+    //    If so, reset interrupter so first 1a2 ring happens now.
+    //
+    if ( IsStopped_TimerMsecs(&L1_ringing_tmr) &&
+         IsStopped_TimerMsecs(&L2_ringing_tmr) ) {
+        Set_TimerMsecs(&G_int_tmr, 4000);  // restart timer
+    }
     // Start 6sec ringing timer running
     switch ( G_curr_line ) {
         case 1: Set_TimerMsecs(&L1_ringing_tmr, RING_CYCLE_MSECS); return;
@@ -764,60 +787,30 @@ void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
 //
 // Manage the sync signal between two CPUs on different boards over interlink.
 //
-//   A sync signal is sent whenever the G_int_tmr starts, telling the "other board"
-//   to adjust its G_int_tmr count to match ours.
-//
-//   We need to keep the interrupters in sync on both boards so that ringing,
-//   lamp flashing, etc. are all synchronized.
-//
-//   If this signal is sent at the same time by both boards, it will be ignored,
-//   which is OK because that means the timers are already synchronized, so no loss.
-//   We're only interested in signals that happen sooner than ours,
-//   so the slower cpu always keeps up with the faster one.
-//
-void HandleInterlinkSync() {
-    // Send a sync signal during the last 3 iters of the G_int_tmr:
-    //
-    //               0ms         1000ms      2000ms      3000ms 3976 0ms         1000ms      2000ms
-    //               :           :           :           :      :    :           :           :
-    //               
-    // G_int_tmr: ___|_______________________________________________|_____________________________
-    //
-    //      iter:  _|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|
-    //
-    //      sync: ______________________________________________      ______________________________
-    //                                                          ______
-    //                                                           SYNC
-    //                                                           (once every 4 secs)
+void HandleInterlinkSync(int send_sync) {
     static char sending  = 0;
     static char lastsync = 0;
 
-    const int sync_start = 
-        RING_SEQ_MSECS - (G_msecs_per_iter * 3);        // sync signal is 3 iters long
-    if ( Get_TimerMsecs(&G_int_tmr) >= sync_start ) {   // sync during last 3 iters of timer
-        // SEND SYNC
+    if ( send_sync ) {
+        sending = 1;               // Indicate for next iter we're sending sync
         TRISB = 0b10000000;        // Change RB6 to be OUTPUT
         WPUB  = 0b10000000;        // Enable 'weak pullup resistors' for all inputs
-        SYNC_ILINK_OUT = 0;        // Set output low to send signal, leave low
-        sending        = 1;        // Flag we're sending sync
+        SYNC_ILINK_OUT = 0;        // Set output low to send signal, leave low for full iter
     } else {
-        if ( sending ) {           // was sending, now not?
-            // First iter after send finished?
-            //     If so, switch hardware to input and skip this iter to let hardware recover
-            //
-            SYNC_ILINK_OUT = 1;    // Set output hi for signal off
-            TRISB = 0b11000000;    // Set RB6 back to INPUT
-            WPUB  = 0b11000000;    // Enable 'weak pullup resistors' for all inputs
-            sending = 0;           // no longer sending
-            lastsync = 1;          // assume normal condition of high
-            return;                // skip this iter to allow hardware to recover
+        char sync = SYNC_ILINK_IN; // Read hardware input: see if "other" cpu sending sync to us
+        if ( sending ) {           // Are we still sending output since last iter?
+            sending = 0;           // Turn off send flag; no longer sending sync
+            sync    = 1;           // force sync hi (idle)
+            SYNC_ILINK_OUT = 1;    // Set output hi for signal off      // XXX: when tested, add this
+            TRISB   = 0b11000000;  // Set RB6 back to INPUT
+            WPUB    = 0b11000000;  // Enable 'weak pullup resistors' for all inputs
+        } else {
+            if ( sync == 0 && lastsync == 1 ) {
+                // Reset hardware timer
+                ResetTimer1();
+            }
         }
-        // CHECK FOR RISING SYNC FROM REMOTE
-        char sync = SYNC_ILINK_IN;             // Read hardware input: see if "other" cpu sending sync to us
-        if ( sync == 1 && lastsync == 0 ) {    // rising edge? reset to zero
-            Set_TimerMsecs(&G_int_tmr, 4000);  // restart timer
-        }
-        lastsync = sync;
+        lastsync = sync;           // keep track of state between iters (to detect edge)
     }
 }
 
@@ -825,6 +818,8 @@ void HandleInterlinkSync() {
 // to the large diagram in README--REV-X--logic-diagram.txt file.
 //
 void main(void) {
+    uint timer1_wait;
+
     // Ring detect debounce/hysteresis struct
     Debounce ringdet_d1, ringdet_d2;
 
@@ -847,18 +842,30 @@ void main(void) {
     ALeadDebounceInit(&a_lead_d1);
     ALeadDebounceInit(&a_lead_d2);
 
+    // Start hardware timer1 at zero
+    ResetTimer1();
+
     // Loop at ITERS_PER_SEC
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
-        // Reset main loop timer
-        ResetTimer1();
+        // Take snapshot of timer1, reset timer if reaches 1sec count.
+        //    G_timer1_cnt is the time base for all flashing, ringing, etc.
+        //
+        if ( (G_timer1_cnt = GetTimer1()) > TIMER1_FREQ ) {
+            ResetTimer1();
+            G_timer1_cnt = 0;
+            G_iter       = 1;
+            HandleInterlinkSync(1);
+        } else {
+            HandleInterlinkSync(0);
+        }
+
+        // Determine timer count to wait for
+        timer1_wait = G_iter * 125;             // 125*250=31250
 
         // Sample input ports all at once
         SampleInputs();
-
-        // Send/recv sync signal (if another interlinked board present)
-        HandleInterlinkSync();
 
         // Keep CPU STATUS lamp flashing
         FlashCpuStatusLED();
@@ -894,6 +901,9 @@ void main(void) {
         // LOOP DELAY: Wait on hardware timer for iteration delay
         //             This gives accurate main loop iters, no matter speed of code execution
         //
-        while ( GetTimer1() < TIMER1_ITER_WAIT ) { }        // wait until timer reaches iter timer count
+        while ( GetTimer1() < timer1_wait ) { }        // wait until timer reaches iter timer count
+
+        // Wrap iteration counter
+        if ( ++G_iter > ITERS_PER_SEC ) G_iter = 1;
     }
 }
