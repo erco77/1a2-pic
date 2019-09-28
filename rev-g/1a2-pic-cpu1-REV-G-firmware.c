@@ -1,5 +1,4 @@
 // vim: autoindent tabstop=8 shiftwidth=4 expandtab softtabstop=4
-#define FIXED_RINGING   // set for fixed ringing (1sec ring/3sec pause)
 
 /*
  * File:   main.c
@@ -121,7 +120,7 @@
 //             :                           :
 
 #define RING_CYCLE_MSECS     6000   // #msecs count for ring cycle (how long to keep lamps flashing)
-#define RING_SEQ_MSECS       4000   // #msecs count for ring sequence (used for FIXED_RINGING)
+#define RING_SEQ_MSECS       4000   // #msecs count for ring sequence (used for fixed cadence ringing)
 
 // This must be #defined before #includes
 #define _XTAL_FREQ 4000000UL        // system oscillator speed in HZ (__delay_ms() needs this)
@@ -349,19 +348,45 @@ inline uint GetTimer1() {
 //     at the "on HOLD" rate of 2Hz, 80% duty cycle.
 //     This variable will be 0 for lamp off, 1 for lamp on.
 //
-void HandleHoldFlash() {
-    // HOLD WINK: 2Hz 80% DUTY CYCLE
+inline void HandleHoldFlash() {
+/// // HOLD WINK: 2Hz 80% DUTY CYCLE
+/// //
+/// //      0               12500 15625           28125 31250
+/// //      :               :     :               :     :
+/// //      0sec            400ms 500msec         900ms 1000msec
+/// //      :               :     :               :     :
+/// //       _______________       _______________       _____ _ _ _ ON
+/// //      |      "A"      |     |      "B"      |     |
+/// // _____|               |_____|               |_____|            OFF
+/// //      :               :                           :
+/// //      :<------------->:<--->:                     :
+/// //      :      80%        20% :                     :
+/// //      :                     :                     :
+/// //      :<------------------->:                     :
+/// //      :       1/2 sec                             :
+/// //      :                                           :
+/// //      :<----------------------------------------->:
+/// //                           1 sec
+/// //
+/// int count = G_timer1_cnt % TIMER1_FREQ;
+/// G_hold_flash = (count <= 12500) ||                // "A"
+///                (count >= 15625 && count <= 28125) // "B"
+///                ? 1 : 0;
+
+
+    // We want any interlink sync trimming to happen during
+    // the long on-time, and not the short off-time.
     //
-    //      0               12500 15625           28125 31250
-    //      :               :     :               :     :
-    //      0sec            400ms 500msec         900ms 1000msec
-    //      :               :     :               :     :
-    //       _______________       _______________       _____ _ _ _ ON
-    //      |      "A"      |     |      "B"      |     |
-    // _____|               |_____|               |_____|            OFF
-    //      :               :                           :
-    //      :<------------->:<--->:                     :
-    //      :      80%        20% :                     :
+    //      0     3125            15625 18750           31250
+    //      :     :               :     :               :
+    //      0sec  100ms           500ms 600ms           1000msec
+    //      :     :               :     :               :
+    //     _       _______________       _______________       _____ _ _ _ ON
+    //      |     |      "A"      |     |      "B"      |     |
+    //      |_____|               |_____|               |_____|            OFF
+    //      :     :               :                     :
+    //      :<--->:<------------->:                     :
+    //      : 20%       80%       :                     :
     //      :                     :                     :
     //      :<------------------->:                     :
     //      :       1/2 sec                             :
@@ -370,9 +395,9 @@ void HandleHoldFlash() {
     //                           1 sec
     //
     int count = G_timer1_cnt % TIMER1_FREQ;
-    G_hold_flash = (count <= 12500) ||                // "A"
-                   (count >= 15625 && count <= 28125) // "B"
-		   ? 1 : 0;
+    G_hold_flash = (count <= 3125) ||                 // "A"
+                   (count >= 15625 && count <= 18750) // "B"
+                   ? 0 : 1;
 }
 
 // Manage the global G_ring_flash variable.
@@ -404,13 +429,13 @@ void HandleRingFlash() {
 }
 
 // Flash the CPU STATUS led once per second
-void FlashCpuStatusLED() {
+inline void FlashCpuStatusLED() {
     int count      = G_timer1_cnt % TIMER1_FREQ;
     CPU_STATUS_LED = (count <= 15625) ? 1 : 0;
 }
 
 // Change the hardware state of current line's HOLD_RLY
-void SetHold(char val) {
+inline void SetHold(char val) {
     switch ( G_curr_line ) {
         case 1: L1_HOLD_RLY = val; L1_hold = val; return;
         case 2: L2_HOLD_RLY = val; L2_hold = val; return;
@@ -418,7 +443,7 @@ void SetHold(char val) {
 }
 
 // Change the hardware state of current line's RING_RLY
-void SetRing(char val) {
+inline void SetRing(char val) {
     switch ( G_curr_line ) {
         case 1: L1_RING_RLY = val; return;
         case 2: L2_RING_RLY = val; return;
@@ -426,7 +451,7 @@ void SetRing(char val) {
 }
 
 // Change the hardware state of current line's LAMP
-void SetLamp(char val) {
+inline void SetLamp(char val) {
     switch ( G_curr_line ) {
         case 1: L1_LAMP = val; return;
         case 2: L2_LAMP = val; return;
@@ -434,14 +459,14 @@ void SetLamp(char val) {
 }
 
 // Start the 1/20sec (50msecs) software hold timer value for current line.
-void StartHoldTimer() {
+inline void StartHoldTimer() {
     switch ( G_curr_line ) {
         case 1: Set_TimerMsecs(&L1_hold_tmr, 50); return;
         case 2: Set_TimerMsecs(&L2_hold_tmr, 50); return;
     }
 }
 
-void StopHoldTimer() {
+inline void StopHoldTimer() {
     switch ( G_curr_line ) {
         case 1: Stop_TimerMsecs(&L1_hold_tmr); return;
         case 2: Stop_TimerMsecs(&L2_hold_tmr); return;
@@ -451,7 +476,7 @@ void StopHoldTimer() {
 // Is 1/20sec hold timer running?
 //    Returns the state of current line's 1/20sec hold timer
 //
-int IsHoldTimer() {
+inline int IsHoldTimer() {
     switch ( G_curr_line ) {
         case 1: return IsRunning_TimerMsecs(&L1_hold_tmr);
         case 2: return IsRunning_TimerMsecs(&L2_hold_tmr);
@@ -462,23 +487,23 @@ int IsHoldTimer() {
 // Manage counting one-shot hold timers (if enabled) for current line.
 //     Stop timer when it expires.
 //
-void HandleHoldTimer() {
+inline void HandleHoldTimer() {
     switch ( G_curr_line ) {
         case 1:
             if ( Advance_TimerMsecs(&L1_hold_tmr, G_msecs_per_iter) ) {
                 Stop_TimerMsecs(&L1_hold_tmr);
             }
-            break;
+            return;
         case 2:
             if ( Advance_TimerMsecs(&L2_hold_tmr, G_msecs_per_iter) ) {
                 Stop_TimerMsecs(&L2_hold_tmr);
             }
-            break;
+            return;
     }
 }
 
 // See if current line's 6sec ring cycle timer is running
-int IsRingCycle() {
+inline int IsRingCycle() {
     switch ( G_curr_line ) {
         case 1: return IsRunning_TimerMsecs(&L1_ringing_tmr);
         case 2: return IsRunning_TimerMsecs(&L2_ringing_tmr);
@@ -487,7 +512,7 @@ int IsRingCycle() {
 }
 
 // See if either line is ringing
-int IsAnyLineRinging() {
+inline int IsAnyLineRinging() {
     return( IsRunning_TimerMsecs(&L1_ringing_tmr) |
             IsRunning_TimerMsecs(&L2_ringing_tmr) );
 }
@@ -496,7 +521,7 @@ int IsAnyLineRinging() {
 //      This timer keeps lamp flashing between CO rings.
 //      This counts in msec.
 //
-void StartRingingTimer() {
+inline void StartRingingTimer() {
     // See if first ring
     //    If so, reset interrupter so first 1a2 ring happens now.
     //
@@ -514,7 +539,7 @@ void StartRingingTimer() {
 // Stop the 6sec software ringing timer value for current line
 //     Also stops the ring sequence timer if no lines are ringing.
 //
-void StopRingingTimer() {
+inline void StopRingingTimer() {
     switch ( G_curr_line ) {
         case 1: Stop_TimerMsecs(&L1_ringing_tmr); break;
         case 2: Stop_TimerMsecs(&L2_ringing_tmr); break;
@@ -524,7 +549,7 @@ void StopRingingTimer() {
 // Advance ringing timers
 //     Check for expirations and stop.
 //
-void HandleRingingTimers() {
+inline void HandleRingingTimers() {
     // Advance L1 timer if running, and stop if timer expired
     if ( Advance_TimerMsecs(&L1_ringing_tmr, G_msecs_per_iter) ) {
         Stop_TimerMsecs(&L1_ringing_tmr);
@@ -538,12 +563,12 @@ void HandleRingingTimers() {
 }
 
 // Return the state of the RING_DET optocoupler with noise removed
-int IsTelcoRinging(Debounce *d) {
+inline int IsTelcoRinging(Debounce *d) {
     return (d->value > d->thresh) ? 1 : 0;
 }
 
 // Return 1 if bell/buzzer should be ringing or not based on fixed ringing cadence.
-int IsFixedRinging() {
+inline int IsFixedRinging() {
     return (Get_TimerMsecs(&G_int_tmr) < 1000) ? 1 : 0;
 }
 
@@ -558,7 +583,7 @@ int IsFixedRinging() {
 //                       0 ____/
 //
 //
-void RingDetectDebounceInit(Debounce *d) {
+inline void RingDetectDebounceInit(Debounce *d) {
     d->value      = 0;
     d->max_value  = 30;
     d->on_thresh  = 20;
@@ -592,7 +617,7 @@ void RingDetectDebounceInit(Debounce *d) {
 //                                  |                                 |
 //             _____________________|                                 |_________
 //
-void HandleRingDetTimers(Debounce *d1, Debounce *d2) {
+inline void HandleRingDetTimers(Debounce *d1, Debounce *d2) {
     DebounceNoisyInput(d1, L1_RING_DET);
     DebounceNoisyInput(d2, L2_RING_DET);
 }
@@ -608,7 +633,7 @@ void HandleRingDetTimers(Debounce *d1, Debounce *d2) {
 //                       0 ____/
 //
 //
-void ALeadDebounceInit(Debounce *d) {
+inline void ALeadDebounceInit(Debounce *d) {
     d->value      = 0;
     d->max_value  = 10;
     d->on_thresh  = 7;
@@ -616,7 +641,7 @@ void ALeadDebounceInit(Debounce *d) {
     d->thresh     = d->on_thresh;
 }
 
-void HandleALeadDebounce(Debounce *d1, Debounce *d2) {
+inline void HandleALeadDebounce(Debounce *d1, Debounce *d2) {
     DebounceNoisyInput(d1, L1_A_SENSE);
     DebounceNoisyInput(d2, L2_A_SENSE);
 }
@@ -625,7 +650,7 @@ void HandleALeadDebounce(Debounce *d1, Debounce *d2) {
 //     Returns 1 when current is flowing through Tip/Ring, indicating
 //     the line is in use; either with an active call, or call on HOLD.
 //
-int IsLineDetect() {
+inline int IsLineDetect() {
     switch ( G_curr_line ) {
         case 1: return(L1_LINE_DET ? 1 : 0);
         case 2: return(L2_LINE_DET ? 1 : 0);
@@ -634,7 +659,7 @@ int IsLineDetect() {
 }
 
 // Returns 1 if call is currently on hold, 0 if not
-int IsHold() {
+inline int IsHold() {
     switch ( G_curr_line ) {
         case 1: return(L1_hold); // TODO: try reading hardware state (L1_HOLD_RLY)
         case 2: return(L2_hold);
@@ -643,7 +668,7 @@ int IsHold() {
 }
 
 // Returns 1 if A Lead is engaged
-int IsALead(Debounce *d) {
+inline int IsALead(Debounce *d) {
     return (d->value > d->thresh) ? 1 : 0;
 }
 
@@ -742,11 +767,7 @@ void HandleLine(Debounce *rd, Debounce *ad) {
             //
             StopHoldTimer();
             SetHold(0);
-#ifdef FIXED_RINGING
             SetRing(IsFixedRinging());   // manage ring relay
-#else
-            SetRing(IsTelcoRinging(rd)); // ring follows telco's debounced ringing
-#endif
             SetLamp(G_ring_flash);       // flash line lamp at RING rate
             return;
         } else {
@@ -768,7 +789,7 @@ void HandleLine(Debounce *rd, Debounce *ad) {
 //     We then do bit tests on these buffered values, to avoid multiple
 //     hardware reads throughout execution to avoid sampling parallax.
 //
-void SampleInputs() {
+inline void SampleInputs() {
     // Buffer the hardware input states
     G_porta = PORTA;
     G_portb = PORTB;
@@ -776,12 +797,8 @@ void SampleInputs() {
 }
 
 // Handle flagging isr() to: toggle BUZZ_RING during ringing (or not)
-void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
-#ifdef FIXED_RINGING
+inline void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
     G_buzz_signal = IsFixedRinging() ? 1 : 0;
-#else
-    G_buzz_signal = IsTelcoRinging(rd1) || IsTelcoRinging(rd2);
-#endif
 }
 
 //
@@ -790,27 +807,29 @@ void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
 void HandleInterlinkSync(int send_sync) {
     static char sending  = 0;
     static char lastsync = 0;
+    char sync;
 
     if ( send_sync ) {
-        sending = 1;               // Indicate for next iter we're sending sync
-        TRISB = 0b10000000;        // Change RB6 to be OUTPUT
-        WPUB  = 0b10000000;        // Enable 'weak pullup resistors' for all inputs
-        SYNC_ILINK_OUT = 0;        // Set output low to send signal, leave low for full iter
+        sending        = 1;          // Indicate for next iter we're sending sync
+        TRISB          = 0b10000000; // Change RB6 to be OUTPUT
+        WPUB           = 0b10000000; // Enable 'weak pullup resistors' for all inputs
+        SYNC_ILINK_OUT = 0;          // Set output low to send signal, leave low for full iter
+        lastsync       = 1;          // force lastsync hi (idle/normal)
     } else {
-        char sync = SYNC_ILINK_IN; // Read hardware input: see if "other" cpu sending sync to us
-        if ( sending ) {           // Are we still sending output since last iter?
-            sending = 0;           // Turn off send flag; no longer sending sync
-            sync    = 1;           // force sync hi (idle)
-            SYNC_ILINK_OUT = 1;    // Set output hi for signal off      // XXX: when tested, add this
-            TRISB   = 0b11000000;  // Set RB6 back to INPUT
-            WPUB    = 0b11000000;  // Enable 'weak pullup resistors' for all inputs
-        } else {
-            if ( sync == 0 && lastsync == 1 ) {
-                // Reset hardware timer
-                ResetTimer1();
-            }
+        if ( sending ) {             // Are we still sending output since last iter?
+            sending  = 0;            // Turn off send flag; no longer sending sync
+            lastsync = 1;            // force lastsync hi (idle/normal)
+////        SYNC_ILINK_OUT = 1;      // Set output hi for signal off      // XXX: when tested, add this
+            TRISB    = 0b11000000;   // Set RB6 back to INPUT
+            WPUB     = 0b11000000;   // Enable 'weak pullup resistors' for all inputs
+            return;
         }
-        lastsync = sync;           // keep track of state between iters (to detect edge)
+        sync = SYNC_ILINK_IN;        // Snapshot sync input from remote
+        if ( sync == 0 && lastsync == 1 ) { // falling edge of sync from remote?
+            // Reset hardware timer
+            ResetTimer1();
+        }
+        lastsync = sync;             // keep track of state between iters (to detect edge)
     }
 }
 
@@ -818,7 +837,7 @@ void HandleInterlinkSync(int send_sync) {
 // to the large diagram in README--REV-X--logic-diagram.txt file.
 //
 void main(void) {
-    uint timer1_wait;
+    uint timer1_wait = 0;
 
     // Ring detect debounce/hysteresis struct
     Debounce ringdet_d1, ringdet_d2;
@@ -852,7 +871,7 @@ void main(void) {
         // Take snapshot of timer1, reset timer if reaches 1sec count.
         //    G_timer1_cnt is the time base for all flashing, ringing, etc.
         //
-        if ( (G_timer1_cnt = GetTimer1()) > TIMER1_FREQ ) {
+        if ( (G_timer1_cnt = GetTimer1()) >= TIMER1_FREQ ) {
             ResetTimer1();
             G_timer1_cnt = 0;
             G_iter       = 1;
