@@ -23,38 +23,27 @@
  *                         PIC16F1709 / CPU1
  *                           REV G, G1, H
  *
- * "REV H" differs from "REV G1" in the following ways:
- *    > New input SECONDARY_DET on Cpu1/RC3 (currently unused)
- *    > New input SECONDARY_DET on Cpu2/RA5 (currently unused)
- *    > New onboard fuse
+ *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      Copyright (C) 2019 Seriss Corporation.
  *
- * "REV G1" differs from "REV G" in the following ways:
- *    > No impact on software at all
- *    > Added TIP125 surge suppression diodes D22-D25
- *    > Change surface mount resistors to through hole (SMT annoying to solder)
- *    > Repositioned R25, R26, and R28 (changed to R27) for easier soldering/lead trimming
- *    > Swapped component numbers for R28 <-> R27: regional sequential numbering
- *    > Moved C7 next to C5 + C6 for easier assembly
- *    > Moved JP5 to left of EXT1 for cable clearence
- *    > Increased INTERLINK connector pad size for *solder side only* (more surface area for soldering)
- *    > Increased overall pad size for JP3 & 4 (more surface area for soldering)
- *    > Slight enlarge of LED holes to allow red status leds to flush mount
- *    > Added extra pad holes for 60/1W and 300/1W resistors
+ *      This program is free software; you can redistribute it and/or modify
+ *      it under the terms of the GNU General Public License as published by
+ *      the Free Software Foundation; either version 2 of the License, or
+ *      (at your option) any later version.
  *
- * "REV G" differs from "REV F" in the following ways:
- *    > REV G added 'SYNC' I/O signal to allow two boards to keep their
- *      flashing signals in sync (Hold + Ring Flash). Mostly an INPUT,
- *      briefly switches to output to send short sync signal to "other" cpu.
- *      This ensures "slower" cpu autosyncs itself to "faster" one.
- *      See UpdateInterlinkSync() function for complete implementation.
- *    > LED through holes enlarged slightly allowing red CPU LEDs to flush mount
- *    > Some traces moved around for clearance issues, but no electrical changes
- * 
- * "REV F" differs from "REV E" in the following ways:
- *    > REV F now has two PIC chips; CPU1 and CPU2, each with separate firmware
- *    > CPU1 handles logic same as REV E's single CPU, but no longer handles MT8870 signals
- *    > CPU2 handles MT8870 signals and rotary dial counting
- *    > HandleDTMF() function removed from CPU1 firmware, moved to CPU2
+ *      This program is distributed in the hope that it will be useful,
+ *      but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *      GNU General Public License for more details.
+ *
+ *      You should have received a copy of the GNU General Public License
+ *      along with this program; if not, write to the Free Software
+ *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *
+ * For the GPL license, see COPYING in the top level directory.
+ * For board revisions, see REVISIONS in the top level directory.
+ *
  */
 
 //                                                      Port(ABC)
@@ -81,7 +70,7 @@
 
 // In/Out
 #define SYNC_ILINK_OUT LATBbits.LATB6               // RB6[OUT]: pull low when sending sync to "other" cpu
-#define SYNC_ILINK_IN  ((G_portb & 0b01000000)?0:1) // RB6[IN]: low when sync sent by "other" cpu
+#define SYNC_ILINK_IN  ((G_portb & 0b01000000)?1:0) // RB6[IN]: low when sync sent by "other" cpu
 
 // Ring timers
 //
@@ -349,31 +338,6 @@ inline uint GetTimer1() {
 //     This variable will be 0 for lamp off, 1 for lamp on.
 //
 inline void HandleHoldFlash() {
-/// // HOLD WINK: 2Hz 80% DUTY CYCLE
-/// //
-/// //      0               12500 15625           28125 31250
-/// //      :               :     :               :     :
-/// //      0sec            400ms 500msec         900ms 1000msec
-/// //      :               :     :               :     :
-/// //       _______________       _______________       _____ _ _ _ ON
-/// //      |      "A"      |     |      "B"      |     |
-/// // _____|               |_____|               |_____|            OFF
-/// //      :               :                           :
-/// //      :<------------->:<--->:                     :
-/// //      :      80%        20% :                     :
-/// //      :                     :                     :
-/// //      :<------------------->:                     :
-/// //      :       1/2 sec                             :
-/// //      :                                           :
-/// //      :<----------------------------------------->:
-/// //                           1 sec
-/// //
-/// int count = G_timer1_cnt % TIMER1_FREQ;
-/// G_hold_flash = (count <= 12500) ||                // "A"
-///                (count >= 15625 && count <= 28125) // "B"
-///                ? 1 : 0;
-
-
     // We want any interlink sync trimming to happen during
     // the long on-time, and not the short off-time.
     //
@@ -652,8 +616,8 @@ inline void HandleALeadDebounce(Debounce *d1, Debounce *d2) {
 //
 inline int IsLineDetect() {
     switch ( G_curr_line ) {
-        case 1: return(L1_LINE_DET ? 1 : 0);
-        case 2: return(L2_LINE_DET ? 1 : 0);
+        case 1:  return(L1_LINE_DET ? 1 : 0);
+        case 2:  return(L2_LINE_DET ? 1 : 0);
         default: return 0;       // shouldn't happen
     }
 }
@@ -661,8 +625,8 @@ inline int IsLineDetect() {
 // Returns 1 if call is currently on hold, 0 if not
 inline int IsHold() {
     switch ( G_curr_line ) {
-        case 1: return(L1_hold); // TODO: try reading hardware state (L1_HOLD_RLY)
-        case 2: return(L2_hold);
+        case 1:  return(L1_hold); // TODO: try reading hardware state (L1_HOLD_RLY)
+        case 2:  return(L2_hold);
         default: return 0;       // shouldn't happen
     }
 }
@@ -803,31 +767,69 @@ inline void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
 
 //
 // Manage the sync signal between two CPUs on different boards over interlink.
+//            
+//              31250                                      31250
+//            ../|  ....................................../|
+//           /   | /                                       | ......
+//   Tmr1: 0/    |/                                        |/
+//               Reset tmr1                                Reset tmr1
+//               .                                         .
+//               .                                         .
+//         __..__.   ______________________________________.   ___
+//   Sync:       |__|                                      |__|
+//
+//            -->    <-- 4 iters, or 4/250th sec
+//
+// Receiver should reset its timer on *falling edge* of sync from "other" board.
+// This should ensure boards are at least within 1/250th of a second in sync.
+// Sync stays low several iters by transmitter to ensure "other" board sees it.
 //
 void HandleInterlinkSync(int send_sync) {
-    static char sending  = 0;
-    static char lastsync = 0;
+    // send_sync: Sent by caller when hw timer1 reached maximum count for 1sec (31250),
+    //            caller will have reset timer1 to 0, so this only happens once per second.
+    //
+    // sending: 0 - not sending
+    //          1 - sending (one iter to go)
+    //          2 - sending (two iters to go)
+    //
+    // lastsync: 0 - sync input was lo on last iter
+    //           1 - sync input was hi on last iter
+    //           2 - sync input was unknown (we were 'sending')
+    //
+    static uchar sending  = 0;       // flag + counter indicating sync send in progress
+    static uchar lastsync = 0;       // record of last iter's sync input (for edge detection)
     char sync;
 
-    if ( send_sync ) {
-        sending        = 1;          // Indicate for next iter we're sending sync
+    if ( send_sync ) {               // set once per second
+        // OUTPUT MODE
+        //    XXX: 4 seems to work better than 2 to keep Hold Flash in sync,
+        //         not sure why? Should research this..
+        //
+        sending        = 4;          // Leave sync low for this #iters
         TRISB          = 0b10000000; // Change RB6 to be OUTPUT
         WPUB           = 0b10000000; // Enable 'weak pullup resistors' for all inputs
         SYNC_ILINK_OUT = 0;          // Set output low to send signal, leave low for full iter
-        lastsync       = 1;          // force lastsync hi (idle/normal)
+        lastsync       = 2;          // "last sync" unknown since we're sending
+        return;
     } else {
         if ( sending ) {             // Are we still sending output since last iter?
-            sending  = 0;            // Turn off send flag; no longer sending sync
-            lastsync = 1;            // force lastsync hi (idle/normal)
-////        SYNC_ILINK_OUT = 1;      // Set output hi for signal off      // XXX: when tested, add this
+            lastsync = 2;            // "last sync" unknown since we're sending
+            if ( --sending ) return; // Keep sync lo until 'sending' == 0
+            sending  = 0;            // turn off 'sending'
+
+            // INPUT MODE
+            //     Done sending sync: revert to input mode
+            //
+            SYNC_ILINK_OUT = 1;      // Set output hi for signal off
             TRISB    = 0b11000000;   // Set RB6 back to INPUT
             WPUB     = 0b11000000;   // Enable 'weak pullup resistors' for all inputs
             return;
         }
+        // Not sending, read input for low transition
         sync = SYNC_ILINK_IN;        // Snapshot sync input from remote
-        if ( sync == 0 && lastsync == 1 ) { // falling edge of sync from remote?
-            // Reset hardware timer
-            ResetTimer1();
+        if ( sync == 0 &&            // sync input is low right now
+             lastsync == 1 ) {       // sync was high last iter -- falling edge, time to sync
+            ResetTimer1();           // Remote telling us to reset tmr1 hardware
         }
         lastsync = sync;             // keep track of state between iters (to detect edge)
     }
@@ -868,16 +870,17 @@ void main(void) {
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
-        // Take snapshot of timer1, reset timer if reaches 1sec count.
+        // Take snapshot of timer1's count, reset timer if reaches 1sec count.
         //    G_timer1_cnt is the time base for all flashing, ringing, etc.
         //
-        if ( (G_timer1_cnt = GetTimer1()) >= TIMER1_FREQ ) {
-            ResetTimer1();
-            G_timer1_cnt = 0;
-            G_iter       = 1;
-            HandleInterlinkSync(1);
+        G_timer1_cnt = GetTimer1();             // runs 0 to TIMER1_FREQ (31250)
+        if ( G_timer1_cnt >= TIMER1_FREQ ) {    // wrap?
+            ResetTimer1();                      // reset hardware timer to zero
+            G_timer1_cnt = 0;                   // snapshot zero count
+            G_iter       = 1;                   // reset iter counter to zero
+            HandleInterlinkSync(1);             // start sending sync to remote
         } else {
-            HandleInterlinkSync(0);
+            HandleInterlinkSync(0);             // handle sync otherwise
         }
 
         // Determine timer count to wait for
@@ -922,7 +925,7 @@ void main(void) {
         //
         while ( GetTimer1() < timer1_wait ) { }        // wait until timer reaches iter timer count
 
-        // Wrap iteration counter
-        if ( ++G_iter > ITERS_PER_SEC ) G_iter = 1;
+        // Advance iteration timer
+        ++G_iter;                                      // may go above 250! (we don't want to wrap until timer resets)
     }
 }

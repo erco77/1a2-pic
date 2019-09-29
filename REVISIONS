@@ -1,0 +1,50 @@
+Seriss 1A2 Single Board KSU - Board Revisions
+(Revisions shown latest at the top, oldest at the bottom)
+--------------------------------------------------------------------------------
+
+"REV H" (Sep 2019) Differs from "REV G1" in the following ways:
+    > New input SECONDARY_DET on Cpu1/RC3 (currently unused)
+    > New input SECONDARY_DET on Cpu2/RA5 (currently unused)
+    > New onboard fuse
+    > Trace clearances increased around some interlink pads
+
+"REV G1" (Jul 2019) Differs from "REV G" in the following ways:
+    > No impact on software at all
+    > Added TIP125 surge suppression diodes D22-D25
+    > Change surface mount resistors to through hole (SMT annoying to solder)
+    > Repositioned R25, R26, and R28 (changed to R27) for easier soldering/lead trimming
+    > Swapped component numbers for R28 <-> R27: regional sequential numbering
+    > Moved C7 next to C5 + C6 for easier assembly
+    > Moved JP5 to left of EXT1 for cable clearence
+    > Increased INTERLINK connector pad size for *solder side only* (more surface area for soldering)
+    > Increased overall pad size for JP3 & 4 (more surface area for soldering)
+    > Slight enlarge of LED holes to allow red status leds to flush mount
+    > Added extra pad holes for 60/1W and 300/1W resistors
+
+"REV G" (Jun 2019) Differs from "REV F" in the following ways:
+    > REV G added 'SYNC' I/O signal to allow two boards to keep their
+      flashing signals in sync (Hold + Ring Flash). Mostly an INPUT,
+      briefly switches to output to send short sync signal to "other" cpu.
+      This ensures "slower" cpu autosyncs itself to "faster" one.
+      See UpdateInterlinkSync() function for complete implementation.
+    > LED through holes enlarged slightly allowing red CPU LEDs to flush mount
+    > Some traces moved around for clearance issues, but no electrical changes
+
+"REV F" and "REV F1" (May 2019) Introduced interlink feature, two cpus.
+    Differs from "REV E" in the following ways:
+    > Revision "F" was an internal "development only" board; "F1" is the release version.
+    > Introduiced Interlink feature to support combining two boards for 4 lines/8 extensions
+    > Introduced rotary dial support for extension dialing.
+    > Now has two PIC chips; CPU1 and CPU2, each with separate firmware
+    > CPU1 handles logic same as REV E's single CPU, but no longer handles MT8870 signals
+    > CPU2 handles MT8870 signals and rotary dialing
+    > HandleDTMF() function removed from CPU1 firmware, moved to CPU2
+    > Dropped these components:
+           * "REV E" JP2 removed  -- interlink handles this now
+	   * "REV E" C4 removed   -- 2200uF filter capacitor (voice batt) was unused
+	   * "REV E" 7445 removed -- made obsolete by use of PIC CPU2
+
+"REV E" (Apr 2019) First version of board with PIC chip to handle logic.
+    > Previous board used no CPUs, all analog/discrete circuitry.
+    > This board included 8 buzzer transistors and no interlink feature.
+
