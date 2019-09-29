@@ -58,7 +58,7 @@
 
 // Outputs
 #define CPU_STATUS_LED LATCbits.LATC4               // RC4: hi to turn LED on
-                                                                                  __
+                                                    //                            __
 #define EXT1_BUZZ      LATBbits.LATB7               // hi to turn EXT1 buzzer on    |
 #define EXT2_BUZZ      LATCbits.LATC7               // hi to turn EXT2 buzzer on    |__ EXT 1-4
 #define EXT3_BUZZ      LATCbits.LATC6               // hi to turn EXT3 buzzer on    |   PRIMARY
