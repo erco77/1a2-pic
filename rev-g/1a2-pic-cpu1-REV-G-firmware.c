@@ -740,9 +740,9 @@ void HandleLine(Debounce *rd, Debounce *ad) {
             //
             StopHoldTimer();
             StopRingingTimer();
-            SetHold(0);          // disable HOLD relay
-            SetRing(0);          // disable ringing
-            SetLamp(0);          // lamp off
+            SetHold(0);                   // disable HOLD relay
+            SetRing(0);                   // disable ringing
+            SetLamp(IsALead(ad) ? 1 : 0); // Keep lamp lit if A LEAD (prevent flash during rotary)
             return;
         }
     }
