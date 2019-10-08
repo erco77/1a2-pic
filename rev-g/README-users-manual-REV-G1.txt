@@ -36,6 +36,7 @@
                                 ==============================================
                                     erco@seriss.com - 06/27/2019 - REV G
                                     erco@seriss.com - 07/22/2019 - REV G1
+                                    erco@seriss.com - 09/29/2019 - REV H
 
                         If you find problems in this document, contact: erco@seriss.com
 

@@ -852,8 +852,8 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     to another.<br>
     <br>
     To use the intercom, push the Line #5 button, and dial the number of the extension you want to talk to.<br>
-    Pushing "1" on the dial pad will buzz the buzzer for that extension. If a person is available at that <br>
-    extension, they should pick up the intercom line and talk to you.<br>
+    Dialing "1" will buzz the buzzer for that extension (EXT1). If a person is available at that extension, they can<br>
+    pick up the intercom line to talk to you. Dialing "0" buzzes <u><i>all</i></u> extensions.<br>
     <br>
     If your phone buzzes, and the intercom line is lit, it means someone wants to talk to you, so pick up<br>
     that line to talk to them.
@@ -948,9 +948,9 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
 <a name="Interlink"></a>
 <span class=man_heading>4.0 - Interlinking Two Boards - Four Lines / 8 Extensions</span>
 <UL>
-  If you have two REVISION F1 boards, you can connect them together with a 30 pin ribbon cable to create<br>
+  If you have two boards, you can connect them together with a 30 pin ribbon cable to create<br>
   a single phone system with 4 Telco lines and up to 8 extensions that all can be individually buzzed on<br>
-  the intercom line (by dialing 1 through 8).<br>
+  the intercom line (by dialing "1" through "8", or buzz all of them by dialing "0").<br>
   <br>
   For info on how to configure two boards with the INTERLINK connector, refer to this page which includes<br>
   diagrams and descriptions: <a href="http://seriss.com/1a2-ksu/rev-g1/data/1a2-REV-G-0015.png"
@@ -958,27 +958,29 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
   <br>
   In short, connect the two boards together by their INTERLINK connector using a 30 pin ribbon cable, and power<br>
   the two boards either with separate power adapters, or a single adapter of suitable amperage wired in parallel.<br>
-  <br>
-  The recommended cable configuration is shown on the left-hand side of in this diagram:<br>
+  What follows is the recommended cabling:<br>
   <ul><br>
   <a href="images/good-vs-bad-interlink-cabling.jpg"><img src="images/good-vs-bad-interlink-cabling.jpg" width="800" title="Click for larger version of this image"></a><br>
   </ul><br>
   <br>
-  This prevents the cable obscuring the boards so one can easily inspect and configure DIP switches and primary/secondary jumpers.<br>
-  Note how the left ("correct") diagram, the cable does a full 360 degree flip over itself to remain in the same plug orientation.<br>
-  <br>
-  Here's a <u><b>side view</b></u> of the preferred cable orientation, just to make it clear:<br>
+  This arrangement prevents obscuring the board, so one can easily see the DIP switch and jumper configurations.<br>
+  Note how in the correct arrangement, the cable does a full 360 degree flip over itself, as shown in this <u><b>side view</b></u>:<br>
   <ul><br>
-      <a href="images/interlink-cable-side-view.png"><img src="images/interlink-cable-side-view.png" width="800"></a>
+      <table><tr><td align=center>
+      <a href="images/interlink-cable-side-view.png"><img src="images/interlink-cable-side-view.png" width="800" style="border:solid 1px #bbb;"></a>
+      <small><br><i>Recommended interlink cable configuration for final installs.</i></small>
+      </td></tr></table>
   </ul><br>
   <br>
   One can also trivially route the cable straight across the top of the two boards as shown below <I>without a twist</I>,<br>
-  useful for simple tests: <br>
+  useful for quick/simple tests: <br>
   <ul><br>
-      <a href="images/interlink-cable-side-view2.png"><img src="images/interlink-cable-side-view2.png" width="800"></a>
+      <table><tr><td align=center>
+      <a href="images/interlink-cable-side-view2.png"><img src="images/interlink-cable-side-view2.png" width="800" style="border:solid 1px #bbb;"></a>
+      <small><br><i>Simple cable arrangement OK for quick tests, but obscures top board's settings.</i></small>
+      </td></tr></table>
   </ul><br>
-  <br>
-  ..but that blocks access to the jumper/DIP switches, so the <u><b>previous</b></u> diagram is preferred.<br>
+  ..but that blocks access to jumper/DIP switches, so the <u><b>previous</b></u> arrangement is preferred, especially for final installations.<br>
   <br>
   Configure one board as the "PRIMARY"; that board's telco inputs will appear as LINE 1 and LINE 2 on the extensions.<br>
   Configure the other board as the "SECONDARY"; that board's telco inputs will appear as LINE 3 and LINE 4 on the extensions.<br>
@@ -1210,6 +1212,17 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
              Keep in mind stray metal/liquids lying across components may have permanently damaged the board to the point<br>
              where components are blown, and may need to be swapped out to properly repair the board.</LI><br>
     </UL>
+  </UL>
+  <a name="NoHold"></a>
+  <span class=man_subheading>5.9 - PROBLEM: Hitting HOLD causes line lamp to turn off instead of flash</span><br>
+  <UL><br>
+      Check to make sure the line isn't dead.  Without talk battery from the CO, the line can't go into Hold.
+      <P>
+      In the v1.5b firmware, the line lamp comes on during pickup whether the line is alive or not.<br>
+      This is so that pressing RECALL (for phones that have this feature) or use rotary dialing doesn't<br>
+      flash the line lamp.
+      <p>
+      But if the line is inactive, the line can't go into Hold because there's no line current.
   </UL>
 </UL>
 <a name="WireColors"></a>

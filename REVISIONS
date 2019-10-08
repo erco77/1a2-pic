@@ -7,6 +7,10 @@ Seriss 1A2 Single Board KSU - Board Revisions
     > New input SECONDARY_DET on Cpu2/RA5 (currently unused)
     > New onboard fuse
     > Trace clearances increased around some interlink pads
+    > Small printing error:
+      In board run "WELLPCB_REV-H-printed-09-16-2019", bottom silk revision marker
+      said "G1" instead of "H". Fixed lay6 file + gerbers for next board run,
+      (but left WELLPCB directory unchanged)
 
 "REV G1" (Jul 2019) Differs from "REV G" in the following ways:
     > No impact on software at all
