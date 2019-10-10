@@ -406,30 +406,38 @@ SOLDERING BOARDS
                                     |
                                     |
 
-     > Solder the large profile components last (relays, large caps, connectors, SIP + DIP headers)
+     > Solder the larger profile components (relays, large caps, connectors, SIP + DIP headers)
 
-     > Last I usually do the press-fit 50 pin amphenol connectors.
+     > Insert all the chips into the sockets
 
-       I used a large clamp and a simple wood jig with a slot cut in it. The jig goes under the
-       board for the clamp to clamp against, the slot allows the pins to poke through without
-       being compressed by the clamp:
+     > Program the PIC chips, and insert them into their sockets
+
+     > I do the press-fit 50 pin amphenol connectors last.
+
+       In the beginning of the project, I used a large clamp and a simple wood jig with a slot
+       cut in it to do the compression. Later I procured a drill press to make the process easier.
+
+
+
+       CLAMP TECHNIQUE FOR PRESS-FITTING AMPHENOLS
+       ============================================
+       For this technique, the jig goes under the board, the slot aligning with the
+       connector's holes for the pins to poke through once the connector presses fully into place:
+
                                       __________________
                                      /   ____________   \
                                     /____\           \   \
                                                      |    |  <-- clamp
-                                      __             |    |
-           press fit amphenol -->    |  |            |    |
-           connector (side view)    _|__|_           |    |
+           Press Fit Amphenol         __             |    |
+           Connector (side view) -> _|__|_           |    |
                                     |____|           |    |
-                                      ||             |    |
-    PCB BOARD                                        |    |
+    PCB BOARD                         ||             |    |
     ===============================================  |    |
                             ________      ________   |    |
                wood --->   |        |____| slot   |  |    |
                jig         |______________________|  |    |
                                     _____            |    |
                                     \___/            |    |
-                                     ///             |    |
                                     _///_            |    |
                                    |     |__________/     |
                                     \____________________/
@@ -439,24 +447,43 @@ SOLDERING BOARDS
                                     /   \===========()
                                     \___/
 
-    I found pressing first at the edges, then the center last works best.
-    So in three pressings, I'm able to get the connector pressed into place
-    completely. You have to make sure the clamp is CENTERED on the connector,
-    both above and beneath, or the connector will tip sideways. Stop and reposition
-    as soon as you see that happening, or it'll bend the pins.
+    I found pressing first at the edges, then the center last works best, e.g.
+
+                                       __
+                                      /  |
+                                     /   |
+                                    |  X |  <-- press here first
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |  X |  <-- press here last
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |  X |  <-- press here second
+                                     \   |
+                                      \__|
+
+
+    So in three compressions, the connector can be pressed firmly into place.
+    You have to make sure the clamp is CENTERED sideways on the connector, both above 
+    and beneath, or the connector will tip sideways, which must be avoided.
+    Stop and reposition as soon as you see that happening, or it'll bend the pins.
 
     When pressed in properly, the result looks like this:
     
                                       __________________
-                                     /   ____________   \
-                                    /____\           \   \
-                                     |  |            |    |
+                       connector     /   ____________   \
+                       pressed in   /____\           \   \
                                     _|__|_           |    |
-                                    |____|           |    |
+    PCB BOARD                       |____|           |    |
     ==================================||============ |    |
                wood --->   |        |____| slot   |  |    |
                jig         |______________________|  |    |
                                     \___/            |    |
+                                     ///             |    |
                                      ///             |    |
                                      ///             |    |
                                     _///_            |    |
@@ -470,8 +497,327 @@ SOLDERING BOARDS
      for the pins when they poke through the board, while still keeping uniform
      pressure on the lower part of the board.
 
-     Once pressed into place, you DO NOT solder the pins. I mean, that's the whole
-     point is not having to make 200 solders for the 4 50 pin connectors.
+     Once pressed into place, you DO NOT solder the pins; that's the whole point
+     of pressfit connectors, not having to make 50 solders for each connector.
+
+
+
+
+     DRILL PRESS TECHNIQUE FOR PRESSING AMPHENOLS
+     ============================================
+     After a few months of doing boards with the clamp technique, I procured a 
+     small drill press (a WEN model 4208, 8" 5-speed), and use that now instead
+     of the clamp; just quicker, very repeatable, less clumsy than the clamp.
+
+     I used the same wood jig above to place on the drill press table, and created
+     a second jig that fits into the drill chuck which presses down on the connector:
+
+
+                                 _
+                                | |  <-- 1/4" carriage bolt
+                                | |
+                                | |
+                                | |
+                                | |     nut
+                     washer   __|_|__ / 
+                           \ |_|___|_|
+     ________________________=========_____________________________
+    |                           | |                                |
+    |                      _____|_|_____                           |  <-- bar of hard wood 
+    |_____________________|  \_______/  |__________________________|      (poplar I think)
+              
+                                   \___ carriage bolt head
+                                        countersunk into wood jig
+
+
+
+     The carriage bolt's threaded shank is inserted into the drill press chuck,
+     so that when it presses down, the bottom surface of the bar of wood is used
+     to press the top of the Amphenol connector evenly into the printed circuit board.
+
+     The carriage bolt head is countersunk and the hole filled with bondo and sanded
+     flat, so that the bottom surface is completely flat, to give an evenly flat surface
+     for press fitting the connector.
+
+     The result looking like this:
+
+
+                        ____________________________________
+                       /                                    \
+                       |            DRILL PRESS             |
+                       |___                                 |
+                           |        ____________            |
+                           |       /            |           |
+                           |______/             |           |
+                  chuck -->  |  |                \_________/
+                           __|__|__                 |    |
+                          |________|  <--(1)        |    |
+                                                    |    |
+                (2) ________#_#_#_#__               |    |
+                           |______|   <--(3)        |    |
+                       -----------------------      |    |
+                      |_______________________|     |    |
+                             table         |  |_____|____|_
+                                           |______         |
+                                                  |________|
+                                                    |    |
+                                                    |    |
+
+                      (1) top wood jig (attached to chuck)
+                      (2) printed circuit board ("#"=amphenols)
+                      (3) bottom wood jig
+
+    The top wood jig's bolt shank is inserted all the way into the chuck, and the
+    chuck tightened down on the bolt shank, so that the bottom of the chuck is flush
+    with the top of the wood jig. This way the hard downward pressure of the chuck
+    presses against the wood, and not stripping the bolt shank's threads.
+
+    I still have to press fit one connector at a time; as strong as the drill's
+    compression is, it still takes a *lot* of pressure to do just one connector
+    at a time.
+
+    In fact it's enough pressure on the cantilevered table that it'd bend the table.
+    I had to wedge a piece of wood under the table between it and the drill press base
+    to give it more vertical stability.
+
+    All of which is good; strong pressure on the connector means the connectors 
+    /won't/ come out easily when users plug and unplug phones.
+
+
+PROGRAMMING PIC CHIPS
+=====================
+
+The PIC chip vendor is a company called "Microchip" (microchip.com), and they also
+sell a USB programmer which at the time of this writing (July 2019) is called the
+"PIC KIT 4".
+
+The programmer is about the size of a pack of cigarettes, and has a USB cable to
+plug into a computer, and the other end can plug into a Zero Insertion Force (ZIF)
+socket used to program the actual chips.
+
+Microchip also supplies a free compiler/IDE environment for editing your programs,
+and burning the compiled software onto the chip. At the time of this writing the tool
+is called "MPLAB X".
+
+So with the USB programmer plugged into the computer, and MPLAB X running, you can
+write code, compile and burn it onto the chip. You can then take the programmed chip
+and plug it into the 1A2 KSU board to use it.
+
+During development I usually rotate between two chips; one to program, and one to
+live in the board, and just rotate them each time I need to test changes to the firmware.
+
+You can do all the development inside MPLAB X, though I later found a way to
+use the command line to compile and program the chips, so that I don't have to
+fumble around in their IDE to program the two PIC chips for my board, and just
+use a DOS BATCH script that prompts for programming the chips easily.
+
+A quick overview of using MPLAB X:
+
+    (1) Create a new project (File -> New Project)
+
+         Steps
+          1. Categories: Microchip Embedded
+          2. Projects: Standalone Project
+          3. Select Device:
+                Family: Baseline 8-bit MCUs (PIC 10/12/16)
+                Device: PIC16F1709
+          4. Select Header 
+               Supported Debug Header: None    <-- skip this, we don't use it as a "debug header"
+          5. Select Tool
+               Under PICkit 4, there should be a serial number of your programmer, e.g.
+
+                    Hardware Tools
+                      |-- o Atmel-ICE
+                      |-- oo ICD 3
+                      |-- oo ICD 4
+                      |-- PICkit 4
+                      |     |__ SN:BUR1833339134  <-- Pick this
+                      |
+                      |-- oo PM3
+                      :
+
+          6. Set Compiler
+               I used "XC8" (v2.10)
+
+          7. Set Project Name and Folder
+
+               This is the name that will appear in the list of projects.
+               I suggest using a name without spaces (or use - or _ in place of spaces)
+               so that the actual directory on disk doesn't have spaces in it (makes it
+               easier to refer to in DOS BATCH scripts)
+
+               In my case, I made separate projects for the CPU#1 and CPU#2 firmware.
+               So I used:
+
+                    1A2-REV-G-CPU1   -- for the CPU#1 firmware code
+                    1A2-REV-G-CPU2   -- for the CPU#2 firmware code
+
+               I left the other settings all at default values.
+
+      (2) Now create a .c and .h file
+
+          Right click on the project and choose New -> main.c
+          Set the filename. In my case I used:
+
+                    main-rev-g-cpu1.c  -- for CPU#1 firmware
+                    main-rev-g-cpu2.c  -- for CPU#2 firmware
+
+      (3) Open the new file in an editor, delete any default text the IDE put into
+          the file, and replace it with the firmward code e.g. from github.
+
+          Here's a "simple" test program to check the PIC16F1709; blinks and LED (RA2),
+          and also reads an input from one pin (RA5) and writes the value to an
+          output pin (RA0), and writes the INVERTED value to another pin (RA1):
+
+__________________________________________________________________________ snip
+/*
+ * File:   main.c
+ * Author: erco
+ *
+ * Created on Feb 28, 2019, 05:27 AM
+ *
+ * Program the inputs/outputs needed by the 1A2 board, and test them.
+ *
+ *                           _    _
+ *                       V+ | |__| | GND
+ *  TEST INPUT (IN) -- RA5  |      | RA0 -- (OUT) VALUE OF RA5 (DAT)
+ *           X (IN) -- RA4  |      | RA1 -- (OUT) VALUE OF RA5 INVERTED (CLK)
+ *    (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) LED OUTPUT
+ *           X (IN) -- RC5  |      | RC0 -- (IN) X
+ *           X (IN) -- RC4  |      | RC1 -- (IN) X
+ *           X (IN) -- RC3  |      | RC2 -- (IN) X
+ *           X (IN) -- RC6  |      | RB4 -- (IN) X
+ *           X (IN) -- RC7  |      | RB5 -- (IN) X
+ *           X (IN) -- RB7  |______| RB6 -- (IN) X
+ *
+ *                         PIC16F1709
+ */
+
+// This must be #defined before #includes
+#define _XTAL_FREQ 4000000UL    // system oscillator speed in HZ (__delay_ms() needs this)
+
+// --- The following section copy/pasted from MPLAB X menu: Production -> Set Configuration Bits -> Generate Source..
+// CONFIG1
+#pragma config FOSC     = INTOSC    // USE INTERNAL OSCILLATOR: Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
+#pragma config WDTE     = OFF       // Watchdog Timer Enable (WDT disabled)
+#pragma config PWRTE    = OFF       // Power-up Timer Enable (PWRT disabled)
+#pragma config MCLRE    = ON        // MCLR Pin Function Select (MCLR/VPP pin function is MCLR)
+#pragma config CP       = OFF       // Flash Program Memory Code Protection (Program memory code protection is disabled)
+#pragma config BOREN    = OFF       // Brown-out Reset Enable (Brown-out Reset disabled)
+#pragma config CLKOUTEN = OFF       // Clock Out Enable (CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin)
+#pragma config IESO     = OFF       // Internal/External Switchover Mode (Internal/External Switchover Mode is disabled)
+#pragma config FCMEN    = OFF       // Fail-Safe Clock Monitor Enable (Fail-Safe Clock Monitor is disabled)
+
+// CONFIG2
+#pragma config WRT     = OFF        // Flash Memory Self-Write Protection (Write protection off)
+#pragma config PPS1WAY = ON         // Peripheral Pin Select one-way control (The PPSLOCK bit cannot be cleared once it is set by software)
+#pragma config ZCDDIS  = ON         // Zero-cross detect disable (Zero-cross detect circuit is disabled at POR)
+#pragma config PLLEN   = OFF        // Phase Lock Loop enable (4x PLL is enabled when software sets the SPLLEN bit)
+#pragma config STVREN  = ON         // Stack Overflow/Underflow Reset Enable (Stack Overflow or Underflow will cause a Reset)
+#pragma config BORV    = LO         // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
+#pragma config LPBOR   = OFF        // Low-Power Brown Out Reset (Low-Power BOR is disabled)
+#pragma config LVP     = ON         // Low-Voltage Programming Enable (Low-voltage programming enabled)
+// --- end section
+
+#include <xc.h>         // microchip's header file for our PIC chip
+                        // (our PIC chip device# is passed to the compiler from the IDE's project settings)
+
+// Initialize the PIC chip..
+void Init() {
+    OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
+    
+    // Set PIC chip oscillator speed (we use 4MHz internal oscillator)
+    OSCCONbits.IRCF   = 0b1101;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
+    OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
+    OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
+    
+    // NOTE: in the following TRISA/B/C data direction registers,
+    //       '1' configures an input, '0' configures an output.
+    //       'X' indicates a don't care/not implemented on this chip hardware.
+    //
+    TRISA  = 0b11111000;  // data direction for port A (0=output, 1=input)
+    WPUA   = 0b11111000;  // enable 'weak pullup resistors' for all inputs
+    //         ||||||||_ RA0 (OUT) VALUE OUTPUT
+    //         |||||||__ RA1 (OUT) INVERTED VALUE OUTPUT
+    //         ||||||___ RA2 (OUT) LED OUTPUT
+    //         |||||____ X
+    //         ||||_____ RA4 (IN) unused
+    //         |||______ RA5 (IN) VALUE INPUT
+    //         ||_______ X
+    //         |________ X
+    
+    TRISB  = 0b11111111;  // data direction for port B (0=output, 1=input)
+    WPUB   = 0b11111111;  // enable 'weak pullup resistors' for all inputs
+    //         ||||||||_ X
+    //         |||||||__ X
+    //         ||||||___ X
+    //         |||||____ X
+    //         ||||_____ RB4 (OUT) unused
+    //         |||______ RB5 (IN)  unused
+    //         ||_______ RB6 (OUT) unused
+    //         |________ RB7 (IN)  unused
+    
+    TRISC  = 0b11111111;  // data direction for port C (0=output, 1=input)
+    WPUC   = 0b11111111;  // enable 'weak pullup resistors' for all inputs
+    //         ||||||||_ RC0 (OUT) unused
+    //         |||||||__ RC1 (OUT) unused
+    //         ||||||___ RC2 (OUT) unused
+    //         |||||____ RC3 (IN)  unused
+    //         ||||_____ RC4 (IN)  unused
+    //         |||______ RC5 (IN)  unused
+    //         ||_______ RC6 (IN)  unused
+    //         |________ RC7 (OUT) unused
+
+    // Disable analog stuff
+    ANSELA = 0x0;
+    ANSELB = 0x0;
+    ANSELC = 0x0;
+    ADCON0 = 0x0;   // disable ADC
+    
+    // Disable slew rate controls
+    SLRCONA = 0x0;
+    SLRCONB = 0x0;
+    SLRCONC = 0x0;
+}
+
+void main(void) {
+    unsigned char count = 0;
+
+    // Initialize the chip speed and program inputs/outputs
+    Init();
+
+    // main loop (500ms): flash LED, copy input to outputs 
+    while (1) {
+        LATAbits.LATA0 = PORTAbits.RA5;     // Read RA5, write its value to RA0
+        LATAbits.LATA1 = PORTAbits.RA5 ^ 1; // Read RA5, write its inverted value to RA1
+        LATAbits.LATA2 = count & 1;         // Turn RA2 on and off every 500ms (LED blink)
+        __delay_ms(500);
+        count++;
+    }
+}
+__________________________________________________________________________ snip
+
+      To configure the ZIF socket so that the chip can be programmed with the power from
+      the PICkit 4:
+
+        1) In the "Projects" pane, right-click on the project and choose PRoperties
+
+        2) In the "Project Properties" dialog, under the "Categories" pane:
+
+                > Click on "PICkit4"
+                > Under "Options for PICkit4", set the "Option Categories" to "Power"
+                > For "Power target circuit from PICkit 4", check the box
+                > Leave the "Voltage Level" at "5.0"
+                > Hit "Apply", and hit OK out of the dialog
+
+      Now you should be able to click the "Build and Program" icon, or right click
+      on the project and choose "Make and Program Device".
+
+      If it succeeds, the chip is programmed, and can be moved to the board for testing.
+
+
+MANAGING FIRMWARE CODE IN GIT
+=============================
 
 TODO:
     Programming the PIC chips
