@@ -778,7 +778,7 @@ inline void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
 //         __..__.   ______________________________________.   ___
 //   Sync:       |__|                                      |__|
 //
-//            -->    <-- 4 iters, or 4/250th sec
+//            -->    <-- 2 iters, or 2/250th sec
 //
 // Receiver should reset its timer on *falling edge* of sync from "other" board.
 // This should ensure boards are at least within 1/250th of a second in sync.
@@ -802,10 +802,7 @@ void HandleInterlinkSync(int send_sync) {
 
     if ( send_sync ) {               // set once per second
         // OUTPUT MODE
-        //    XXX: 4 seems to work better than 2 to keep Hold Flash in sync,
-        //         not sure why? Should research this..
-        //
-        sending        = 4;          // Leave sync low for this #iters
+        sending        = 2;          // Leave sync low for this #iters
         TRISB          = 0b10000000; // Change RB6 to be OUTPUT
         WPUB           = 0b10000000; // Enable 'weak pullup resistors' for all inputs
         SYNC_ILINK_OUT = 0;          // Set output low to send signal, leave low for full iter
