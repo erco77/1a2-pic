@@ -154,6 +154,21 @@ SAVING GERBERS / ORDERING NEW BOARDS
 
 PRINTING BOARDS AT PCB HOUSES
 -----------------------------
+Notes about board:
+                           Inches
+                           --------------
+               Dimensions: 4.92" x 13.05"
+                   Layers: 2
+          Board Thickness: 0.062"
+                Min Trace: 0.010"
+           Surface Finish: HASL    <-- CHECK
+           Smallest Holes: 0.012"
+                  # Holes: 1001
+          ITAR Controlled? No
+                     Silk: White
+         Solder Mask Type: LPI-Semi Gloss
+        Solder Mask Color: Black
+
 Typically you upload a .zip file of the gerbers and "Excellon Drill" file
 to have the boards printed.
 
@@ -447,26 +462,6 @@ SOLDERING BOARDS
                                     /   \===========()
                                     \___/
 
-    I found pressing first at the edges, then the center last works best, e.g.
-
-                                       __
-                                      /  |
-                                     /   |
-                                    |  X |  <-- press here first
-                                    |    |
-                                    |    |
-                                    |    |
-                                    |    |
-                                    |  X |  <-- press here last
-                                    |    |
-                                    |    |
-                                    |    |
-                                    |    |
-                                    |  X |  <-- press here second
-                                     \   |
-                                      \__|
-
-
     So in three compressions, the connector can be pressed firmly into place.
     You have to make sure the clamp is CENTERED sideways on the connector, both above 
     and beneath, or the connector will tip sideways, which must be avoided.
@@ -497,9 +492,32 @@ SOLDERING BOARDS
      for the pins when they poke through the board, while still keeping uniform
      pressure on the lower part of the board.
 
+     I found pressing first at the edges, then the center last works best, e.g.
+
+
+                             Top View of Amphenol
+                                   Connector
+
+                                       __
+                                      /  |
+                                     /   |
+                                    |  X |  <-- press here first
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |  X |  <-- press here last
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |    |
+                                    |  X |  <-- press here second
+                                     \   |
+                                      \__|
+
+
      Once pressed into place, you DO NOT solder the pins; that's the whole point
      of pressfit connectors, not having to make 50 solders for each connector.
-
 
 
 
@@ -513,21 +531,21 @@ SOLDERING BOARDS
      a second jig that fits into the drill chuck which presses down on the connector:
 
 
-                                 _
-                                | |  <-- 1/4" carriage bolt
-                                | |
-                                | |
-                                | |
-                                | |     nut
-                     washer   __|_|__ / 
-                           \ |_|___|_|
-     ________________________=========_____________________________
-    |                           | |                                |
-    |                      _____|_|_____                           |  <-- bar of hard wood 
-    |_____________________|  \_______/  |__________________________|      (poplar I think)
-              
-                                   \___ carriage bolt head
-                                        countersunk into wood jig
+                                          _
+                                         | |  <-- 1/4" carriage bolt
+                                         | |
+                                         | |
+                                         | |
+                                         | |     nut
+                              washer   __|_|__ / 
+                                    \ |_|___|_|
+              ________________________=========________________________
+             |                           | |                           |
+             |                      _____|_|_____                      |  <-- bar of hard wood 
+             |_____________________|  \_______/  |_____________________|      (poplar I think)
+                       
+                                            \___ carriage bolt head
+                                                 countersunk into wood jig
 
 
 
@@ -566,6 +584,7 @@ SOLDERING BOARDS
                       (1) top wood jig (attached to chuck)
                       (2) printed circuit board ("#"=amphenols)
                       (3) bottom wood jig
+
 
     The top wood jig's bolt shank is inserted all the way into the chuck, and the
     chuck tightened down on the bolt shank, so that the bottom of the chuck is flush
