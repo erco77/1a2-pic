@@ -1005,6 +1005,38 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
   Email erco@seriss.com if you encounter problems not defined here, esp.  if you've found a solution and think others<br>
   would benefit from it.<br>
   <br>
+  <a name="NoPower"></a>
+  <span class=man_subheading>5.0.1 - PROBLEM: No power - all LEDs off.</span><br>
+  <UL><BR>
+    When the AC wall adapter is plugged into the wall, the board's CPU1 STATUS LED should immediately start blinking.<br>
+    If not, things to check:<br>
+    <UL><br>
+      <LI> The in-line power cord fuse.<br>
+           In REV-G1 (and older), there is a fuse on the end of power cord. Using a volt meter,<br>
+           check if 12VDC is getting to the two terminal screws on the green power connector that plugs<br>
+           into the board. <br>
+           <br>
+           If there's no power, unscrew the plastic fuse holder that is near the end of the power wire.<br>
+           (not to be confused with the solid black plastic cylinder that holds a ferrite core).<br>
+           <br>
+           The fuse holder is a push-and-twist type. Inside it should be a glass cartridge fuse <br>
+           (250V/2AMP 5mm x 20mm Slo-Blo). If it's burned out, suspect a short; see below.<br>
+           <br>
+      <LI> The on-board fuse.<br>
+           In REV-H (and newer) there is a glass cartridge fuse on the circuit board, just above the<br>
+           power connection. Verify the fuse is not blown by removing it.  It should be a glass cartridge<br>
+           fuse (250V/2AMP 5mm x 20mm Slo-Blo). If it's burned out, suspect a short; see below.<br>
+    </UL><br>
+    If the fuse is blown, before replacing with another, first unplug all the phone extensions from the board,<br>
+    in case one of the phones or the cables to them has a short.<br>
+    <br>
+    Also check for small bits of metal on the circuit board (stray wire clippings, paper clips, fallen screws..)<br>
+    that may be shorting out some pins on the board. If that's not it, suspect it might be one of the phones,<br>
+    or the cables connecting them to the board. Reconnect each phone ONE AT A TIME, exercising all features of each;<br>
+    pick up each line, put it on hold, test ringing, and test intercom use. Repeat with each phone until a culprit<br>
+    is found.
+  </UL>
+  <P>
   <a name="NoTouchTone"></a>
   <span class=man_subheading>5.1 - PROBLEM: Can't dial with Touch-Tone.</span><br>
   <UL><BR>
