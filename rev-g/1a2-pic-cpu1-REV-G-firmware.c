@@ -867,6 +867,11 @@ void main(void) {
     //     If ITERS_PER_SEC is 125, this is an 8msec loop
     //
     while (1) {
+        // DO THIS FIRST!
+        // Sample input ports all at once
+        //
+        SampleInputs();
+
         // Take snapshot of timer1's count, reset timer if reaches 1sec count.
         //    G_timer1_cnt is the time base for all flashing, ringing, etc.
         //
@@ -882,9 +887,6 @@ void main(void) {
 
         // Determine timer count to wait for
         timer1_wait = G_iter * 125;             // 125*250=31250
-
-        // Sample input ports all at once
-        SampleInputs();
 
         // Keep CPU STATUS lamp flashing
         FlashCpuStatusLED();
