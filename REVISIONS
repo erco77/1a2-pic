@@ -2,6 +2,22 @@ Seriss 1A2 Single Board KSU - Board Revisions
 (Revisions shown latest at the top, oldest at the bottom)
 --------------------------------------------------------------------------------
 
+"REV H1" (Oct 2019) Differs from "REV H" in the following ways:
+
+    > Extra holes for HOLD RESISTOR
+      (Copied one of the RING DETECT resistors)
+
+    > Changed Digikey part# for 33K 1/2W to be 1W component
+
+    > Changed Digikey part# for 0.1uF caps to be bulk (instead of cut tape)
+
+    > Changed 0.1uF caps' footprints to be smaller, so leads can be
+      folded onto the component (instead of needing to leave 1/4" leads)
+
+    > Changed holes for TIP125 and Amphenols to be plated through holes
+      (like the TIP32's) to prevent PCB printing delays (happened on last order).
+
+
 "REV H" (Sep 2019) Differs from "REV G1" in the following ways:
     > New input SECONDARY_DET on Cpu1/RC3 (currently unused)
     > New input SECONDARY_DET on Cpu2/RA5 (currently unused)
