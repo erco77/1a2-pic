@@ -43,7 +43,7 @@
  *
  * For the GPL license, see COPYING in the top level directory.
  * For board revisions, see REVISIONS in the top level directory.
- *
+ * 
  */
 
 //                                                      Port(ABC)
@@ -70,7 +70,7 @@
 
 // In/Out
 #define SYNC_ILINK_OUT LATBbits.LATB6               // RB6[OUT]: pull low when sending sync to "other" cpu
-#define SYNC_ILINK_IN  ((G_portb & 0b01000000)?1:0) // RB6[IN]: low when sync sent by "other" cpu
+#define SYNC_ILINK_IN  ((PORTBbits.RB6)?1:0)        // RB6[IN]: low when sync sent by "other" cpu
 
 // Ring timers
 //
@@ -802,24 +802,24 @@ void HandleInterlinkSync(int send_sync) {
 
     if ( send_sync ) {               // set once per second
         // OUTPUT MODE
-        sending        = 2;          // Leave sync low for this #iters
-        TRISB          = 0b10000000; // Change RB6 to be OUTPUT
-        WPUB           = 0b10000000; // Enable 'weak pullup resistors' for all inputs
-        SYNC_ILINK_OUT = 0;          // Set output low to send signal, leave low for full iter
-        lastsync       = 2;          // "last sync" unknown since we're sending
+        sending          = 2;        // Leave sync low for this #iters
+        TRISBbits.TRISB6 = 0;        // Change RB6 to be OUTPUT
+        WPUBbits.WPUB6   = 0;        // enable 'weak pullup' for output
+        SYNC_ILINK_OUT   = 0;        // Set output low to send signal, leave low for 'sending' iters
+        lastsync         = 2;        // "last sync" unknown since we're sending
         return;
     } else {
         if ( sending ) {             // Are we still sending output since last iter?
             lastsync = 2;            // "last sync" unknown since we're sending
             if ( --sending ) return; // Keep sync lo until 'sending' == 0
-            sending  = 0;            // turn off 'sending'
+            sending  = 0;            // (implied) turn off 'sending'
 
             // INPUT MODE
             //     Done sending sync: revert to input mode
             //
-            SYNC_ILINK_OUT = 1;      // Set output hi for signal off
-            TRISB    = 0b11000000;   // Set RB6 back to INPUT
-            WPUB     = 0b11000000;   // Enable 'weak pullup resistors' for all inputs
+            SYNC_ILINK_OUT   = 1;    // Set output hi for signal off
+            TRISBbits.TRISB6 = 1;    // Set RB6 back to INPUT
+            WPUBbits.WPUB6   = 1;    // Enable 'weak pullup resistors' for all inputs
             return;
         }
         // Not sending, read input for low transition
@@ -868,7 +868,7 @@ void main(void) {
     //
     while (1) {
         // DO THIS FIRST!
-        // Sample input ports all at once
+        //    Sample input ports all at once
         //
         SampleInputs();
 
