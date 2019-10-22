@@ -23,7 +23,7 @@
  *                         PIC16F1709 / CPU2
  *                           REV G, G1, H
  *
- *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  *      Copyright (C) 2019 Seriss Corporation.
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@
  *      You should have received a copy of the GNU General Public License
  *      along with this program; if not, write to the Free Software
  *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * For the GPL license, see COPYING in the top level directory.
  * For board revisions, see REVISIONS in the top level directory.
  *
@@ -102,22 +102,21 @@
 // DEFINES
 #define uchar unsigned char
 #define uint  unsigned int
-#define ulong unsigned long
 #define ITERS_PER_SEC        500    // while() loop iters per second (Hz). *MUST BE EVENLY DIVISIBLE INTO 1000*
 #define ROTARY_BUZZ_MSECS    800    // how many msecs a rotary dialed extension's buzzer should buzz (almost 1 sec)
 #define ROTARY_MAX_OFF_MSECS 200    // determines when dialing completed
 #define ROTARY_POWERUP_MSECS 500    // how long to wait after powerup before doing rotary detect
 
-// Rotary dialing struct
-//     Variables related to rotary dial management
+// Dialing struct
+//     Variables related to dial management
 //
 typedef struct {
     uchar mode;        // 0=idle, 1=digit pulse, 2=digit space, 3=dialing completed
-    uchar digit;       // rotary digit dialed
-    int   on_msecs;    // #msecs debounced rotary detector was "on"
-    int   off_msecs;   // #msecs debounced rotary detector was "off"
-    int   buzz_msecs;  // counts how long to run buzzer after rotary dialing an extension
-} Rotary;
+    uchar digit;       // digit dialed
+    int   on_msecs;    // (rotary) #msecs debounced rotary detector was "on"
+    int   off_msecs;   // (rotary) #msecs debounced rotary detector was "off"
+    int   buzz_msecs;  // counts how long to run buzzer after dialing an extension
+} Dial;
 
 // GLOBALS
 const int   G_msecs_per_iter = (1000/ITERS_PER_SEC); // #msecs per iter (if ITERS_PER_SEC=125, this is 8)
@@ -145,8 +144,8 @@ void RotaryDebounceInit(Debounce *d) {
     d->thresh     = 10; // 15;
 }
 
-// Initialize the Rotary struct's values to zero
-void RotaryInit(Rotary *r) {
+// Initialize the Dial struct's values to zero
+void DialInit(Dial *r) {
     r->mode       = 0;
     r->digit      = 0;
     r->on_msecs   = 0;
@@ -197,7 +196,9 @@ void SetTimerSpeed(int val) {
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
 
-    // Set PIC chip oscillator speed
+    // Set PIC chip oscillator speed to 8MHZ
+    //    We need speed to debounce rotary detection
+    //
     OSCCONbits.IRCF   = 0b1110;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
     OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
     OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
@@ -206,6 +207,7 @@ void Init() {
     //       '1' configures an input, '0' configures an output.
     //       'X' indicates a don't care/not implemented on this chip hardware.
     //       NOTE: A3 is INPUT ONLY.
+    //
     TRISA  = 0b00001000; // data direction for port A (0=output, 1=input)
     WPUA   = 0b00001000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ A0 (OUT) EXT8 BUZZ
@@ -261,7 +263,7 @@ void Init() {
         INTCONbits.TMR0IE     = 1;          // timer 0 Interrupt Enable (IE)
         INTCONbits.TMR0IF     = 0;          // timer 0 Interrupt Flag (IF)
         // Configure timer
-        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock
+        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock (FOSC/4)
         OPTION_REGbits.TMR0SE = 0;          // Select Edge (SE) to be rising (0=rising edge, 1=falling edge)
         OPTION_REGbits.PSA    = 0;          // PreScaler Assignment (PSA) (0=assigned to timer0, 1=not assigned to timer0)
         // Set timer0 prescaler speed
@@ -296,16 +298,16 @@ void BuzzExtension(int num) {
 //     This runs at approx 60Hz
 //
 void __interrupt() isr(void) {
-    static char count = 0;          // DEBUG
+    //static char count = 0;        // DEBUG
     if ( INTCONbits.TMR0IF ) {      // int timer overflow?
         INTCONbits.TMR0IF = 0;      // clear bit for next overflow
         BuzzExtension(G_buzz_ext);  // run selected buzzer
     }
 }
 
-// Reset the rotary counters and deenergize any buzzers
-void RotaryReset(Rotary *r) {
-    RotaryInit(r);
+// Reset the dial counters and deenergize any buzzers
+void DialReset(Dial *r) {
+    DialInit(r);
     G_buzz_ext = -1;        // all buzzer coils off
 }
 
@@ -326,7 +328,7 @@ void RotaryReset(Rotary *r) {
 //                         \/               \/
 //                       noise            noise
 //
-void HandleRotaryDialing(Rotary *r, Debounce *d) {
+void HandleRotaryDialing(Dial *r, Debounce *d) {
     // Debounce the "ROTARY_PULSE" input
     int is_rotary_pulse = DebounceNoisyInput(d, ROTARY_PULSE);
 
@@ -339,7 +341,7 @@ void HandleRotaryDialing(Rotary *r, Debounce *d) {
     if ( is_rotary_pulse ) {
         // PULSE
         if ( r->mode == 0 || r->mode == 3 ) // Begin new dialing sequence?
-             RotaryReset(r);                // Reset rotary system, stop buzzers
+             DialReset(r);                  // Reset rotary system, stop buzzers
         r->mode = 1;
         if ( r->off_msecs )                 // Just finished counting "off time"?
             r->off_msecs = 0;               // ..then this is rising edge: zero off timer
@@ -364,7 +366,7 @@ void HandleRotaryDialing(Rotary *r, Debounce *d) {
 //     Also handles preventing switch hook pickup noise from causing false dialing.
 //     NOTE: When "0" is dialed, a 10 is generated
 //
-int GetRotaryDigit(Rotary *r, Debounce *d) {
+int GetRotaryDigit(Dial *r, Debounce *d) {
     // Early exit if recent pickup
     if ( G_powerup_msecs < ROTARY_POWERUP_MSECS ) return -1;
 
@@ -373,7 +375,7 @@ int GetRotaryDigit(Rotary *r, Debounce *d) {
     // Valid digit recently dialed (mode=3), and buzzer still running?
     if ( r->mode == 3 && r->buzz_msecs > 0 ) {
         r->buzz_msecs -= G_msecs_per_iter;            // count buzz timer down to zero
-        if ( r->buzz_msecs <= 0 ) RotaryReset(r);     // stop buzzer, done
+        if ( r->buzz_msecs <= 0 ) DialReset(r);       // stop buzzer, done
         else                      return r->digit;    // return digit to keep buzzing
     }
     return -1;
@@ -406,15 +408,15 @@ void SampleInputs() {
 
 void main(void) {
     int digit;          // dtmf or rotary dialed digit
-    Rotary rot;         // rotary management struct
+    Dial rot;           // dial management struct
     Debounce rdeb;      // rotary debounce/hysteresis struct
 
     // Initialize PIC chip
     Init();
 
     // Initialize rotary structs/hardware
-    RotaryInit(&rot);
-    RotaryReset(&rot);
+    DialInit(&rot);
+    DialReset(&rot);
     RotaryDebounceInit(&rdeb);
 
     // Loop at ITERS_PER_SEC
@@ -470,6 +472,7 @@ void main(void) {
 
         // Powerup counter
         //     Counts up from zero then stops after 10 secs, leaving counter >=10000.
+        //
         if ( G_powerup_msecs < 10000 ) G_powerup_msecs += G_msecs_per_iter;
     }
 }

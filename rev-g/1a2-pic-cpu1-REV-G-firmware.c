@@ -23,7 +23,7 @@
  *                         PIC16F1709 / CPU1
  *                           REV G, G1, H
  *
- *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  *      Copyright (C) 2019 Seriss Corporation.
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -39,11 +39,11 @@
  *      You should have received a copy of the GNU General Public License
  *      along with this program; if not, write to the Free Software
  *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  *
  * For the GPL license, see COPYING in the top level directory.
  * For board revisions, see REVISIONS in the top level directory.
- * 
+ *
  */
 
 //                                                      Port(ABC)
@@ -618,7 +618,7 @@ inline int IsLineDetect() {
     switch ( G_curr_line ) {
         case 1:  return(L1_LINE_DET ? 1 : 0);
         case 2:  return(L2_LINE_DET ? 1 : 0);
-        default: return 0;       // shouldn't happen
+        default: return 0;        // shouldn't happen
     }
 }
 
@@ -627,7 +627,7 @@ inline int IsHold() {
     switch ( G_curr_line ) {
         case 1:  return(L1_hold); // TODO: try reading hardware state (L1_HOLD_RLY)
         case 2:  return(L2_hold);
-        default: return 0;       // shouldn't happen
+        default: return 0;        // shouldn't happen
     }
 }
 
