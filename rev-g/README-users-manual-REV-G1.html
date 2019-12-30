@@ -1266,6 +1266,14 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
       This happens when something is wrong with the A lead circuit; it's staying open on pickup,
       instead of closing to ground.
       <P>
+      <UL>
+          NOTE: Northern Telecom LOGIC 10/LOGIC 20/LOGIC 30 phones are not compatible with 1A2 KSU REV-H<br>
+          boards (and older), due to a diode built into the phone's A lead circuit that causes the issue.<br>
+          If you have one of these boards, you can shunt across the A lead diode inside the phone to make<br>
+          it work, with no negative effects on the phone's operation. This incompatibility was solved in<br>
+          REV-J (and up) KSU boards.
+      </UL>
+      <P>
       Normally the A lead (e.g. Pin 27 for Line 1) is connected to ground (Pin 2) when a line is picked up;<br>
       switch closures inside the phone connect the A lead to ground in the off-hook state. When you press Hold,<br>
       that opens the A lead causing a Hold condition. If the A lead isn't working at all, picking up a line<br>
