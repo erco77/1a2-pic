@@ -531,7 +531,7 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     <br>
     There are several options for supplying a ring generator:<br>
     <UL><BR>
-        * PowerDSINE 12v ring generator 70VAC/20Hz (can ring 3 or 4 phones using board's own 12v supply)<br>
+        * PowerDSINE 12v ring generator 70VAC/20Hz (can ring 4 phones using board's own 12v supply)<br>
         <br>
         * Western Electric 118A Ring generator from an old 1A2 KSU<br>
         <br>
@@ -625,7 +625,7 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
     <table class="openall" title="Click to open ALL the 'collapsed' details on this page.."><tbody><tr><td width="99%"></td><td class="openall" onclick="OpenAllDetails();" title="Click to open ALL the 'collapsed' details on this page.." NOWRAP>+Open All</td></tr></tbody></table><details open=""><summary>1.4.3 - 12V Ring Generator without 6 pin connector (Cambridge Electronics)</summary>
     <UL><BR>
         If you have a PowerDSINE ring generator with the connector cut off, or if you have a Cambridge Electronics<br>
-        12V ring generator, you can wire it directly to the EXT RING GEN screw terminals as follows, leaving JP5 unconnected:<br>
+        12V ring generator, you can wire it directly to the EXT RING GEN screw terminals this way:<br>
         <br><A NAME="Figure_D"></A>
         <span class=ascii_art_small_border>
 
@@ -796,6 +796,9 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
 <span class=man_heading>2.0 - Using Your 1A2 Multiline Phone System</span>
 <UL>
     Each multiline phone has "line select" buttons to let you pick which phone line you can use.<br>
+    <ul><br>
+    <a href="images/1a2-deskphone-illust.jpg"><img src="images/1a2-deskphone-illust.jpg" width="300" title="Click for larger version of this image"></a><br>
+    </ul><br>
     <br>
     <span class=man_subheading>2.1 - Hold</span><br>
     From left-to-right, the first button is the red HOLD button, which lets you put calls on Hold.<br>
@@ -1256,6 +1259,36 @@ refer to, please see the <A HREF="#WireColors">"Wire Colors"</A> section near th
       flash the line lamp.
       <p>
       But if the line is inactive, the line can't go into Hold because there's no line current.
+  </UL>
+  <a name="ForcedHold"></a>
+  <span class=man_subheading>5.10 - PROBLEM: Phone goes straight to Hold when a line is picked up</span><br>
+  <UL><br>
+      This happens when something is wrong with the A lead circuit; it's staying open on pickup,
+      instead of closing to ground.
+      <P>
+      Normally the A lead (e.g. Pin 27 for Line 1) is connected to ground (Pin 2) when a line is picked up;<br>
+      switch closures inside the phone connect the A lead to ground in the off-hook state. When you press Hold,<br>
+      that opens the A lead causing a Hold condition. If the A lead isn't working at all, picking up a line<br>
+      simulates going directly into Hold, as if someone immediately pressed the Hold button.
+      <P>
+      NOTE: A problem with pin 2 (common ground for all A leads) can affect ALL lines. So if all lines go into Hold<br>
+      on pickup, focus on pin 2 (O-W wire).
+      <P>
+      Check the A lead circuit in the phone; using a test meter in continuity mode, test the amphenol connector<br>
+      across pin 2 (ground) and pin 27 (A lead for Line 1). It should tone when Line 1 is picked up, and stop tone<br>
+      when pressing down Hold or on hangup.
+      <P>
+      If the A lead doesn't close during pickup, that's the problem to solve. Using the BSP for your phone model,<br>
+      check the wiring of Pin 27 (W-O wire) through the switch contacts of the hook switch, hold button, and line button<br>
+      to Pin 2 (O-W wire) against the wiring inside the phone.
+      <P>
+      Possible problems: Amphenol connector contacts corroded, broken wire somewhere in the connector or phone<br>
+      for any signals involving the A lead (Pin 27 + 2 for Line 1, Pin 30 and 2 for Line 2, etc), switch contacts<br>
+      for the phone's Hold button, Hook Switch, or Line Buttons not making proper contact, miswiring inside phone,<br>
+      miswiring of a 66 block between phone and KSU, if any.
+      <P>
+      If the A lead seems to work when testing the phone's connector, check any wiring between phone and KSU,<br>
+      such as 66 blocks, 66E3 devices, etc. Focus on pins 2 and 27 (O-W pair) if Line 1 has the problem.<br>
   </UL>
 </UL>
 <a name="WireColors"></a>
