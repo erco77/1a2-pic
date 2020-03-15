@@ -4,6 +4,10 @@
     which controls old AT&T 1A2 business phone systems which were THE phones
     used in business from the 1950's on through the early 1980's.
 
+    Revision "G" firmware is being used on all boards REV G and after.
+    I've been using the release tag "v1.3c" for all release boards so far.
+    (Although v1.5 is newer, v1.3c is what I've standardized on)
+
     Some people still like using these rugged multiline phones which can
     be integrated with modern technology; IP telephones, Cellphones (via
     Bluetooth gateway devices), etc.
