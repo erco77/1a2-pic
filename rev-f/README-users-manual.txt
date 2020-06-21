@@ -159,12 +159,21 @@ refers to, please see the section on "WIRE COLORS" near the bottom of this docum
            :....................................................:
 
     With 12V power connected, the CPU1 STATUS led should flash at 1 flash
-    per second, and the CPU2 STATUS led should flash at 2 quick flashes per second.
-    This indicates the CPUs are operating normally.
+    per second.
     
-    If leds are NOT flashing, something is WRONG - disconnect power
-    immediately, and refer to the TROUBLESHOOTING section at the
-    end of this document.
+    NOTE: 
+        If the LED is NOT flashing when you attach power, wait at least 5
+        seconds, as some power supplies don't power up immediately. 
+
+	If 5 seconds passed and there's no CPU1 flashing LED, then
+        something is WRONG: disconnect power immediately, and refer
+        to the TROUBLESHOOTING section at the end of this document.
+
+        No flashing CPU1 STATUS led most likely means the fuse has blown
+        (near the end of the power supply wire) , and the reason it blew
+        would be a short somewhere; make sure the board is not lying on
+        any metal objects, and no stray screws or metal is on top of the board
+        shorting across connections.
 
     IMPORTANT: DON'T CONNECT 12V POWER WITH POLARITY REVERSED.
                This board has NO PROECTION against reverse polarity DC power;

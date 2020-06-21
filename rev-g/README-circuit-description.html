@@ -14,6 +14,12 @@
                 NOTE: In REV-G1, R28 (10K) and R27 (300/1W) component numbers were swapped,
                       so that now R28 is the 300/1W, and R27 is the 10K.
 
+                      In REV-H, new onboard fuse added, removed JP1 and JP2
+
+                      In REV-J, TIP32 (Q6), R25 and R27 were dropped, and replaced with
+                                C8 and C9.
+
+
 1.0 OVERVIEW OF THE 1A2 BOARD AND FEATURES
 ==========================================
 
@@ -88,8 +94,8 @@
 
     Let's start with the Detect signals first.
 
-    LDA-110 "AC input" optocouplers are used for detecting both signals
-    (Ring Detect and Line Detect). These optocouplers have AC input LEDs
+    LDA-110 "AC input" optocouplers are used for detecting both
+    Ring Detect and Line Detect. These optocouplers have AC input LEDs
     and darlington transistors with an open collector output, which makes
     them perfect for this purpose.
 
@@ -135,17 +141,13 @@
 
         4.1.3 CPC Detection
         -------------------
-        If the central office detects the calling party has hung up,
+        When the central office detects the remote caller hung up,
         it briefly opens the Tip/Ring circuit for about 1/2 a second.
 
-        This is useful mainly to free up a line if the call was on hold,
-        and the remote party hung up. The 1a2 system should drop the call
-        and free up the line.
-
-        The above "Line Detect" circuit will detect this; when current
-        stops flowing through Tip+Ring, the Line Detect optocoupler turns
-        off, telling the PIC firmware to reset the line, releasing any Hold
-        condition.
+        If this happens while a line is on Hold, the Line Detect circuit
+        no longer sees loop current, causing the PIC chip to see no line
+        current, and drops the call out of Hold, automatically freeing up
+        the line for new calls.
 
         4.1.4 Holding A Call
         --------------------
@@ -155,11 +157,13 @@
         To put a call "on hold", one only needs to shunt a low value
         resistor across Tip and Ring so that when the extension hangs
         up, the CO still sees current flowing through the resistor, 
-        which keeps the call active.
+        keeping the call active.
 
-        The 1A2 system flashes the line lamps on all extensions for 
-        the line that is on Hold, keeping a 60 ohm 1 watt resistor (R1)
-        across the line via the energized Hold relay (K1).
+        Once on Hold, the KSU flashes the lamps on all extensions for 
+        that line, holding a 60 ohm 1 watt resistor (R1) across the line
+        via the energized Hold relay (K1).
+        
+        The description of how the Hold button is detected is described below.
 
     Next, the circuit design should consider 1A2 phone inputs and outputs.
 
@@ -233,23 +237,23 @@
         * 4.3.3 - Buzzer (Audible)
 
     The on board PIC chips control these signals to the phones by way of a ULN2803
-    darlington transistor array (to boost the PIC chip's output current), which in turn
-    controls power transistors and relays to interface to these 1A2 devices:
+    darlington transistor array to boost the PIC chip's output current. These signals
+    control power transistors and relays to interface to these 1A2 devices:
 
-        * An IRF9530 power transsitor (Q1) drives the Line #1 lamps
-        * A a relay (K3) drives bell ringing for Line #1
-        * A TIP125 (Q7-Q10) drives the buzzers for the 4 extensions
+        * An IRF9530 power transistor (Q1) drives the Line #1 lamps
+        * The relay K3 drives bell ringing for Line #1
+        * The TIP125 power transistors (Q7-Q10) drive the buzzers for the 4 extensions
 
     4.3.1 Lamps
     -----------
 
     The line lamps in 1A2 phones are all wired in parallel. A single IRF9530 transistor
-    (Q1) controls the Line #1 lamp in all extensions, lighting them all simultaneously
-    to indicate if a line is in use, or flashes the lamp for incoming calls or calls on Hold.
+    (Q1) controls the Line #1 lamp in all extensions, lighting them simultaneously to
+    indicate if a line is in use, or flashes the lamp for incoming calls or calls on Hold.
 
     When the KSU wants to light the Line #1 lamps, the IRF9530 power transistor (Q1) is
     energized by control of the PIC firmware, providing a strong +12V signal to power
-    all the lamps.
+    the lamps.
 
     The PIC output RA0 ("L1 LAMP") drives a ULN2803 darlington transistor to actually
     turn on the IRF9530 transistor. When flashing is needed, the PIC firmware handles
@@ -258,18 +262,13 @@
     4.3.2 Bells
     -----------
     The bells are used for ringing phones when there's an incoming call on a line.
-    Ringing for each extension is programmable by the SW1 diode matrix, allowing
-    the installer to configure which extensions will ring for each of the two lines.
 
     The bell in each extension needs between 70 VAC and 105 VAC to ring. The AC frequency
-    is usually 30Hz for a 1A2 systems, considered to be a "strident ring" appropriate for
-    a business environment. It can also be 20 Hz for the "calmer" ringing usually used
-    for "home" environments.
+    is usually 30Hz for a 1A2 systems, but can also be 20 Hz for a 'calmer' sounding ring.
 
     The bell ringing voltage and frequency is NOT supplied by the KSU circuit board; 
-    this must be provided by an external "Ring Generator" (or "Frequency Generator"
-    as per Bell System terminology). The KSU circuit board simply switches this external
-    power to the bells as needed to ring them.
+    this must be provided by an external "Ring Generator" (or "Frequency Generator")
+    that the KSU circuit board simply switches as needed to ring the bells.
 
     When the PIC chip senses an incoming call on Line #1 via the Ring Detect optocoupler (IC1),
     it turns on the "L1 RING RLY" output, which by way of the ULN2803, turns on the coil of
@@ -285,9 +284,13 @@
     for AC powering ring generators, such as the 118A, so that the device is only on 
     during ringing.
 
-### I YAM HERE ### <!--
+    4.3.2.1 Programmable Ringing
+    ----------------------------
+    Making "ringing programmable" was one of the design goals.
 
-    Making "ringing programmable" is an extra design goal.
+    Ringing for each extension is programmable by the SW1 diode
+    matrix, allowing the installer to configure which extensions
+    will ring for each of the two lines.
 
     1A2 phones have a separate wire pair just for the 70-105 VAC ringer
     (pins 20/45) and a separte pair for the 10 VAC buzzer (pins 17/42).
@@ -296,17 +299,18 @@
     to do at least two things:
 
          1) Flash the lamps for the line that's ringing, so the caller knows
-            which of the 5 lines needs to be answered
+            which line to answer
 
          2) Ring the appropriate extension phone's bells (or buzzers)
 
-    The Bell System Practices (or BSP) recommends diodes be used to
+    The Bell System Practices (BSP's) recommends diodes be used to
     "program" ringing, so that different extensions can ring depending
     on which line is ringing.
 
     In our case, we provide a full diode network, and use DIP switches
-    to direct the 90 VAC/30Hz ring signal. We also have a similar arrangement
-    to direct the 12 VAC/60Hz buzzer signal, if "buzzer ringing" is desired.
+    to control the 70-105 VAC ring signal. A similar arrangement is
+    used to control which buzzers are used during ringing, such as if
+    a ring generator is not present, but audible signaling is needed.
 
 
     4.1 GENERAL BOARD LAYOUT
@@ -318,39 +322,22 @@
     To access all feautures, 2 separate power supplies need to be provided:
 
         12 VDC - for board logic and phone lamps
-        90 VAC - for phone ringing
-
-    90 VAC is optional if bell ringing isn't needed; phones can be 'rung'
-    using the 12VDC supply to signal buzzers in each phone.
+        70-105 VAC / 30Hz - for phone ringing
 
     Components for unused sections can be left unpopulated if need be.
     Examples:
-
-        EXTRA EXTENSIONS 5-8
-        --------------------
-        If you won't be using the 'extra extensions' 5 through 8, you
-        can leave out all components in the dotted "EXTRA EXTENSIONS"
-        section, namely:
-
-             o The RJ11-4 female connector
-
-             o The 4 TIP125 "Buzzer Driver" transistors for
-               EXT5 through EXT8 in the BUZZER CONTROL section
 
         LINE 2
         ------
         If a Line2 isn't needed, all components can be left out of the
         "LINE 2" section of the board:
 
-             o The RJ11-4 female connector
-             o The two relays and their protection diodes
+             o The Hold relay
              o The two LDA110 optocouplers
-             o The 160 ohm resistor
-             o The 220uF capacitor
-             o The TIP125 "L2 LAMPS" transistor
-             o The leds for L and A relays
-             o The led for the IN USE indication
-             o All related resistors and capacitors
+             o The 160 ohm Hold resistor
+             o The IRF9530 "L2 LAMPS" transistor (Q2) and related resistors R9 + R11
+             o The "LINE 2 STATUS" led and resistor R10
+             o The 4 telco line conditioning components R12, R13, C3, R14.
 
         90 VAC RINGING
         --------------
@@ -364,25 +351,30 @@
         INTERCOM
         --------
         If intercom features aren't needed, all components can be
-        left out of the "ICM VOICE BATT", "INTERCOM DTMF DECODE",
-        and "INTERCOM POWER" sections.
+        left out of the "ICM VOICE BATT" and "INTERCOM DIALING" sections.
 
         BUZZERS
         -------
         If buzzers won't be used at all, either for intercom notifications
-        or incoming calls ("BUZZ CALL"), the 10K resistor network and
-        all the TIP125s in the BUZZ CONTROL section can be left out.
-        Also, the 8 diodes and DIP switch in the BUZZ CALL section can
-        be left out.
+        or incoming calls ("BUZZ CALL"), then you can leave out:
+
+            * All the TIP125's under "BUZZERS"
+            * The ULN2803 (IC12)
+            * The 10K resistor network  (RN2)
+            * The four diodes D22-D25
+            * The 10 LED bar graph (IC13)
+            * The 8 position DIP switch (SW1)
+
+
+### I YAM HERE ### <!--
 
     4.x 1A2 PHONES
     --------------
-    Sometimes the internal wiring of the 1A2 phones have been
-    modified from the defaults based on the special needs of their last
-    installation.  So before connecting up the phones, verify the phones
-    are wired "normally".
+    Sometimes the internal wiring of the 1A2 phones need to be modified to
+    work properly with the KSU.  So before connecting up the phones, verify
+    the phones are wired as described in the "User Manual" installation section.
 
-    Usually the only wires that are changed are the buzzer and sometimes bell.
+    Usually the only wires that need modification, if any, are the buzzer and bell.
     This board expects all phones to be internally wired the same way (if
     plugging directly into the board), where:
 
@@ -421,8 +413,8 @@
 
     Other than that, the internals of the phone are mostly the same as
     the old home phone sets; there's a voice hybrid, a switch hook,
-    a carbon-mic based handset, a touchtone dial.
-
+    a carbon-mic based handset, a touchtone dial, and tip/ring enters
+    the phone.
 
     4.2 TELCO LINE
     --------------
@@ -471,11 +463,13 @@
                 AT&amp;T TELCO SYMBOL                 TYPICAL SCHEMATIC SYMBOL
                 -----------------                 ------------------------
 
-                                                           |_
-                                                    _)
-                                                    _)
-                                                            _)
-                                                           |
+                         |
+                        _|_                                |_
+                       |   |                                _)
+                       |   |                                _)
+                       |___|                                _)
+                         |                                 |
+                         |                                 |
 
 
     So when the relay is OFF, current flows through the circuit this way,

@@ -16,19 +16,35 @@ SAVING GERBERS / ORDERING NEW BOARDS
 
     SAVING OUT GERBERS/EXCELLON DRILL
     ---------------------------------
-    These are necessary for printing up the boards. I use a Makefile to gather them
-    up and zip them together for upload to printing services. Steps in Sprint 6.0 are:
+    Gerber files are used by the board fabrication company to print the boards.
+    For this project, there's 7 files in total:
 
-    * Load the layout file:
-      File -> Open -> 1a2-pic-IRF-rotary-interlink-REV-F1.lay6
+        * 2 Gerber files for each electrical level of the board (top and bottom).
+          This defines where copper will remain to define the electrical traces,
+          and are referred to as C1 and C2 for top and bottom copper layers.
 
-    * Export the Gerbers:
-      File -> Export -> Gerber Export
+        * 2 Gerber files defining the solder mask for top and bottom.
+          The solder mask defines where varnish should be coated on the board, 
+          to cover everything /except/ the solder joints.
 
-      1) Turn on all layers that are not grayed out.
-      2) Be sure "solder mask offset" for "Pads" is 5.0 mils
+        * 2 Gerber files for the silk screen pass, which defines where paint
+          will be deposited to draw the text and diagrams on the board's front and back.
 
-      Change all the input fields marked with "***":
+        * Finally, there's one 'excellon drill' file used to define where all
+          the holes should be drilled, and what drill bit size is for each hole.
+
+    Steps in Sprint 6.0 to save out these files:
+
+        * Load the layout file:
+          File -> Open -> 1a2-pic-IRF-rotary-interlink-REV-F1.lay6
+
+        * Export the Gerbers:
+          File -> Export -> Gerber Export
+
+          1) Turn on all layers that are not grayed out.
+          2) Be sure "solder mask offset" for "Pads" is 5.0 mils
+
+          Change all the input fields marked with "***":
 
             Layer  (X) C1 Copper Top                                              Options
                    ***                                                              ( ) Mirror
@@ -62,16 +78,18 @@ SAVING GERBERS / ORDERING NEW BOARDS
 	    for generating the metal mask used for solder paste. The few surface mount
 	    components on these boards can be hand soldered easily.
 
-    * File -> Export -> Excellon
-	    Make sure "Inches" selected
+        * File -> Export -> Excellon
+                Make sure "Inches" selected
 
-    Then I put the resulting files into a .zip using a Makefile that I can
-    then shop around to the various PCB print houses. I used a Makefile to
-    automatically generate the zip, but it can be done by hand too using
-    tools like Winzip, pkzip, or the zip software that comes with linux.
+    The resulting files are combined into a single .zip file that I can
+    then shop around to the various PCB print houses. 
+    
+    I use a Makefile to automatically generate the zip, but it can be done
+    by hand too using tools like Winzip, pkzip, or the zip(1) program that
+    comes with linux.
 
-    I found PCBway to work well for the boards I've printed during
-    development, and they have instructions specifically for Sprint 6.0:
+    I found PCBway works well for printing the boards, and they have instructions
+    specifically for Sprint 6.0:
     https://www.pcbway.com/blog/help_center/How_to_generate_Gerber_from_Sprint_Layout_6_0.html
 
     [OPTIONAL] SAVING OUT JPG IMAGES
@@ -83,8 +101,8 @@ SAVING GERBERS / ORDERING NEW BOARDS
         I. 1a2-REV-XX-all.jpg
         ---------------------
 
-        1) At bottom left, ensure visible: "C1", "S1", "C2". Other layers "S2" and "O" should be OFF.
-        2) At bottom left, ensure active: "C1". This ensures top copper draws over bottom copper.
+        1) At bottom left, ensure all are visible: "C1", "S1", and "C2". "S2" and "O" should be OFF.
+        2) At bottom left, ensure "C1" is selected. This ensures top copper draws over bottom copper.
         3) File -> Export -> JPG
         4) Resolution: 300 dpi (3rd slider position from left)
         5) Save as "1a2-REV-XX-all"
@@ -169,10 +187,10 @@ Notes about board:
          Solder Mask Type: LPI-Semi Gloss
         Solder Mask Color: Black
 
-Typically you upload a .zip file of the gerbers and "Excellon Drill" file
+Typically you upload a .zip file of the Gerbers + "Excellon Drill" file
 to have the boards printed.
 
-Companies like PCBWay, OSHPark, WellPCB, Seeed Studios, etc.
+Companies like PCBWay, WellPCB, Seeed Studios, Avanti Circuits, etc.
 
 I used PCBWay for several board runs to do my prototypes and final boards,
 and the general instructions for using them:
