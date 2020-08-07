@@ -17,31 +17,37 @@ PICKIT 3 PROGRAMMER WIRING
 
                                                              PIC16F1709
 
-               PIC16F1709 COMPLETE PINOUT                    1A2 PIC BOARD ASSIGNMENTS (02/28/2019)
-               ==========================                    ======================================
-                           _    _                                                      _    _
-                       V+ | |__| | GND                                             V+ | |__| | GND 
-                     RA5  |      | DAT / RA0                 L1 RING DET (IN) -- RA5  |      | RA0 -- (OUT) L1 LAMP (DAT)
-                ____ RA4  |      | CLK / RA1                 L1 LINE DET (IN) -- RA4  |      | RA1 -- (OUT) L1 HOLD (CLK)
-                MCLR/RA3  |      | RA2                     (MCLR) unused (IN) -- RA3  |      | RA2 -- (OUT) L2 RING
-                     RC5  |      | RC0                         L1 A LEAD (IN) -- RC5  |      | RC0 -- (OUT) L2 HOLD
-                     RC4  |      | RC1                         L2 A LEAD (IN) -- RC4  |      | RC1 -- (OUT) L1 RING
-                     RC3  |      | RC2                       L2 LINE DET (IN) -- RC3  |      | RC2 -- (OUT) BUZZ 60HZ
-                     RC6  |      | RB4                       L2 RING DET (IN) -- RC6  |      | RB4 -- (OUT) L2 LAMP
-                     RC7  |      | RB5                       CPU STATUS (OUT) -- RC7  |      | RB5 -- (IN)  "StD"
-                     RB7  |______| RB6                            unused (IN) -- RB7  |______| RB6 -- (OUT) "TOE"
+               PIC16F1709 COMPLETE PINOUT                    1A2 PIC CPU1 ASSIGNMENTS (08/07/2020)
+               ==========================                    =====================================
+                           _    _                                                _    _ 
+                       V+ | |__| | GND                                       V+ | |__| | GND
+                     RA5  |      | DAT / RA0           L1_RING_DET (IN) -- RA5  |      | RA0 -- (OUT) L1_LAMP (DAT)
+                ____ RA4  |      | CLK / RA1           L1_LINE_DET (IN) -- RA4  |      | RA1 -- (OUT) L1_HOLD_RLY (CLK)
+                MCLR/RA3  |      | RA2                    (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) RING_GEN_POW
+                     RC5  |      | RC0                  L1_A_SENSE (IN) -- RC5  |      | RC0 -- (OUT) L2 HOLD_RLY
+                     RC4  |      | RC1                  L2_A_SENSE (IN) -- RC4  |      | RC1 -- (OUT) BUZZ_RING
+                     RC3  |      | RC2               SECONDARY_DET (IN) -- RC3  |      | RC2 -- (OUT) L1_RING_RLY
+                     RC6  |      | RB4                 L2_LINE_DET (IN) -- RC6  |      | RB4 -- (OUT) L2_RING_RLY
+                     RC7  |      | RB5             CPU_STATUS_LED (OUT) -- RC7  |      | RB5 -- (OUT) L2_LAMP
+                     RB7  |______| RB6                 L2_RING_DET (IN) -- RB7  |______| RB6 -- (IN/OUT) SYNC_ILINK
                                                           
-                         PIC16F1709                       
+                         PIC16F1709                                         PIC16F1709 / CPU1
+			                                                       REV G, H, J
 
-        Software: MikroC PRO for PIC v.5.4.0 <-- GUI used in video
-                  Also: MicroChip recommends "MPLAB X IDE Software",
-                        which is what I ended up using.
+        Software: 
+
+	      MicroChip recommends "MPLAB X IDE Software",
+		    which is what I ended up using.
+
+	    Earlier I'd been interested in using MikroC PRO for PIC v.5.4.0,
+	    as that had good online documentation + examples, but wasn't compatible
+	    with MicroChip's newer tools for burning new chips.
 
         Xtal: 32.768kHz tuning fork type crystals for LP oscillator mode.
               Connect between SOSCO and SOSCI pins.
 
-        Or, don't use any xtal, and just use the internal oscillator
-        by setting the config pragma at the top of the code:
+        Or, don't use any xtal (which is what I ended up doing), and just use the 
+	internal oscillator by setting the config pragma at the top of the code:
 
                 #pragma config FOSC = INTOSC    // Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
 
@@ -157,6 +163,8 @@ PICKIT 3 PROGRAMMER WIRING
        1A2 LINE CARD STATE FLOW CHART
        ==============================
 
+       NOTE: For the latest version of this diagram, see "README-firmware-logic-diagram.txt"
+
        +-----------------------------------------+
        |                                         |
        |                                        / \
@@ -205,6 +213,11 @@ PICKIT 3 PROGRAMMER WIRING
        |                  \|/                   \|/                   \|/                  \|/                  \|/                  \|/
        |                   |                     |                     |                    |                    |                    |
        +-------------------o---------------------o---------------------o--------------------o--------------------o--------------------o
+
+    NOTE: For the latest version of the following code, see the actual source code
+    used for programming CPU#1 in "1a2-pic-cpu1-REV-G-firmware.c.txt". The following
+    was the initial code implementation, put here for record keeping of the initial plan,
+    (which evolved over several revisions):
 
 typedef struct {
     // Inputs (debounced)
@@ -280,23 +293,28 @@ void HandleLineTransitions(line) {
 }
 
 
+WHERE TO GET THE SOFTWARE
+-------------------------
 
 
    MPLAB
    =====
+   This is what I ended up using along with the MPLAB X IDE on Windows:
    C compiler:
    https://www.microchip.com/mplab/compilers
 
    MikroC
    ======
+   In the end, I didn't use this toolkit, but it's here for reference.
    https://www.mikroe.com/blog/compiler-quick-start-guide
 
    Perhaps a way to get MikroC to write .HEX file to PICKit3:
    http://www.theengineeringprojects.com/2013/03/how-to-burn-mikroc-code-using-pickit3.html
-
    ..but in the end I couldn't get that to work, so I started using the MPLAB X IDE,
    which is kinda slow and uses up a lot of memory on my two Windows 7 and Windows 8
-   machines.
+   machines. Upgrading to a Windows 7 machine with more memory helped a lot for responsiveness.
+   Windows 8 is a shit version of the OS, I don't recommend it. The Metro interface gets in the
+   way of everything.
 
 
 ---------------------------------------------------------------------------------------------------------------

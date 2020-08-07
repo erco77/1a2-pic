@@ -4,34 +4,33 @@ Seriss 1A2 Single Board KSU - Board Revisions
 --------------------------------------------------------------------------------
 
 "REV J1" (Jan 2020) Differs from "REV J1" in the following ways:
-
   * Modification for Northern Telecom LOGIC 10; swapped buzzer leads [1]
-  * Broguth EXT1-4 closer so phones w/3 amphenols don't stretch when all connected
+  * Brought EXT 1-4 connectors closer by a small bit so phones w/3 amphenols
+    don't stretch when all connected
   * Small trace mods, no electrical changes (other than LOGIC 10 mod above)
-  * Enlarged many solder pads to aid in soldering (chips, discretes..)
+  * Enlarged many solder pads to aid in soldering (chips, discrete components..)
   * Enlarged clearance for ground trace away from amphenol signal bus and JP3 T1 via
   * Small trace changes to remove some unnecessary vias
   * ULN2803 (IC12) and 10K RNET (RN2) lowered to clear for "BUZZERS"
     label and to remove an unnecessary via
   * Simplified trace runs around "12V INPUT"
   * Dropped 3rd pad hole on left of R28, will never be needed.
-  * Labelling changes:
+  * Labeling changes:
       - Added "CPU1" and "CPU2" labels to PIC chips.
       - Added part# for 220 ohm resistors
-      - Flopped "POWERDSIN RING GEN" label for JP5 to match others
+      - Flopped "POWERDSINE RING GEN" label for JP5 to match others
       - Many section labels enlarged
-      - Removed "A" and "B" labelling on PRIMARY/SECONDARY connectors
+      - Removed "A" and "B" labeling on PRIMARY/SECONDARY connectors
         because they weren't being used.
 
-    [1] This change prevents board from immediately shorting out when a LOGIC 10
-        is trivially plugged in without wiring reassignments. Flopping buzzer 
-	polarity so ground is on 17 instead of 42 to solve. LOGIC 10 makes odd use
-	of Y-O pair for A lead ground.
-
+  [1] This change prevents board from immediately shorting out when a LOGIC 10
+      is trivially plugged in without wiring reassignments. Flopping buzzer
+      polarity so ground is on 17 instead of 42 to solve. LOGIC 10 makes odd use
+      of Y-O pair for A lead ground.
 
 "REV J" (Dec 2019) Differs from "REV H2" in the following ways:
   * Polarity swapped for A lead circuits to support Nothern Telecom LOGIC6 and LOGIC10
-  * Fixed missing ground for L4 ground on EXT2 (this was in H1 and H2)
+  * Fixed missing ground for L4 ground on EXT2 (this was in H1 and H2, fixed in H3)
   * Increase clearance of JP4's "SEC" trace across board to be away from TO220 screws
   * Increases size of annular rings -- printers had trouble with the solder mask
   * Enlarged layout for capacitors slightly
