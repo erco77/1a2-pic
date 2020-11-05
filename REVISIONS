@@ -3,7 +3,7 @@ Seriss 1A2 Single Board KSU - Board Revisions
 (Revisions shown newest first, oldest last)
 --------------------------------------------------------------------------------
 
-"REV J1" (Jan 2020) Differs from "REV J1" in the following ways:
+"REV J1" (Jan 2020) Differs from "REV J" in the following ways:
   * Modification for Northern Telecom LOGIC 10; swapped buzzer leads [1]
   * Brought EXT 1-4 connectors closer by a small bit so phones w/3 amphenols
     don't stretch when all connected
@@ -26,7 +26,7 @@ Seriss 1A2 Single Board KSU - Board Revisions
   [1] This change prevents board from immediately shorting out when a LOGIC 10
       is trivially plugged in without wiring reassignments. Flopping buzzer
       polarity so ground is on 17 instead of 42 to solve. LOGIC 10 makes odd use
-      of Y-O pair for A lead ground.
+      of Y-O pair as a path to A lead ground.
 
 "REV J" (Dec 2019) Differs from "REV H2" in the following ways:
   * Polarity swapped for A lead circuits to support Nothern Telecom LOGIC6 and LOGIC10
