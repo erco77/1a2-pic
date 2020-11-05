@@ -615,11 +615,23 @@ inline void HandleALeadDebounce(Debounce *d1, Debounce *d2) {
     DebounceNoisyInput(d2, L2_A_SENSE);
 }
 
+// Returns 1 if A Lead is engaged
+inline int IsALead(Debounce *d) {
+    return (d->value > d->thresh) ? 1 : 0;
+}
+
 // Return the hardware state of the LINE_DET optocoupler
 //     Returns 1 when current is flowing through Tip/Ring, indicating
 //     the line is in use; either with an active call, or call on HOLD.
 //
-inline int IsLineDetect() {
+inline int IsLineDetect(Debounce *ad) {  // A Lead debounce
+    // V1.3D 11/04/2020:
+    //      Bypass line detect check IF ringing and no A lead yet.
+    //      Line Detect optocoupler can sometimes false trigger during ringing,
+    //      apparently detecting ringing as line current, falsely stopping ring cycle.
+    //
+    if ( IsRingCycle() && !IsALead(ad) ) return 0;  // early exit if noisy line detect
+
     switch ( G_curr_line ) {
         case 1:  return(L1_LINE_DET ? 1 : 0);
         case 2:  return(L2_LINE_DET ? 1 : 0);
@@ -636,11 +648,6 @@ inline int IsHold() {
     }
 }
 
-// Returns 1 if A Lead is engaged
-inline int IsALead(Debounce *d) {
-    return (d->value > d->thresh) ? 1 : 0;
-}
-
 // MANAGE L1/L2 INPUTS/OUTPUTS
 //     Set G_curr_line before calling this function to define the line#
 //     to be managed during execution.
@@ -651,7 +658,7 @@ inline int IsALead(Debounce *d) {
 //
 void HandleLine(Debounce *rd, Debounce *ad) {
     // A: Line Detect?
-    if ( IsLineDetect() ) {
+    if ( IsLineDetect(ad) ) {
         // B: Hold?
         if ( IsHold() ) {                  // line currently on HOLD?
             // C: A lead?
