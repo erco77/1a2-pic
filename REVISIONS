@@ -28,6 +28,8 @@ Seriss 1A2 Single Board KSU - Board Revisions
       polarity so ground is on 17 instead of 42 to solve. LOGIC 10 makes odd use
       of Y-O pair as a path to A lead ground.
 
+  The revision J1 boards were printed by PCBWAY in matte black.
+
 "REV J" (Dec 2019) Differs from "REV H2" in the following ways:
   * Polarity swapped for A lead circuits to support Nothern Telecom LOGIC6 and LOGIC10
   * Fixed missing ground for L4 ground on EXT2 (this was in H1 and H2, fixed in H3)
@@ -37,6 +39,7 @@ Seriss 1A2 Single Board KSU - Board Revisions
   * Increased DRC (Design Rule Check):
     * Copper 5.9mil -> 7.0mil
     * Annular ring min: 5.0mil -> 7.0mil
+  The revision J boards were printed by PCBWAY in matte black.
 
 "REV H2" (Nov 2019) Differs from "REV H1" in the following ways:
   * Fixed badly positioned via at end of EXT1's T1 trace, off by a full grid unit.
@@ -45,7 +48,7 @@ Seriss 1A2 Single Board KSU - Board Revisions
   * Removed redundant part# for JP3/4 at far right of board; components have this info already.
   * Removed dated PCB: and SCH: filenames from right side of board: never bothered to update them!
   * Enforce DRC (Design Rule Check):
-  <PRE>
+
     Minimum Distance (mil)
         (x) Copper: 5.9
         (x) Drillings: 19.7
@@ -59,8 +62,8 @@ Seriss 1A2 Single Board KSU - Board Revisions
         ( ) Drilling on SMD pads
         ( ) Pads without soldermask
         ( ) Soldermask out of pads
-  </PRE>
-  <P>
+
+  The REV-H2 boards were printed by WellPCB in matte black.
 
 "REV H1" (Oct 2019) Differs from "REV H" in the following ways:
 
@@ -184,6 +187,7 @@ Seriss 1A2 Single Board KSU - Board Revisions
     * Increased overall pad size for JP3 & 4 (more surface area for soldering)
     * Slight enlarge of LED holes to allow red status leds to flush mount
     * Added extra pad holes for 60/1W and 300/1W resistors
+    These boards were printed by PCBWay in Matte Black.
 
 "REV G" (Jun 2019) Differs from "REV F" in the following ways:
     * REV G added 'SYNC' I/O signal to allow two boards to keep their
@@ -193,6 +197,7 @@ Seriss 1A2 Single Board KSU - Board Revisions
       See UpdateInterlinkSync() function for complete implementation.
     * LED through holes enlarged slightly allowing red CPU LEDs to flush mount
     * Some traces moved around for clearance issues, but no electrical changes
+    These boards were printed by WellPCB in Matte Black.
 
 "REV F" and "REV F1" (May 2019) Introduced interlink feature, two cpus.
     Differs from "REV E" in the following ways:
@@ -207,7 +212,11 @@ Seriss 1A2 Single Board KSU - Board Revisions
            * "REV E" JP2 removed  -- interlink handles this now
            * "REV E" C4 removed   -- 2200uF filter capacitor (voice batt) was unused
            * "REV E" 7445 removed -- made obsolete by use of PIC CPU2
+    These boards were printed by PCBWay in purple.
 
-"REV E" (Apr 2019) First version of board with PIC chip to handle logic.
+"REV E" (Apr 2019) First version of board with PIC chip to handle logic, which reduced
+    the parts count by 50 components from the previous REV-B.
     * Previous board used no CPUs, all analog/discrete circuitry.
     * This board included 8 buzzer transistors and no interlink feature.
+    * This board is the first to use Sprint6 PCB software, lowering print cost for 3 boards from $380 to $60.
+    These boards were printed by PCBWay in blue.
