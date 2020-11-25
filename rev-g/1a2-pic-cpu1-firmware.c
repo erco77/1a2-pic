@@ -25,7 +25,7 @@
  *         L2_RING_DET (IN) -- RB7  |______| RB6 -- (IN/OUT) SYNC_ILINK
  *
  *                              PIC16F1709 / CPU1
- *                                REV G, G1, H
+ *                           REV G, G1, H, H1, J, J1
  *
  *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  *      Copyright (C) 2019 Seriss Corporation.
@@ -84,7 +84,7 @@
 //
 //     RING_CYCLE_MSECS: The maximum amount of time to wait for the next ring from the CO.
 //                       During this time, the line is considered "ringing"; lamps flashing,
-//                       bells ringing, and the 12V "ring generator power" turned on. 
+//                       bells ringing, and the 12V "ring generator power" turned on.
 //                       Each CO ring restarts this timer. There is one timer per line.
 //
 //       RING_SEQ_MSECS: The 4 second 1A2 ring sequence; 1 second ring, 3 second pause.
@@ -224,7 +224,7 @@ void Init() {
     //         |||______ A5 (IN) L1 RING DET
     //         ||_______ X
     //         |________ X
-    
+
     // WARNING: Any changes to TRISB/WPUB must be reflected in the code for
     //          HandleInterlinkSync() as well.
     //
@@ -384,9 +384,9 @@ void HandleRingFlash() {
     //      :        :        :
     //      0ms      500ms    1000ms
     //      :        :        :
-    //       ________          ________ 
+    //       ________          ________
     //      |        |        |        |
-    // _____|        |________|        |___ _ _ 
+    // _____|        |________|        |___ _ _
     //      :        :        :
     //      :<------>:<------>:
     //      :   50%  :   50%  :
@@ -779,7 +779,7 @@ inline void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
 
 //
 // Manage the sync signal between two CPUs on different boards over interlink.
-//            
+//
 //              31250                                      31250
 //            ../|  ....................................../|
 //           /   | /                                       | ......
