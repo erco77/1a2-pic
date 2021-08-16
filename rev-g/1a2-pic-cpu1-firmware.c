@@ -173,7 +173,11 @@ uchar      G_porta, G_portb, G_portc;  // 8 bit input sample buffers, once per m
 uint       G_timer1_cnt      = 0;      // running value of main loop Timer1. counts 0 to TIMER1_FREQ.
 uint       G_iter            = 1;      // iteration counter (1-250)
 
-// See p.xx of PIC16F1709 data sheet for other values for PS (PreScaler) -erco
+// PS<2:0> -- Prescaler Rate Select Bits
+//     See p.245 of PIC16F1709 data sheet for other values for PS (PreScaler) -erco
+//     (Section on OPTION_REG for bits PS<2:0>
+//
+
 #define PS_256  0b111
 #define PS_128  0b110
 #define PS_64   0b101
@@ -181,20 +185,20 @@ uint       G_iter            = 1;      // iteration counter (1-250)
 #define PS_16   0b011
 #define PS_8    0b010
 #define PS_4    0b001
-#define PS_2    0b000
-//                 \\\_ PS0 \    Together these are
-//                  \\_ PS1  |-- the PS bits of the
-//                   \_ PS2 /    OPTION_REG.
+#define PS_2    0b000 //     _
+//                |||__ PS0   |   Together these are
+//                ||___ PS1   |-- the PS<2:0> bits
+//                |____ PS2  _|   of the OPTION_REG.
 
 // Interrupt service routine
-//     Handles oscillating BUZZ_RING at hardware controlled rate of speed
+//     Handles oscillating BUZZ_RING at hardware controlled rate of speed (60Hz)
+//     This is called 125x per second, which divided by 2 is around 62Hz.
 //
 void __interrupt() isr(void) {
     static char count = 0;
     if ( INTCONbits.TMR0IF ) {                  // int timer overflow?
         INTCONbits.TMR0IF = 0;                  // clear bit for next overflow
-        BUZZ_RING = ((++count & 1) && G_buzz_signal) ? 1 : 0;
-                                                // flip oscillator on + off
+        BUZZ_RING = ((++count & 1) && G_buzz_signal) ? 1 : 0; // toggle BUZZ_RING on/off
     }
 }
 
