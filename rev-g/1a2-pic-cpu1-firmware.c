@@ -3,9 +3,11 @@
 /*
  * File:   main.c
  * Author: Greg Ercolano, erco@seriss.com
+ * Version: V1.3E
+ * Current Board Revision: REV-J3
  *
  * Created on Apr 24, 2019, 08:22 AM
- * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
+ * Compiler: MPLAB X IDE V5.10/5.25 + XC8 -- Microchip.com
  *
  *     This firmware runs on CPU1 on the 1A2 Multiline Phone Control board,
  *     managing 1A2 functions for Line #1 and #2: Hold, Lamp, and Ringing.
@@ -47,6 +49,18 @@
  *
  * For the GPL license, see COPYING in the top level directory.
  * For board revisions, see REVISIONS in the top level directory.
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * V1.3E
+ *     * Changed INLVLA/B/C from default (TTL?) to Schmitt
+ *     * (TODO) Lock ring cadence between PRIMARY and SECONDARY?
+ *        Possible way to do this: Configure RING_SYNC signal to be
+ *       a data transfer line. For input configure with interrupt-on-change (IOC),
+ *       so when other end sends us data, interrupts trigger on each
+ *       transition, and we can record system timer to determine the pulse width
+ *       to parse the bit data. On complete xmit, we can then turn around and
+ *       send reply data back.. all with the same bit, and just using IOC
+ *       to manage the data transfers all in the background.
  */
 
 //                                                      Port(ABC)
@@ -87,7 +101,7 @@
 //                       bells ringing, and the 12V "ring generator power" turned on.
 //                       Each CO ring restarts this timer. There is one timer per line.
 //
-//       RING_SEQ_MSECS: The 4 second 1A2 ring sequence; 1 second ring, 3 second pause.
+//       RING_SEQ_MSECS: The 4 sec 1A2 ring sequence: 1 sec ring followed by 3 sec pause.
 //                       There is one ring sequence timer for all lines, so that lines
 //                       all ring together.
 //
@@ -206,6 +220,15 @@ void __interrupt() isr(void) {
 //    Configures the clock speed of the processor, which I/O pins are inputs vs outputs,
 //    enables input pullup resistors, and enables the interrupt timer.
 //
+// TTL vs Schmitt input table:
+//           ........................
+//           : LOW(max) : HIGH(min) :
+//           :..........:...........:
+//        TTL:   0.8V   :   2.0V    :     Bad zone is 0.9v - 1.9v
+//    Schmitt:   0.2V   :   0.8V    :     Bad zone is 0.3v - 0.7v
+//           :..........:...........:
+//
+
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
 
@@ -219,6 +242,7 @@ void Init() {
     //       'X' indicates a don't care/not implemented on this chip hardware.
     //
     TRISA  = 0b00111000; // data direction for port A (0=output, 1=input)
+    INLVLA = 0b00111000; // TTL(0) vs Schmitt(1) level inputs
     WPUA   = 0b00111000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ A0 (OUT) L1 LAMP
     //         |||||||__ A1 (OUT) L1 HOLD RLY
@@ -233,6 +257,7 @@ void Init() {
     //          HandleInterlinkSync() as well.
     //
     TRISB  = 0b11000000; // data direction for port B (0=output, 1=input)
+    INLVLB = 0b11110000; // TTL(0) vs Schmitt(1) level inputs
     WPUB   = 0b11000000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ X
     //         |||||||__ X
@@ -244,6 +269,7 @@ void Init() {
     //         |________ B7 (IN)  L2 RING DET
 
     TRISC  = 0b01111000; // data direction for port C (0=output, 1=input)
+    INLVLC = 0b01111000; // TTL(0) vs Schmitt(1) level inputs
     WPUC   = 0b01110000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ C0 (OUT) L2 HOLD RLY
     //         |||||||__ C1 (OUT) BUZZ 60HZ
@@ -568,7 +594,7 @@ inline void RingDetectDebounceInit(Debounce *d) {
 //     Ignore noise false-triggering RING_DET due to capacitive noise from CO lines
 //     during pickup/hangup.
 //
-// Noisey RING_DET Input:
+// Noisy RING_DET Input:
 //                         _      ___   _______________       __          _
 //                        | | ||||   | |               | ||| |  || |     | |
 //             ___________| |_||||   |_|               |_|||||  ||_|_____| |_______
@@ -784,17 +810,17 @@ inline void HandleBuzzRing(Debounce *rd1, Debounce *rd2) {
 //
 // Manage the sync signal between two CPUs on different boards over interlink.
 //
-//              31250                                      31250
-//            ../|  ....................................../|
-//           /   | /                                       | ......
-//   Tmr1: 0/    |/                                        |/
-//               Reset tmr1                                Reset tmr1
-//               .                                         .
-//               .                                         .
-//         __..__.   ______________________________________.   ___
-//   Sync:       |__|                                      |__|
+//              31250                    31250                    31250
+//   ......``````|                ....````|                ....````|
+//               |        ....````        |        ....````        |
+//   Tmr1: 0     |....````                |....````                |....````
+//               Reset tmr1               Reset tmr1               Reset tmr1
+//               .                       .                       .
+//               .                       .                       .
+//         ______.  _____________________.  _____________________.  _____
+//   Sync:       |_|                     |_|                     |_|
 //
-//            -->    <-- 2 iters, or 2/250th sec
+//            -->   <-- 2 iters, or 2/250th sec
 //
 // Receiver should reset its timer on *falling edge* of sync from "other" board.
 // This should ensure boards are at least within 1/250th of a second in sync.

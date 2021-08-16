@@ -3,7 +3,9 @@
 /*
  * File:   main.c
  * Author: Greg Ercolano, erco@seriss.com
- *
+ * Version: V1.3E
+ * Current Board Revision: REV-J3
+
  * Created on Apr 24, 2019, 06:29 PM
  * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
  *
