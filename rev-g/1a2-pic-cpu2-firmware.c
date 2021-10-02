@@ -21,9 +21,9 @@
  *      EXT1 BUZZ (OUT) -- RB7  |______| RB6 -- (IN) DTMF 'a'
  *
  *                         PIC16F1709 / CPU2
- *                           REV G, G1, H, J, J4
+ *                        REV G, G1, H, J, J4
  *
- *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  *      Copyright (C) 2019,2021 Seriss Corporation.
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@
  *      You should have received a copy of the GNU General Public License
  *      along with this program; if not, write to the Free Software
  *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ *      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * For the GPL license, see COPYING in the top level directory.
  * For board revisions, see REVISIONS in the top level directory.
  *

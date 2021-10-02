@@ -150,9 +150,11 @@
  *            > Hold flash   - 1 if lamp on during hold flash, 0 if lamp off
  *
  *       SECONDARY should xmit back with state of:
- *            > MOTOR - set if any line is ringing or on hold
- *              This should cause PRIMARY to start ring timer (if not already)
- *              so ring cadence/hold+ring flash are running.
+ *            > Any line ringing? (0=no, 1=yes)
+ *            > Any line on hold? (0=no, 1=yes)
+ *
+ *       If any line is ringing or on hold, this should cause PRIMARY to
+ *       start its interrupter (if not already).
  */
 
 #define ABS(a)          (((a)<0)?-(a):(a))
@@ -429,25 +431,19 @@ volatile uchar ZeroOrOne(uchar val) {
 //
 void Send() {
     if ( IS_PRIMARY ) {
-        // PRIMARY -> SECONDARY
-        SendBit(1);                           // 0. start bit (1)
-        SendBit(0);                           // 1. start bit (0)
-        SendBit(G_int.ring_relay ? 1 : 0);    // 2. is interrupter ringing?
-        SendBit(G_int.ring_flash ? 1 : 0);    // 3. is interrupter ring flash high?
-        SendBit(G_int.hold_flash ? 1 : 0);    // 4. is interrupter hold flash high?
-//        SendBit(0);                           // 5. unused
-//        SendBit(0);                           // 6. unused
-//        SendBit(0);                           // 7. unused
+        // PRIMARY -> SECONDARY                                                     _
+        SendBit(1);                           // 0. start bit (1)                    |
+        SendBit(0);                           // 1. start bit (0)                    |__ XMIT_BITS = 5 total
+        SendBit(G_int.ring_relay ? 1 : 0);    // 2. is interrupter ringing?          |
+        SendBit(G_int.ring_flash ? 1 : 0);    // 3. is interrupter ring flash high?  |
+        SendBit(G_int.hold_flash ? 1 : 0);    // 4. is interrupter hold flash high? _|
     } else {
-        // SECONDARY -> PRIMARY
-        SendBit(1);                            // 0. start bit (1)
-        SendBit(0);                            // 1. start bit (0)
-        SendBit(IsAnyLineRinging() ? 1 : 0);   // 2. any local lines ringing
-        SendBit(IsAnyLineHold()    ? 1 : 0);   // 3. any local lines on hold
-        SendBit(0);                            // 4. unused
-//        SendBit(0);                            // 5. unused
-//        SendBit(0);                            // 6. unused
-//        SendBit(0);                            // 7. unused
+        // SECONDARY -> PRIMARY                                                     _
+        SendBit(1);                            // 0. start bit (1)                   |
+        SendBit(0);                            // 1. start bit (0)                   |__ XMIT BITS = 5 total
+        SendBit(IsAnyLineRinging() ? 1 : 0);   // 2. any local lines ringing         |
+        SendBit(IsAnyLineHold()    ? 1 : 0);   // 3. any local lines on hold         |
+        SendBit(0);                            // 4. unused                         _|
     }
 }
 
