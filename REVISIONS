@@ -2,6 +2,54 @@
 Seriss 1A2 Single Board KSU - Board Revisions
 (Revisions shown newest first, oldest last)
 --------------------------------------------------------------------------------
+"REV J4"
+  * Support for V1.4 firmware. (Also supports V1.3 firmware)
+
+    For older board revs to support V1.4, i.e. REV-J3 and older, the trace
+    from CPU2 for RC4's SECONDARY_DET needs to be cut. This is because V1.4
+    is the first firmware version to make use of SECONDARY_DET, and when CPU2
+    is off/ICM hung up, the deenergized PIC's RC4 pin forces the signal low.
+    So the trace cut is needed for reliable detection of a SECONDARY config.
+
+  * In firmware V1.4, ringing is now synchronized across the two boards.
+    This allows calls on Line #1 through #4 to ring in sync, regardless of
+    how out-of-sync the CO ring cadence is.
+
+    Basically V1.4 uses the same 'interrupter' model the old 1A2 KSUs use,
+    where one "interrupter" drives all signals on both boards. In this case,
+    the interrupter (implemented in software) on the PRIMARY board's CPU1
+    generates the ring cadence/ring flash/hold wink signals used by both boards.
+
+    It does this by doing bi-directional communication over the SYNC_ILINK signal,
+    using the PIC's IOC (Interrupt On Change) and PWM/CCP hardware to do bi-directional
+    data transmission over the single wire.
+
+    The PRIMARY board sends the 3 interrupter signals first (cadence, flash, wink),
+    the SECONDARY board saves this info for its interrupter outputs, and it replies
+    with the state of its lines (lines ringing/lines on hold) which are used to
+    start the PRIMARY board's interrupter if its not already running.
+
+  * Small silk screen fixes; "LINE RINGING" section label was overlapping the
+    component id for K3.
+
+  * Mounting holes were adjusted to a standard 300x300 mil spacing from edges.
+    (When "Velcro Slots" were added in REV-J3, the mounting holes were adjusted
+    without concern for consistent edge clearance)
+
+"REV J3"
+  * Velcro slots added to allow securing the amphenols to the board.
+  * The addition of the Velcro slots changed the overall board dimensions,
+    mounting hole positions, and caused the entire 1A2 bus to be rerouted.
+  * The board's width was decreased by about 1/4" by optimizing component
+    positions and traces. (Smaller board widths simplify shipping)
+  * Seriss logo graphic and product URL was added.
+  * Electrically, no changes were made.
+
+"REV J2"
+  * "EXTRA" position (C9) had extra pads added to accomodate large components.
+    For single board installations, this position is populated with a power resistor.
+  * Small silk screen changes were made for second source part#s.
+  * Electrically, no changes were made.
 
 "REV J1" (Jan 2020) Differs from "REV J" in the following ways:
   * Modification for Northern Telecom LOGIC 10; swapped buzzer leads [1]
