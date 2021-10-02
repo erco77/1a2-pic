@@ -205,7 +205,9 @@ void SetTimerSpeed(int val) {
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
 
-    // Set PIC chip oscillator speed
+    // Set PIC chip oscillator speed to 8MHZ
+    //    We need speed to debounce rotary detection
+    //
     OSCCONbits.IRCF   = 0b1110;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
     OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
     OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
@@ -269,7 +271,7 @@ void Init() {
         INTCONbits.TMR0IE     = 1;          // timer 0 Interrupt Enable (IE)
         INTCONbits.TMR0IF     = 0;          // timer 0 Interrupt Flag (IF)
         // Configure timer
-        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock
+        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock (FOSC/4)
         OPTION_REGbits.TMR0SE = 0;          // Select Edge (SE) to be rising (0=rising edge, 1=falling edge)
         OPTION_REGbits.PSA    = 0;          // PreScaler Assignment (PSA) (0=assigned to timer0, 1=not assigned to timer0)
         // Set timer0 prescaler speed
@@ -304,7 +306,6 @@ void BuzzExtension(int num) {
 //     This runs at approx 60Hz
 //
 void __interrupt() isr(void) {
-    static char count = 0;          // DEBUG
     if ( INTCONbits.TMR0IF ) {      // int timer overflow?
         INTCONbits.TMR0IF = 0;      // clear bit for next overflow
         BuzzExtension(G_buzz_ext);  // run selected buzzer
