@@ -1112,6 +1112,75 @@
             rated for up to 30v. So the 12v present at the TIP125's base won't
             cause issues for the 7445, even though it's TTL (0-5v).
 
+    X.X INTERLINKED RINGING
+    -----------------------
+    In V1.3D firmware and / REV-J3 and older, ringing across boards
+    was not synchronized, and ringing across boards was supported only
+    by the addition of the "L1+L2 BELL" terminal block in REV-J3. Only
+    lamp flashing is synchronized by signaling between boards over the
+    SYNC_ILINK pin common between both boards.
+
+    In V1.4 firmware / REV-J4, ringing across boards is synchronized
+    by implementing an "Interrupter" (implemented in Interrupter.h),
+    which handles the ring signal (on 1 sec, off 3 sec) and ring/hold
+    flash signals. The signal's state on the PRIMARY is sent as an 8bit
+    value every 10 main loop iters to the SECONDARY, which copies those
+    signal states to its Interrupter, which drives its line lamps and ringing.
+
+    The SECONDARY then replies with an 8bit data reply of its own, 
+    sending binary state information about if any lines are ringing
+    or on hold, so the PRIMARY board knows to start its interrupter.
+
+    The V1.4 firmware uses the SECONDARY_DET input on CPU1 to determine
+    if the firmware should be running in PRIMARY or SECONDARY mode,
+    since the PRIMARY needs to know it starts all transmissions over
+    SYNC_ILINK, and SECONDARY must take that data to drive the Interrupter,
+    and must only react with state info of its own.
+
+    IMPLEMENTATION OF BIDIR DATA TRANSMISSION
+    -----------------------------------------
+    Some features of the PIC were used to implement doing clean
+    bidirectional data transmission of 8bit values over a single port:
+
+        > WPU (Weak PullUps) are used on SYNC_ILINK to hold the line
+          high so that the transmitter can pull it LOW when sending data.
+
+        > IOC (Interrupt On Change) is used on SYNC_ILINK to interrupt
+          the CPU when reading data from the board acting as a transmitter.
+          Interrupts occur on both RISING and FALLING edges of SYNC_ILINK
+          so that timing of how long signal remains low is possible.
+
+        > TMR0 (hardware timer) is used to time how long SYNC_ILINK is
+          pulled low:
+
+              > When SYNC_ILINK goes low, receiver interrupt zeroes TMR0
+              > When SYNC_ILINK goes high, receiver interrupt saves TMR0 value
+                which is later used to determine if 1 or 0 was sent
+
+
+        > Both boards leave SYNC_ILINK configured as an input
+          until the PRIMARY decides to send data. 
+
+        > PRIMARY switches SYNC_ILINK to output mode, transmits 8bits,
+          then switches back to input mode
+
+        > SECONDARY reads the 8bits from PRIMARY, switches to output mode,
+          and sends its 8bit value, the switches back to input mode
+
+    The transmission of data is implemented such that a '1' bit holds
+    SYNC_ILINK low for a longer time than '0' the bits.
+    Features used by the PIC.
+          the first two bits being 'start' bits that are '1' and '0'
+          which the receiver records the timing of for reference to
+          later determine timing of the data bits that follow.
+
+          the binary data one bit at a time
+          using a longer delay for '1's vs '0's.
+
+        > The receiver board
+
+
+
 ***** WORK IN PROGRESS: ABOVE THIS LINE ^^^
 </FONT>
     4.5 OPTIONAL EXTENSIONS

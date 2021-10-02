@@ -3,17 +3,15 @@
 /*
  * File:   main.c
  * Author: Greg Ercolano, erco@seriss.com
- * Version: V1.3E
- * Current Board Revision: REV-J3
-
+ *
  * Created on Apr 24, 2019, 06:29 PM
- * Compiler: MPLAB X IDE V5.10 + XC8 -- Microchip.com
+ * Compiler: MPLAB X IDE V5.50 + XC8 -- Microchip.com
  *
  * Drive the 1A2 Multiline Phone Control board, CPU2 Firmware.
  *                               _    _
  *                           V+ | |__| | GND
- *              x (OUT) -- RA5  |      | RA0 -- (OUT) EXT8 BUZZ
- *              x (OUT) -- RA4  |      | RA1 -- (OUT) EXT7 BUZZ
+ *               x (IN) -- RA5  |      | RA0 -- (OUT) EXT8 BUZZ
+ *               x (IN) -- RA4  |      | RA1 -- (OUT) EXT7 BUZZ
  *        (MCLR) X (IN) -- RA3  |      | RA2 -- (OUT) EXT6 BUZZ
  *      MT8870 STD (IN) -- RC5  |      | RC0 -- (OUT) EXT5 BUZZ
  *     CPU STATUS (OUT) -- RC4  |      | RC1 -- (IN) ROTARY PULSE
@@ -23,10 +21,10 @@
  *      EXT1 BUZZ (OUT) -- RB7  |______| RB6 -- (IN) DTMF 'a'
  *
  *                         PIC16F1709 / CPU2
- *                      REV G, G1, H, H1, J, J1
+ *                           REV G, G1, H, J, J4
  *
  *	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- *      Copyright (C) 2019 Seriss Corporation.
+ *      Copyright (C) 2019,2021 Seriss Corporation.
  *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
@@ -45,9 +43,18 @@
  * For the GPL license, see COPYING in the top level directory.
  * For board revisions, see REVISIONS in the top level directory.
  *
+ * ************************************************************************
+ *
+ * V1.4: > Removed SECONDARY_DET -- this can't be used; when CPU2 powered down,
+ *         it clamps the signal to ground disabling it from being seen by CPU1.
+ *         In V1.4, first actual use of SECONDARY_DET, CPU1 /needs/ to see it,
+ *         CPU2 does not. So it was simply removed for V1.4 to work properly.
+ *
+ *       > Unused ports were all switched to inputs.
+ *
  */
 
-// REVISION G / CPU2                                    Port(ABC)
+// REVISION G thru J4 / CPU2                            Port(ABC)
 //                                   76543210           |Bit# in port
 // Inputs                            ||||||||           ||
 #define MT8870_STD     ((G_portc & 0b00100000)?1:0) // RC5: goes hi when dial button pressed
@@ -56,7 +63,6 @@
 #define DTMF_c         ((G_portb & 0b00010000)?1:0) // RB4: data bit 'c' from MT8870 of which dial button pressed
 #define DTMF_d         ((G_portc & 0b00000100)?1:0) // RC2: data bit 'd' from MT8870 of which dial button pressed
 #define ROTARY_PULSE   ((G_portc & 0b00000010)?1:0) // RC1: rotary pulse
-#define SECONDARY_DET  ((G_porta & 0b00100000)?1:0) // RA5: detects if card configured as SECONDARY (JP4) [currently unused]
 
 // Outputs
 #define CPU_STATUS_LED LATCbits.LATC4               // RC4: hi to turn LED on
@@ -199,9 +205,7 @@ void SetTimerSpeed(int val) {
 void Init() {
     OPTION_REGbits.nWPUEN = 0;   // Enable WPUEN (weak pullup enable) by clearing bit
 
-    // Set PIC chip oscillator speed to 8MHZ
-    //    We need speed to debounce rotary detection
-    //
+    // Set PIC chip oscillator speed
     OSCCONbits.IRCF   = 0b1110;  // 0000=31kHz LF, 0111=500kHz MF (default on reset), 1011=1MHz HF, 1101=4MHz, 1110=8MHz, 1111=16MHz HF
     OSCCONbits.SPLLEN = 0;       // disable 4xPLL (PLLEN in config words must be OFF)
     OSCCONbits.SCS    = 0b10;    // 10=int osc, 00=FOSC determines oscillator
@@ -210,15 +214,14 @@ void Init() {
     //       '1' configures an input, '0' configures an output.
     //       'X' indicates a don't care/not implemented on this chip hardware.
     //       NOTE: A3 is INPUT ONLY.
-    //
-    TRISA  = 0b00001000; // data direction for port A (0=output, 1=input)
-    WPUA   = 0b00001000; // enable 'weak pullup resistors' for all inputs
+    TRISA  = 0b00111000; // data direction for port A (0=output, 1=input)
+    WPUA   = 0b00111000; // enable 'weak pullup resistors' for all inputs
     //         ||||||||_ A0 (OUT) EXT8 BUZZ
     //         |||||||__ A1 (OUT) EXT7 BUZZ
     //         ||||||___ A2 (OUT) EXT6 BUZZ
     //         |||||____ A3 (IN)  unused/MCLR
-    //         ||||_____ A4 (OUT) unused
-    //         |||______ A5 (OUT) unused
+    //         ||||_____ A4 (IN)  unused
+    //         |||______ A5 (IN)  unused
     //         ||_______ X
     //         |________ X
 
@@ -266,7 +269,7 @@ void Init() {
         INTCONbits.TMR0IE     = 1;          // timer 0 Interrupt Enable (IE)
         INTCONbits.TMR0IF     = 0;          // timer 0 Interrupt Flag (IF)
         // Configure timer
-        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock (FOSC/4)
+        OPTION_REGbits.TMR0CS = 0;          // set timer 0 Clock Source (CS) to the internal instruction clock
         OPTION_REGbits.TMR0SE = 0;          // Select Edge (SE) to be rising (0=rising edge, 1=falling edge)
         OPTION_REGbits.PSA    = 0;          // PreScaler Assignment (PSA) (0=assigned to timer0, 1=not assigned to timer0)
         // Set timer0 prescaler speed
@@ -301,7 +304,7 @@ void BuzzExtension(int num) {
 //     This runs at approx 60Hz
 //
 void __interrupt() isr(void) {
-    //static char count = 0;        // DEBUG
+    static char count = 0;          // DEBUG
     if ( INTCONbits.TMR0IF ) {      // int timer overflow?
         INTCONbits.TMR0IF = 0;      // clear bit for next overflow
         BuzzExtension(G_buzz_ext);  // run selected buzzer
@@ -475,7 +478,6 @@ void main(void) {
 
         // Powerup counter
         //     Counts up from zero then stops after 10 secs, leaving counter >=10000.
-        //
         if ( G_powerup_msecs < 10000 ) G_powerup_msecs += G_msecs_per_iter;
     }
 }
