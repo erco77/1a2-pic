@@ -29,10 +29,10 @@
 //       ##    #####    ##         #
 //
 
-// NOTE: For REV-J3 and older, you must CUT THE RA5 TRACE from CPU2:
+// NOTE: For V1.4 to work with REV-J3 and older, you must: CUT THE TRACE FROM CPU2's RA5:
 //
 //          :
-//          |   CPU2
+//          |   CPU 2
 //          |  +5V     RA5     RA4     RA3
 //          |_______________________________ _ _
 //            | 1 |   | 2 | # | 3 |   | 4 |
@@ -47,11 +47,9 @@
 //        via --> (O)       #
 //                          #
 //
-//       Prevents SECONDARY_DET from being dragged to ground when CPU2 is
+//       This prevents SECONDARY_DET from being dragged to ground when CPU2 is
 //       powered down (ICM on hook). Not an issue for REV-J4 and up, which has
-//       this fix already.
-//       This cut only /needs/ to be done on the PRIMARY board, it's best to
-//       make the cut on BOTH boards.
+//       this trace /removed/.
 //
 
 /*
@@ -110,7 +108,7 @@
  *     * Much changed, this code now depends on REV-J4 board and up.
  *     * Changed INLVLA/B/C from default (TTL?) to Schmitt
  *     * Lock ring cadence between PRIMARY and SECONDARY (using new Interrupter)
- *     * Changed BUZZ_60Hz from software generated to hardware (PWM/CCP)
+ *     * Changed BUZZ_60Hz from software generated to hardware (PWM/CCP/PPS)
  *       (allows bidir send/recv of 8data reliably over SYNC_ILINK)
  *
  * NOTES ON ABOVE:
@@ -334,25 +332,27 @@ volatile uchar G_remote_line_hold = 0;   // PRIMARY: 1 if remote (SECONDARY) has
 ////////    #  #   ##    #    #       #   #   #       #  #   ##  #   #
 ////////    #  #    #    #    ######  #    #  ######  #  #    #  #    #
 //
-//    PRIMARY                 SECONDARY
-//    ----------------------- ------------------------------
-// 0. DataXmitMode()          (receive mode)
-// 1. Send()                       :
-//         :                       :
-//         :-- send bits ---> parse bits
-//         :                       :
-//         :-- done --------> HandleRecv()
+//          PRIMARY                 SECONDARY
+//          ----------------------- ------------------------------
+//       0. DataXmitMode()          (receive mode)
+//       1. Send()                       :
+//               :                       :
+//               :-- send bits ---> parse bits
+//               :                       :
+//               :-- done --------> HandleRecv()
 //
-// 2. DataRecvMode();         delay to allow primary to switch to recv mode
-// 3. (receive mode)          DataXmitMode()
-// 4.      :                  Send()
-//         :                      :
-//    parse 8 bits <- send bits --:
-//         :                      :
-//    HandleRecv() <------ done --:
+//       2. DataRecvMode();         delay to allow primary to switch to recv mode
 //
-// 5. Remain in recv mode     DataRecvMode()
-//    until next iteration, then goto (0)
+//       3. (receive mode)          DataXmitMode()
+//               :                      :
+//       4.      :                  Send()
+//               :                      :
+//          parse bits <--- send bits --:
+//               :                      :
+//          HandleRecv() <------ done --:
+//
+//       5. Remain in recv mode     DataRecvMode()
+//          until next iteration, then goto (0)
 //
 
 // TMR0 enable/disable interrupt on overflow
@@ -440,7 +440,7 @@ void Send() {
     } else {
         // SECONDARY -> PRIMARY                                                     _
         SendBit(1);                            // 0. start bit (1)                   |
-        SendBit(0);                            // 1. start bit (0)                   |__ XMIT BITS = 5 total
+        SendBit(0);                            // 1. start bit (0)                   |__ XMIT_BITS = 5 total
         SendBit(IsAnyLineRinging() ? 1 : 0);   // 2. any local lines ringing         |
         SendBit(IsAnyLineHold()    ? 1 : 0);   // 3. any local lines on hold         |
         SendBit(0);                            // 4. unused                         _|
@@ -483,8 +483,22 @@ void __interrupt() isr(void) {
     uint tmr0 = TMR0;                         // save TMR0 value on entry for timing accuracy
 
     // Handle IOC to receive data bits
+    //
+    //    XXX: Shouldn't do all this in int handler -- move to main loop!
+    //         Set a flag when data received, main loop sees flag at end
+    //         of loop and handle it there.
+    //
     if ( INTCONbits.IOCIF ) {
         INTCONbits.IOCIF = 0;
+        // SYNC_ILINK went lo? Reset TMR0 to zero.
+        //
+        //    TMR0 is used to time low period to determine if
+        //    a logic '0' or logic '1' was sent.
+        //
+        //    TMR0 also generates an interrupt if it overflows,
+        //    an indication transmitter stopped transmitting,
+        //    possibly unexpectedly (indicating noise on the line)
+        //
         if ( IS_SYNC_NEG_EDGE ) {             // RB6 (SYNC) became negative?
             IOCBFbits.IOCBF6 = 0;             // ack int
             TMR0 = 0;                         // reset TMR0 to time how long SYNC is low
@@ -493,8 +507,8 @@ void __interrupt() isr(void) {
             }
         } else if ( IS_SYNC_POS_EDGE ) {      // RB6 (SYNC) became positive?
             IOCBFbits.IOCBF6 = 0;             // ack int
-            if ( G_data_index < XMIT_BITS ) {          // receive up to XMIT_BITS of data
-                G_data_times[G_data_index++] = tmr0;   // save TMR0 timings for Recv() to parse later
+            if ( G_data_index < XMIT_BITS ) {        // receive up to XMIT_BITS of data
+                G_data_times[G_data_index++] = tmr0; // save TMR0 timings for Recv() to parse later
 
                 if ( G_data_index == XMIT_BITS ) {   // all bits recvd?
                     TMR0IntOnOverflow(0);            // TMR0 disable overflow ints: all bits recv'd OK
@@ -516,7 +530,7 @@ void __interrupt() isr(void) {
     // TMR0 overflow? Waited too long for data over interlink, reset index..
     if ( INTCONbits.TMR0IF ) {
         INTCONbits.TMR0IF = 0;  // ack int
-        G_data_index = 0;       // zero index
+        G_data_index = 0;       // re-zero index
     }
 }
 
@@ -525,10 +539,10 @@ void __interrupt() isr(void) {
 //
 void Buzz60hz(uchar onoff) {
     if ( onoff == 1 ) {
-        // ON..
+        // ON: This outputs the PWM's programmed 60Hz output
         RC1PPS = 0x0c;         // enable RC1 -> CCP1 pin assignment
     } else {
-        // OFF..
+        // OFF: Output forced to logic '0' (low)
         RC1PPS = 0x00;         // disable RC1 -> CCP1 pin assignment
         LATCbits.LATC1 = 0;    // make sure RC1 stays /low/ when "off"
     }
