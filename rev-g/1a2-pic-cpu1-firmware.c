@@ -350,9 +350,11 @@ volatile uchar G_remote_line_hold = 0;   // PRIMARY: 1 if remote (SECONDARY) has
 //          parse bits <--- send bits --:
 //               :                      :
 //          HandleRecv() <------ done --:
+//                                      :
+//                                  DataRecvMode()
 //
-//       5. Remain in recv mode     DataRecvMode()
-//          until next iteration, then goto (0)
+//       5. Remain in recv mode until next
+//          iteration, then goto (0)
 //
 
 // TMR0 enable/disable interrupt on overflow
